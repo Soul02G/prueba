@@ -125,8 +125,8 @@ void InitGame(void)
         snake[i].size = (Vector2){ SQUARE_SIZE, SQUARE_SIZE };
         snake[i].speed = (Vector2){ SQUARE_SIZE, 0 };
 
-        if (i == 0) snake[i].color = DARKBLUE;
-        else snake[i].color = BLUE;
+        if (i == 0) snake[i].color = RED;
+        else snake[i].color = PINK;
     }
 
     for (int i = 0; i < SNAKE_LENGTH; i++)
@@ -135,7 +135,7 @@ void InitGame(void)
     }
 
     fruit.size = (Vector2){ SQUARE_SIZE, SQUARE_SIZE };
-    fruit.color = SKYBLUE;
+    fruit.color = BLACK;
     fruit.active = false;
 }
 
