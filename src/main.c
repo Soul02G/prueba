@@ -119,6 +119,9 @@ void InitGame(void)
     offset.x = screenWidth % SQUARE_SIZE;
     offset.y = screenHeight % SQUARE_SIZE;
 
+    Color rainbow[] = { RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, PINK };
+
+    int numColors = sizeof(rainbow) / sizeof(rainbow[0]);
 
     for (int i = 0; i < SNAKE_LENGTH; i++)
     {
@@ -126,8 +129,15 @@ void InitGame(void)
         snake[i].size = (Vector2){ SQUARE_SIZE, SQUARE_SIZE };
         snake[i].speed = (Vector2){ SQUARE_SIZE, 0 };
 
-        if (i == 0) snake[i].color = RED;
-        else snake[i].color = PINK;
+        for (i; i < SNAKE_LENGTH; i++)
+        {
+            snake[i].color = numColors;
+            numColors++;
+            if (numColors >= 5)
+            {
+                numColors = 0;
+            }
+        }
     }
 
     for (int i = 0; i < SNAKE_LENGTH; i++)
