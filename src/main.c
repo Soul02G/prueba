@@ -119,6 +119,7 @@ void InitGame(void)
     offset.x = screenWidth % SQUARE_SIZE;
     offset.y = screenHeight % SQUARE_SIZE;
 
+
     for (int i = 0; i < SNAKE_LENGTH; i++)
     {
         snake[i].position = (Vector2){ offset.x / 2, offset.y / 2 };
@@ -265,9 +266,9 @@ void DrawGame(void)
         // Draw fruit to pick
         DrawRectangleV(fruit.position, fruit.size, fruit.color);
 
-        if (pause) DrawText("GAME PAUSED", screenWidth / 2 - MeasureText("GAME PAUSED", 40) / 2, screenHeight / 2 - 40, 40, GRAY);
+        if (pause) DrawText("JUEGO EN PAUSA CABEZA DESATASCADOR", screenWidth / 2 - MeasureText("JUEGO EN PAUSA CABEZA DESATASCADOR", 30) / 2, screenHeight / 2 - 30, 30, GRAY);
     }
-    else DrawText("PRESS [ENTER] TO PLAY AGAIN", GetScreenWidth() / 2 - MeasureText("PRESS [ENTER] TO PLAY AGAIN", 20) / 2, GetScreenHeight() / 2 - 50, 20, GRAY);
+    else DrawText("QUE MALO ERES; SINVERGUENZA", GetScreenWidth() / 2 - MeasureText("CALLA Y JUEGA JODER [ENTER]", 20) / 2, GetScreenHeight() / 2 - 50, 20, BLACK);
 
     EndDrawing();
 }
