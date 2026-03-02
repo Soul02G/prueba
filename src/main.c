@@ -138,7 +138,7 @@ void InitGame(void)
     }
 
     fruit.size = (Vector2){ SQUARE_SIZE, SQUARE_SIZE };
-    fruit.color = BLACK;
+    fruit.color = rainbow[i % numColors];
     fruit.active = false;
 }
 
