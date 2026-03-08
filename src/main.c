@@ -25,6 +25,7 @@ int main() {
 
     Texture2D trail = LoadTexture("resources\\trail.png");
     Texture2D vertTrail = LoadTexture("resources\\trailVert.png");
+    Texture2D rebote = LoadTexture("resources\\rebot.png");
 
     SetTextureFilter(frames[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(trail, TEXTURE_FILTER_POINT);
@@ -95,6 +96,7 @@ int main() {
             y += yspd;
         }
 
+
         int isMoving = (xspd != 0 || yspd != 0);
 
         if (isMoving) {
@@ -162,6 +164,8 @@ int main() {
     for (int i = 0; i < 5; i++) UnloadTexture(frames[i]);
     UnloadTexture(trail);
     UnloadTexture(vertTrail);
+    UnloadTexture(rebote);
+
     CloseWindow();
     return 0;
 }
