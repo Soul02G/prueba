@@ -1,16 +1,16 @@
-#include "raylib.h"
+﻿#include "raylib.h"
 
 #define TRAIL_LENGTH 15
 
 int main() {
 
-    const int screenWidth = 450;
-    const int screenHeight = 900;
+    const int screenWidth = 800;
+    const int screenHeight = 450;
 
     InitWindow(screenWidth, screenHeight, "Tomb of The Mask");
     SetTargetFPS(120);
 
-    // Animaci�n
+    // Animación
     Texture2D frames[5];
     frames[0] = LoadTexture("resources\\totm.png");
     frames[1] = LoadTexture("resources\\totm_1.png");
@@ -31,8 +31,8 @@ int main() {
     SetTextureFilter(trail, TEXTURE_FILTER_POINT);
     SetTextureFilter(vertTrail, TEXTURE_FILTER_POINT);
 
-    int x = 30;
-    int y = 30;
+    int x = 0;
+    int y = 0;
 
     int xspd = 0, yspd = 0;
     int move_spd = 30;
@@ -42,6 +42,12 @@ int main() {
 
     int playerWidth = (int)(frames[0].width * scale);
     int playerHeight = (int)(frames[0].height * scale);
+
+    // Rebote fijo
+    int reboteWidth = (int)(rebote.width * scale);
+    int reboteHeight = (int)(rebote.height * scale);
+    int reboteX = screenWidth - reboteWidth;
+    int reboteY = screenHeight - reboteHeight;
 
     Vector2 trailPositions[TRAIL_LENGTH];
     for (int i = 0; i < TRAIL_LENGTH; i++) {
@@ -71,31 +77,29 @@ int main() {
             }
         }
 
-        // L�mites
-        if (x + playerWidth + xspd >= screenWidth - 30) {
-            x = screenWidth - 30 - playerWidth;
+        if (x + playerWidth + xspd >= screenWidth) {
+            x = screenWidth - playerWidth;
             xspd = 0;
         }
-        else if (x + xspd <= 30) {
-            x = 30;
+        else if (x + xspd <= 0) {
+            x = 0;
             xspd = 0;
         }
         else {
             x += xspd;
         }
 
-        if (y + playerHeight + yspd >= screenHeight - 30) {
-            y = screenHeight - 30 - playerHeight;
+        if (y + playerHeight + yspd >= screenHeight) {
+            y = screenHeight - playerHeight;
             yspd = 0;
         }
-        else if (y + yspd <= 30) {
-            y = 30;
+        else if (y + yspd <= 0) {
+            y = 0;
             yspd = 0;
         }
         else {
             y += yspd;
         }
-
 
         int isMoving = (xspd != 0 || yspd != 0);
 
@@ -120,9 +124,34 @@ int main() {
             }
         }
 
+        // Colisión con bloque de rebote
+        if (x < reboteX + reboteWidth &&
+            x + playerWidth > reboteX &&
+            y < reboteY + reboteHeight &&
+            y + playerHeight > reboteY)
+        {
+            if (xspd != 0) {
+                // Venía en horizontal → lo saca por arriba del rebote y lo lanza hacia arriba
+                x = screenWidth - playerWidth;
+                y = reboteY - playerHeight;  // lo saca justo encima del rebote
+                xspd = 0;
+                yspd = -move_spd;
+                rotation = 0;
+            }
+            else if (yspd != 0) {
+                // Venía en vertical → lo saca por la izquierda del rebote y lo lanza hacia la izquierda
+                x = reboteX - playerWidth;  // lo saca justo a la izquierda del rebote
+                y = screenHeight - playerHeight;
+                yspd = 0;
+                xspd = -move_spd;
+                rotation = 270;
+            }
+        }
+
         BeginDrawing();
         ClearBackground(BLACK);
 
+        // 1. Trail
         if (isMoving) {
             for (int i = TRAIL_LENGTH - 1; i >= 0; i--) {
                 float alpha = (float)(TRAIL_LENGTH - i) / (float)TRAIL_LENGTH;
@@ -136,27 +165,31 @@ int main() {
             }
         }
 
-        // Jugador
+        // 2. Jugador
         Texture2D current = frames[animOrder[animFrame]];
-
         Rectangle source = { 0, 0, (float)current.width, (float)current.height };
-
         Rectangle dest = {
             (float)x + playerWidth / 2,
             (float)y + playerHeight / 2,
             (float)playerWidth,
             (float)playerHeight
         };
-
         Vector2 origin = { playerWidth / 2, playerHeight / 2 };
-
         DrawTexturePro(current, source, dest, origin, rotation + 180, WHITE);
 
-        // Muros
-        DrawRectangle(0, 0, 30, screenHeight, GRAY);
-        DrawRectangle(screenWidth - 30, 0, 30, screenHeight, GRAY);
-        DrawRectangle(0, 0, screenWidth, 30, GRAY);
-        DrawRectangle(0, screenHeight - 30, screenWidth, 30, GRAY);
+        // 3. Rebote encima con blend additive (el negro no tapa)
+        Rectangle reboteSrc = { 0, 0, (float)rebote.width, (float)rebote.height };
+        Rectangle reboteDest = {
+            (float)reboteX + reboteWidth / 2,
+            (float)reboteY + reboteHeight / 2,
+            (float)reboteWidth,
+            (float)reboteHeight
+        };
+        Vector2 reboteOrigin = { reboteWidth / 2, reboteHeight / 2 };
+
+        BeginBlendMode(BLEND_ADDITIVE);
+        DrawTexturePro(rebote, reboteSrc, reboteDest, reboteOrigin, -90.0f, WHITE);
+        EndBlendMode();
 
         EndDrawing();
     }
