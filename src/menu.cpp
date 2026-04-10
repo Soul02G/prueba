@@ -20,14 +20,14 @@ void MenuLoad(MenuState* menuState) {
     menuState->zoomFrameTimer = 0;
     menuState->transitionState = 0;
     menuState->soundTimer = 0.0f;
-    menuState->soundDuration = 1.58f; // duracion exacta del wav
+    menuState->soundDuration = 1.10f; // duracion exacta del wav
 
     menuState->backgroundMusic = LoadMusicStream("cosas de la wiki\\main screen track.wav");
     menuState->transitionSound = LoadSound("cosas de la wiki\\zoom in start the game.wav");
     PlayMusicStream(menuState->backgroundMusic);
 }
 
-Scene MenuUpdate(MenuState* menuState) {
+SceneType MenuUpdate(MenuState* menuState) {
     float dt = GetFrameTime();
     UpdateMusicStream(menuState->backgroundMusic);
 
@@ -41,12 +41,10 @@ Scene MenuUpdate(MenuState* menuState) {
     // Estado 0: esperando input
     if (menuState->transitionState == 0) {
         if (GetKeyPressed() != 0) {
-            PlaySound(menuState->transitionSound);
             StopMusicStream(menuState->backgroundMusic);
-
+            PlaySound(menuState->transitionSound);
             menuState->currentZoomFrame = 0;
             menuState->zoomFrameTimer = 0;
-            menuState->soundTimer = 0.0f; // ✅ reiniciar timer
             menuState->transitionState = 1;
         }
         return SCENE_MENU;
@@ -54,18 +52,13 @@ Scene MenuUpdate(MenuState* menuState) {
 
     // Estado 1: sonido y zoom arrancan a la vez
     if (menuState->transitionState == 1) {
-        menuState->soundTimer += dt; // ✅ contar tiempo del sonido
-
         menuState->zoomFrameTimer++;
         if (menuState->zoomFrameTimer >= ZOOM_ANIMATION_SPEED) {
             menuState->zoomFrameTimer = 0;
             menuState->currentZoomFrame++;
         }
-
-        // ✅ cambiar escena cuando termina el sonido, no el zoom
-        if (menuState->soundTimer >= menuState->soundDuration) {
-            return SCENE_GAME;
-        }
+        if (menuState->currentZoomFrame >= ZOOM_FRAME_COUNT)
+            return SCENE_MAP;
     }
 
     return SCENE_MENU;
@@ -88,16 +81,9 @@ void MenuDraw(const MenuState* menuState, int screenWidth, int screenHeight) {
         { 0, 0, (float)screenWidth, (float)screenHeight },
         { 0, 0 }, 0.0f, WHITE);
 
-    // ✅ Zoom desde estado 1 (FIX aplicado)
-    if (menuState->transitionState == 1) {
-        int frame = menuState->currentZoomFrame;
-
-        // mantener último frame si se pasa
-        if (frame >= ZOOM_FRAME_COUNT) {
-            frame = ZOOM_FRAME_COUNT - 1;
-        }
-
-        Texture2D zf = menuState->zoomFrames[frame];
+    // Zoom desde estado 1
+    if (menuState->transitionState == 1 && menuState->currentZoomFrame < ZOOM_FRAME_COUNT) {
+        Texture2D zf = menuState->zoomFrames[menuState->currentZoomFrame];
         float zscaleX = (float)screenWidth / (float)zf.width;
         float zscaleY = (float)screenHeight / (float)zf.height;
         float zscale = (zscaleX > zscaleY) ? zscaleX : zscaleY;
