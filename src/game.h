@@ -14,6 +14,8 @@
 #define TILE_DOT              3
 #define TILE_COIN             4
 #define TILE_STAR             5
+#define TILE_HORIZONTAL_BAT   6
+#define TILE_VERTICAL_BAT     7
 #define TILE_LEVEL_END        9
 #define WALL_SOLID            0
 #define WALL_BORDER_TOP       1
@@ -33,6 +35,9 @@
 #define PLAYER_ANIM_SEQ_LEN   8
 #define LEADERBOARD_SIZE      10
 #define TIMER_SECONDS         120
+#define MAX_BATS        20
+#define BAT_SPEED       1.0f
+#define BAT_STOP_TIME   1.0f
 
 typedef struct {
     char  initials[4];
@@ -40,6 +45,16 @@ typedef struct {
     int   stars;
     float time;
 } LeaderboardEntry;
+
+typedef struct {
+    float x;
+    float y;
+    int   isHorizontal;  // 1 = horizontal, 0 = vertical
+    float velocityX;
+    float velocityY;
+    float stopTimer;     // Timer for 1 second pause when hitting wall
+    int   deadly;// 1 = deadly, kills player on contact
+} Bat;
 
 typedef struct {
     Texture2D wallTextures[WALL_VARIANT_COUNT];
@@ -88,6 +103,12 @@ typedef struct {
     int       initialCharIndex[3];
     LeaderboardEntry leaderboard[LEADERBOARD_SIZE];
     int       leaderboardCount;
+    // Bat-related fields
+    Texture2D batTexture;
+    Bat       bats[MAX_BATS];
+    int       batCount;
+    // Player death
+    int       playerDead;
 } GameState;
 
 void      GameLoad(GameState* gameState);

@@ -17,8 +17,8 @@ static const int initialMap[MAP_ROWS][MAP_COLUMNS] = {
     {0,0,0,0,0,0,0,0,0,1,3,1,0,0,0,0,0},
     {0,0,0,0,0,0,1,1,1,1,3,1,0,0,0,0,0},
     {0,0,0,0,0,0,1,5,3,3,3,1,0,0,0,0,0},
-    {0,0,0,0,0,0,1,3,0,1,1,1,0,0,0,0,0},
-    {0,0,0,0,0,0,1,3,0,1,1,1,0,0,0,0,0},
+    {0,0,0,0,0,0,1,3,6,1,1,1,0,0,0,0,0},
+    {0,0,0,0,0,0,1,3,6,1,1,1,0,0,0,0,0},
     {0,0,0,0,0,0,1,3,3,3,1,0,0,0,0,0,0},
     {0,0,0,0,0,0,1,1,1,3,1,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,1,3,1,0,0,0,0,0,0},
@@ -34,7 +34,7 @@ static const int initialMap[MAP_ROWS][MAP_COLUMNS] = {
     {0,0,0,1,3,1,1,3,4,3,3,3,1,0,0,0,0},
     {1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1},
     {1,3,3,3,3,3,3,3,3,3,1,1,5,3,4,3,1},
-    {1,3,0,0,4,1,1,1,1,3,3,3,3,0,0,3,1},
+    {1,3,7,7,4,1,1,1,1,3,3,3,3,0,0,3,1},
     {1,3,0,0,3,1,0,0,1,1,1,1,1,0,0,3,1},
     {1,3,3,3,3,1,0,0,0,1,0,0,0,0,0,3,1},
     {1,1,1,1,1,1,0,0,0,1,0,0,0,0,0,3,1},
@@ -171,7 +171,7 @@ static void ResetGameState(GameState* gameState) {
     gameState->timerStarted = 0;
     gameState->timerExpired = 0;
     gameState->showingLeaderboard = 0;
-    gameState->showingVictoryOptions = 0;   // FIX Bug 2: resetear al volver del menu
+    gameState->showingVictoryOptions = 0;
     gameState->enteringInitials = 0;
     gameState->initialIndex = 0;
     gameState->initials[0] = 'A';
@@ -181,6 +181,7 @@ static void ResetGameState(GameState* gameState) {
     gameState->initialCharIndex[0] = 0;
     gameState->initialCharIndex[1] = 0;
     gameState->initialCharIndex[2] = 0;
+    gameState->playerDead = 0;
 
     for (int row = 0; row < MAP_ROWS; row++)
         for (int col = 0; col < MAP_COLUMNS; col++)
@@ -191,6 +192,34 @@ static void ResetGameState(GameState* gameState) {
         for (int col = 0; col < MAP_COLUMNS; col++)
             if (gameState->tileMap[row][col] == TILE_STAR)
                 gameState->starsTotal++;
+
+    // Spawn bats from map tiles
+    gameState->batCount = 0;
+    for (int row = 0; row < MAP_ROWS; row++) {
+        for (int col = 0; col < MAP_COLUMNS; col++) {
+            int tile = gameState->tileMap[row][col];
+            if (tile == TILE_HORIZONTAL_BAT || tile == TILE_VERTICAL_BAT) {
+                if (gameState->batCount < MAX_BATS) {
+      Bat& bat = gameState->bats[gameState->batCount];
+           bat.x = (float)(col * TILE_SIZE);
+        bat.y = (float)(row * TILE_SIZE);
+      bat.isHorizontal = (tile == TILE_HORIZONTAL_BAT) ? 1 : 0;
+bat.stopTimer = 0.0f;
+                  bat.deadly = 1;  // Bats are deadly by default
+                    // Horizontal bats start moving right, vertical bats start moving up
+  if (bat.isHorizontal) {
+      bat.velocityX = BAT_SPEED;
+         bat.velocityY = 0.0f;
+   } else {
+   bat.velocityX = 0.0f;
+             bat.velocityY = -BAT_SPEED;
+   }
+      gameState->batCount++;
+     }
+         gameState->tileMap[row][col] = TILE_EMPTY;  // Clear the spawn tile
+   }
+        }
+    }
 
     PlacePlayerAtSpawn(gameState);
 
@@ -248,6 +277,10 @@ void GameLoad(GameState* gameState) {
     gameState->starEmptyTexture = LoadTexture("resources\\star_empty.png");
     SetTextureFilter(gameState->starCollectedTexture, TEXTURE_FILTER_POINT);
     SetTextureFilter(gameState->starEmptyTexture, TEXTURE_FILTER_POINT);
+
+    // Load bat texture
+    gameState->batTexture = LoadTexture("resources\\bat_drawing.png");
+    SetTextureFilter(gameState->batTexture, TEXTURE_FILTER_POINT);
 
     gameState->leaderboardCount = 0;
     FILE* f = fopen("leaderboard.bin", "rb");
@@ -397,6 +430,91 @@ SceneType GameUpdate(GameState* gameState) {
         }
     }
 
+    // --- BAT MOVEMENT ---
+    for (int i = 0; i < gameState->batCount; i++) {
+     Bat& bat = gameState->bats[i];
+        
+        // If bat is stopped, count down the timer
+        if (bat.stopTimer > 0.0f) {
+        bat.stopTimer -= dt;
+    continue;
+        }
+     
+        // Calculate next position
+        float nextX = bat.x + bat.velocityX;
+  float nextY = bat.y + bat.velocityY;
+        
+        // Check for wall collision
+        int batCol = (int)(bat.x + TILE_SIZE / 2) / TILE_SIZE;
+        int batRow = (int)(bat.y + TILE_SIZE / 2) / TILE_SIZE;
+        
+        int nextCol, nextRow;
+        if (bat.isHorizontal) {
+    // Check the tile ahead horizontally
+   nextCol = (bat.velocityX > 0) 
+              ? (int)(nextX + TILE_SIZE - 1) / TILE_SIZE 
+       : (int)nextX / TILE_SIZE;
+       nextRow = batRow;
+        } else {
+        // Check the tile ahead vertically
+     nextCol = batCol;
+          nextRow = (bat.velocityY > 0) 
+             ? (int)(nextY + TILE_SIZE - 1) / TILE_SIZE 
+       : (int)nextY / TILE_SIZE;
+        }
+        
+   // Clamp to map bounds
+   nextCol = (nextCol < 0) ? 0 : (nextCol >= MAP_COLUMNS ? MAP_COLUMNS - 1 : nextCol);
+        nextRow = (nextRow < 0) ? 0 : (nextRow >= MAP_ROWS ? MAP_ROWS - 1 : nextRow);
+     
+        // Check if next tile is a wall
+     if (gameState->tileMap[nextRow][nextCol] == TILE_WALL) {
+            // Stop for 1 second and reverse direction
+bat.stopTimer = BAT_STOP_TIME;
+     bat.velocityX *= -1;
+            bat.velocityY *= -1;
+        } else {
+// Move the bat
+       bat.x = nextX;
+     bat.y = nextY;
+      }
+    }
+
+    // --- BAT-PLAYER COLLISION ---
+    if (!gameState->playerDead) {
+        for (int i = 0; i < gameState->batCount; i++) {
+      Bat& bat = gameState->bats[i];
+            
+            // Simple AABB collision check
+     float playerLeft = (float)gameState->playerX;
+     float playerRight = (float)gameState->playerX + TILE_SIZE;
+       float playerTop = (float)gameState->playerY;
+            float playerBottom = (float)gameState->playerY + TILE_SIZE;
+  
+     float batLeft = bat.x;
+            float batRight = bat.x + TILE_SIZE;
+        float batTop = bat.y;
+     float batBottom = bat.y + TILE_SIZE;
+         
+      // Check for overlap
+  if (playerLeft < batRight && playerRight > batLeft &&
+            playerTop < batBottom && playerBottom > batTop) {
+    // Collision detected - transfer deadly property to player
+     if (bat.deadly) {
+       gameState->playerDead = 1;
+    }
+         }
+        }
+    }
+
+    // --- HANDLE PLAYER DEATH ---
+  if (gameState->playerDead) {
+     // Reset the game state after death
+   ResetGameState(gameState);
+   PlaySound(gameState->soundHitWall);  // Use hit wall sound for death (or add a death sound)
+       return SCENE_GAME;
+   }
+
     CollectTileUnderPlayer(gameState);
 
     int playerIsMoving = (gameState->velocityX != 0 || gameState->velocityY != 0);
@@ -489,6 +607,22 @@ void GameDraw(GameState* gameState) {
             };
             DrawTexturePro(activeTrail, trailSource, trailDest, { 0, 0 }, 0.0f, trailColor);
         }
+    }
+
+    // --- BATS ---
+    for (int i = 0; i < gameState->batCount; i++) {
+        Bat& bat = gameState->bats[i];
+        int screenX = (int)bat.x - cameraX;
+        int screenY = (int)bat.y - cameraY;
+      
+        // Skip if off-screen
+        if (screenX < -TILE_SIZE || screenX > SCREEN_WIDTH + TILE_SIZE) continue;
+        if (screenY < -TILE_SIZE || screenY > SCREEN_HEIGHT + TILE_SIZE) continue;
+      
+        Rectangle batSource = { 0, 0, (float)gameState->batTexture.width, (float)gameState->batTexture.height };
+        Rectangle batDest = { (float)screenX, (float)screenY, (float)TILE_SIZE, (float)TILE_SIZE };
+        
+        DrawTexturePro(gameState->batTexture, batSource, batDest, { 0, 0 }, 0.0f, WHITE);
     }
 
     // --- PLAYER ---
@@ -730,9 +864,7 @@ void GameUnload(GameState* gameState) {
     for (int i = 0; i < PLAYER_ANIM_FRAMES; i++) UnloadTexture(gameState->playerFrames[i]);
     UnloadTexture(gameState->starCollectedTexture);
     UnloadTexture(gameState->starEmptyTexture);
-    for (int i = 0; i < PLAYER_ANIM_FRAMES; i++) UnloadTexture(gameState->playerFrames[i]);
-    UnloadTexture(gameState->starCollectedTexture);
-    UnloadTexture(gameState->starEmptyTexture);
+    UnloadTexture(gameState->batTexture);
     UnloadSound(gameState->soundDash);
     UnloadSound(gameState->soundHitWall);
     UnloadSound(gameState->soundCollectDot);
