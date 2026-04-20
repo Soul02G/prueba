@@ -1,4 +1,4 @@
-GLFW_ICON ICON "icon.ico"
+GLFW_ICON ICON "icono.ico"
 
 1 VERSIONINFO
 FILEVERSION     1,0,0,0

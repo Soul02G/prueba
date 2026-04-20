@@ -17,9 +17,12 @@ static Texture2D texStarCollected;
 static Texture2D texStarEmpty;
 
 void MapLoad(MapState* mapState) {
-    mapState->selectedLevel = 0;
-    mapState->settingsOpen = 0;
-    mapState->selectPulse = 0.0f;
+
+
+    mapState->settingsOption = 0;
+    mapState->musicEnabled = true;
+    mapState->masterVolume = 0.5f;
+    SetMasterVolume(mapState->masterVolume);
 
     texStarCollected = LoadTexture("resources/star_collected.png");
     texStarEmpty = LoadTexture("resources/star_empty.png");
@@ -29,8 +32,29 @@ SceneType MapUpdate(MapState* mapState) {
     mapState->selectPulse += GetFrameTime() * 3.0f;
 
     if (mapState->settingsOpen) {
-        if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_BACKSPACE))
+        if (IsKeyPressed(KEY_M))
             mapState->settingsOpen = 0;
+
+        // Navegación vertical entre SFX y VOLUMEN
+        if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) mapState->settingsOption = 0;
+        if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) mapState->settingsOption = 1;
+
+        if (mapState->settingsOption == 0) { // Opción SFX
+            if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_LEFT)) {
+                mapState->musicEnabled = !mapState->musicEnabled;
+            }
+        }
+        else if (mapState->settingsOption == 1) { // Opción VOLUMEN
+            if (IsKeyDown(KEY_LEFT))  mapState->masterVolume -= 0.01f;
+            if (IsKeyDown(KEY_RIGHT)) mapState->masterVolume += 0.01f;
+
+            if (mapState->masterVolume < 0.0f) mapState->masterVolume = 0.0f;
+            if (mapState->masterVolume > 1.0f) mapState->masterVolume = 1.0f;
+        }
+
+        // APLICAR VOLUMEN: Si SFX está OFF, volumen 0. Si no, masterVolume.
+        float finalVolume = mapState->musicEnabled ? mapState->masterVolume : 0.0f;
+        SetMasterVolume(finalVolume);
         return SCENE_MAP;
     }
 
@@ -143,52 +167,71 @@ static void DrawLevelNode(int levelIndex, int screenX, int screenY,
     }
 }
 
-static void DrawSettings(int screenWidth, int screenHeight) {
-    DrawRectangle(0, 0, screenWidth, screenHeight, Color{ 0, 0, 0, 180 });
+static void DrawSettings(const MapState* mapState, int screenWidth, int screenHeight) {
+    DrawRectangle(0, 0, screenWidth, screenHeight, ColorAlpha(BLACK, 0.7f));
 
-    int panelW = 420;
-    int panelH = 380;
+    int panelW = 400;
+    int panelH = 250;
     int px = (screenWidth - panelW) / 2;
     int py = (screenHeight - panelH) / 2;
 
+    // Fondo del panel
     DrawRectangle(px, py, panelW, panelH, Color{ 255, 220, 0, 255 });
     DrawRectangleLines(px, py, panelW, panelH, Color{ 80, 60, 0, 255 });
     DrawRectangleLines(px + 3, py + 3, panelW - 6, panelH - 6, Color{ 255, 255, 120, 255 });
 
     const char* title = "AJUSTES";
-    int titleW = MeasureText(title, 28);
-    DrawText(title, px + (panelW - titleW) / 2, py + 16, 28, Color{ 30, 20, 0, 255 });
+    DrawText(title, px + (panelW - MeasureText(title, 28)) / 2, py + 20, 28, Color{ 30, 20, 0, 255 });
+    DrawLine(px + 40, py + 60, px + panelW - 40, py + 60, Color{ 100, 80, 0, 150 });
 
-    DrawRectangle(px + panelW - 44, py + 10, 34, 34, Color{ 180, 140, 0, 255 });
-    DrawRectangleLines(px + panelW - 44, py + 10, 34, 34, Color{ 60, 40, 0, 255 });
-    DrawText("X", px + panelW - 32, py + 17, 20, Color{ 30, 20, 0, 255 });
-
-    DrawLine(px + 20, py + 56, px + panelW - 20, py + 56, Color{ 100, 80, 0, 180 });
-
-    const char* iconLabels[4] = { "MUS", "SFX", "VIB", "NOT" };
-    for (int i = 0; i < 4; i++) {
-        int bx = px + 24 + i * 94;
-        int by = py + 68;
-        DrawRectangle(bx, by, 80, 72, Color{ 200, 170, 0, 255 });
-        DrawRectangleLines(bx, by, 80, 72, Color{ 60, 40, 0, 255 });
-        int lw = MeasureText(iconLabels[i], 14);
-        DrawText(iconLabels[i], bx + (80 - lw) / 2, by + 28, 14, Color{ 30, 20, 0, 255 });
+    // --- OPCIÓN SFX ---
+    int sfxY = py + 85;
+    Color sfxColor = (mapState->settingsOption == 0) ? BLACK : Color{ 120, 100, 0, 255 };
+    if (mapState->settingsOption == 0) {
+        DrawRectangle(px + 40, sfxY - 5, panelW - 80, 45, Color{ 255, 240, 100, 255 });
+        DrawRectangleLines(px + 40, sfxY - 5, panelW - 80, 45, Color{ 80, 60, 0, 255 });
     }
 
-    DrawLine(px + 20, py + 154, px + panelW - 20, py + 154, Color{ 100, 80, 0, 180 });
+    const char* sfxStatus = mapState->musicEnabled ? "SFX: ON" : "SFX: OFF";
+    DrawText(sfxStatus, px + (panelW - MeasureText(sfxStatus, 22)) / 2, sfxY + 6, 22, sfxColor);
 
-    const char* buttons[3] = { "ESPANOL", "MUSICA: ON", "SONIDO: ON" };
-    for (int i = 0; i < 3; i++) {
-        int by = py + 168 + i * 60;
-        DrawRectangle(px + 20, by, panelW - 40, 48, Color{ 200, 170, 0, 255 });
-        DrawRectangleLines(px + 20, by, panelW - 40, 48, Color{ 60, 40, 0, 255 });
-        int bw = MeasureText(buttons[i], 18);
-        DrawText(buttons[i], px + 20 + (panelW - 40 - bw) / 2, by + 14, 18, Color{ 30, 20, 0, 255 });
-    }
+    // --- OPCIÓN VOLUMEN ---
+    int volY = py + 150;
+    Color volColor = (mapState->settingsOption == 1) ? BLACK : Color{ 120, 100, 0, 255 };
 
-    const char* hint = "ESC o BACKSPACE para cerrar";
-    int hintW = MeasureText(hint, 12);
-    DrawText(hint, px + (panelW - hintW) / 2, py + panelH - 20, 12, Color{ 60, 40, 0, 200 });
+    // Etiqueta "VOLUMEN"
+    DrawText("VOLUMEN", px + (panelW - MeasureText("VOLUMEN", 18)) / 2, volY - 5, 18, volColor);
+
+    // Barra de fondo del slider
+    int sliderW = 200;
+    int sliderH = 20;
+    int sliderX = px + (panelW - sliderW) / 2;
+    int sliderY = volY + 25;
+
+    // 1. Fondo oscuro de la barra
+    DrawRectangle(sliderX, sliderY, sliderW, sliderH, Color{ 100, 80, 0, 255 });
+
+    // 2. NUEVO: Relleno de la barra (Muestra el progreso del volumen)
+    // Usamos un color dorado para que destaque sobre el fondo oscuro
+    DrawRectangle(sliderX, sliderY, (int)(mapState->masterVolume * sliderW), sliderH, Color{ 200, 160, 0, 255 });
+
+    // 3. Slider (Manejador)
+    int handleW = 15;
+    int handleX = sliderX + (int)(mapState->masterVolume * (sliderW - handleW));
+
+    // Si la opción de volumen está seleccionada, el slider brilla más
+    Color handleColor = (mapState->settingsOption == 1) ? Color{ 255, 255, 200, 255 } : Color{ 200, 180, 100, 255 };
+    DrawRectangle(handleX, sliderY - 5, handleW, sliderH + 10, handleColor);
+    DrawRectangleLines(handleX, sliderY - 5, handleW, sliderH + 10, BLACK);
+
+    // Texto del porcentaje
+    const char* volPct = TextFormat("%d%%", (int)(mapState->masterVolume * 100));
+    Color pctColor = (mapState->settingsOption == 1) ? BLACK : Color{ 120, 100, 0, 255 };
+    DrawText(volPct, sliderX + sliderW + 15, sliderY - 2, 16, pctColor);
+
+    // Hint inferior
+    const char* hint = "ARRIBA/ABAJO para navegar";
+    DrawText(hint, px + (panelW - MeasureText(hint, 13)) / 2, py + panelH - 25, 13, Color{ 100, 80, 0, 200 });
 }
 
 void MapDraw(const MapState* mapState, int screenWidth, int screenHeight) {
@@ -251,7 +294,7 @@ void MapDraw(const MapState* mapState, int screenWidth, int screenHeight) {
 
     // ── INSTRUCCIONES ──
     DrawRectangle(0, screenHeight - 70, screenWidth, 70, Color{ 30, 25, 0, 255 });
-    const char* navHint = "FLECHAS: navegar    ESPACIO: jugar    TAB: ajustes    ESC: menu";
+    const char* navHint = "FLECHAS: navegar    ESPACIO: jugar    M: ajustes    ESC: salir";
     int navW = MeasureText(navHint, 12);
     DrawText(navHint, (screenWidth - navW) / 2, screenHeight - 42, 12, Color{ 200, 170, 0, 255 });
 
@@ -260,7 +303,7 @@ void MapDraw(const MapState* mapState, int screenWidth, int screenHeight) {
     DrawText(selText, (screenWidth - selW) / 2, screenHeight - 22, 14, Color{ 255, 220, 0, 255 });
 
     if (mapState->settingsOpen)
-        DrawSettings(screenWidth, screenHeight);
+        DrawSettings(mapState, screenWidth, screenHeight);
 }
 
 void MapUnload(MapState* mapState) {
