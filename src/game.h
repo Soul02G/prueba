@@ -52,6 +52,13 @@
 #define WALL_INNER_CORNER_BL  11
 #define WALL_INNER_CORNER_BR  12
 #define WALL_VARIANT_COUNT    13
+#define WALL_PIPE_V      14
+#define WALL_PIPE_H      15 
+#define WALL_END_TOP     16 
+#define WALL_END_BOTTOM  17 
+#define WALL_END_LEFT    18 
+#define WALL_END_RIGHT   19 
+#define WALL_SINGLE      20 
 
 // --- LÍMITES DE MAPA Y LEADERBOARD ---
 #define MAP_COLUMNS_1          27
