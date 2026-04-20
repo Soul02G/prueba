@@ -15,11 +15,11 @@
 // --- CONSTANTES DE ANIMACIÓN Y ENEMIGOS ---
 #define BAT_SPEED             1.0f
 #define BAT_STOP_TIME         1.0f
-#define PLAYER_ANIM_SEQ_LEN   8
-#define COIN_ANIM_SEQ_LEN     4
-#define PLAYER_ANIM_FRAMES    5
-#define COIN_ANIM_FRAMES      4
-#define BAT_ANIM_SEQ_LEN      6
+#define PLAYER_ANIM_SEQ_LEN    8
+#define COIN_ANIM_SEQ_LEN      4
+#define PLAYER_ANIM_FRAMES     5
+#define COIN_ANIM_FRAMES       4
+#define BAT_ANIM_SEQ_LEN       6
 
 // --- DEFINICIONES DE TILES ---
 #define TILE_EMPTY            0
@@ -30,7 +30,12 @@
 #define TILE_STAR             5
 #define TILE_HORIZONTAL_BAT   6
 #define TILE_VERTICAL_BAT     7
-#define TILE_LEVEL_END        9
+// IMPORTANTE: Los rebotes son 8, 9, 10, 11 y la meta es 12
+#define TILE_REBOTE_D_I       8
+#define TILE_REBOTE_U_D       9
+#define TILE_REBOTE_U_I       10
+#define TILE_REBOTE_D_D       11
+#define TILE_LEVEL_END        12
 
 // --- VARIANTES DE PAREDES (AUTO-TILING) ---
 #define WALL_SOLID            0
@@ -49,28 +54,28 @@
 #define WALL_VARIANT_COUNT    13
 
 // --- LÍMITES DE MAPA Y LEADERBOARD ---
-#define MAP_COLUMNS_1         27
-#define MAP_ROWS_1            40
-#define MAP_COLUMNS_2         25
-#define MAP_ROWS_2            47
-#define LEADERBOARD_SIZE      10
-#define MAX_BATS              20
+#define MAP_COLUMNS_1          27
+#define MAP_ROWS_1             40
+#define MAP_COLUMNS_2          25
+#define MAP_ROWS_2             47
+#define LEADERBOARD_SIZE       10
+#define MAX_BATS               20
 
 // --- ESTRUCTURAS ---
 
 typedef struct {
-    char  initials[4];
-    int   score;
-    int   stars;
+    char initials[4];
+    int score;
+    int stars;
     float time;
 } LeaderboardEntry;
 
 typedef struct {
     Vector2 position;
-    float velocityX;    // Añade esto
-    float velocityY;    // Añade esto
-    bool isHorizontal;  // Añade esto
-    bool deadly;        // Añade esto
+    float velocityX;
+    float velocityY;
+    bool isHorizontal;
+    bool deadly;
     float speed;
     int type;
     int direction;
@@ -96,6 +101,13 @@ typedef struct {
     Texture2D starEmptyTexture;
     Texture2D batTextures[4];
 
+    // Texturas de rebotes
+    Texture2D texRebote8;  // Rebote-D-I-8
+    Texture2D texRebote9;  // Rebote-U-D-9
+    Texture2D texRebote10; // Rebote-U-I-10
+    Texture2D texRebote11; // Rebote-D-D-11
+
+    // Audio
     Sound soundDash;
     Sound soundHitWall;
     Sound soundCollectDot;
@@ -106,63 +118,65 @@ typedef struct {
 
     // Estado del Jugador y Animaciones
     float playerX, playerY;
-    int   velocityX, velocityY;
+    int velocityX, velocityY;
     float playerRotation;
-    int   playerAnimFrame;
+    int playerAnimFrame;
     float playerAnimTimer;
-    int   coinAnimFrame;
+    int coinAnimFrame;
     float coinAnimTimer;
-    int   batFrameCounter;
-    int   batCurrentFrames;
+    int batFrameCounter;
+    int batCurrentFrames;
     Vector2 trailPositions[TRAIL_LENGTH];
-    bool  playerDead;
+    bool playerDead;
 
     // Gestión de Niveles y Mapas
-    int   currentLevel;       // 0 = Nivel 1, 1 = Nivel 2
-    int   currentMapRows;
-    int   currentMapCols;
-
-    // Los mapas se declaran solo aquí dentro para evitar error C2086
-    int   tileMap_1[MAP_ROWS_1][MAP_COLUMNS_1];
-    int   tileMap_2[MAP_ROWS_2][MAP_COLUMNS_2];
+    int currentLevel;
+    int currentMapRows;
+    int currentMapCols;
+    int tileMap_1[MAP_ROWS_1][MAP_COLUMNS_1];
+    int tileMap_2[MAP_ROWS_2][MAP_COLUMNS_2];
 
     // Lógica de Juego y UI
-    int   score;
-    bool  levelCompleted;
+    int score;
+    bool levelCompleted;
     float blinkTimer;
-    int   starsCollected;
-    int   starsTotal;
-    int   victoryStarsShown;
+    int starsCollected;
+    int starsTotal;
+    int victoryStarsShown;
     float victoryStarTimer;
     float cameraX, cameraY;
     float timer;
-    bool  timerStarted;
-    bool  timerExpired;
+    bool timerStarted;
+    bool timerExpired;
 
     // Leaderboard y Menús
-    bool  showingLeaderboard;
-    bool  enteringInitials;
-    bool  showingVictoryOptions;
-    char  initials[4];
-    int   initialIndex;
-    int   initialCharIndex[3];
+    bool showingLeaderboard;
+    bool enteringInitials;
+    bool showingVictoryOptions;
+    char initials[4];
+    int initialIndex;
+    int initialCharIndex[3];
     LeaderboardEntry leaderboard[LEADERBOARD_SIZE];
-    int   leaderboardCount;
+    int leaderboardCount;
 
     // Enemigos y Sistema
-    Bat   bats[MAX_BATS];
-    int   batCount;
-    bool  menuOpen;
-    int   menuOption;
-    bool  musicEnabled;
+    Bat bats[MAX_BATS];
+    int batCount;
+    bool menuOpen;
+    int menuOption;
+    bool musicEnabled;
     float masterVolume;
+
+    int lastBounceTileCol;
+    int lastBounceTileRow;
 
 } GameState;
 
-void      GameLoad(GameState* gameState);
+// --- PROTOTIPOS ---
+void GameLoad(GameState* gameState);
 SceneType GameUpdate(GameState* gameState, MapState* mapState);
-void      GameDraw(GameState* gameState);
-void      GameUnload(GameState* gameState);
-void      ResetGameState(GameState* gameState);
+void GameDraw(GameState* gameState);
+void GameUnload(GameState* gameState);
+void ResetGameState(GameState* gameState);
 
 #endif // GAME_H

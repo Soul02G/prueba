@@ -2,6 +2,7 @@
 #include "raylib.h"
 
 typedef enum {
+    SCENE_CREDITS = 0,
     SCENE_MENU,
     SCENE_MAP,
     SCENE_GAME,

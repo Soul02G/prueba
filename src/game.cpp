@@ -34,7 +34,7 @@ static const int initialMap[MAP_ROWS_1][MAP_COLUMNS_1] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,9,1,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,12,1,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,1,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,1,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,1,0,0,0,0,0,0,0,0,0,0},
@@ -77,32 +77,32 @@ static const int LEVEL_2_DATA[47][25] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,1,1,1,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,1,9,1,0,0,1,3,3,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1},
-    {0,1,3,1,1,1,1,3,0,8,8,3,1,3,3,4,3,1,3,3,3,4,3,3,1},
+    {0,1,12,1,0,0,1,3,3,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1},
+    {0,1,3,1,1,1,1,3,0,0,0,3,1,3,3,4,3,1,3,3,3,4,3,3,1},
     {0,1,3,3,4,3,3,3,0,3,4,3,1,3,0,3,3,1,0,0,6,0,0,4,1},
     {0,1,1,1,1,1,1,1,7,3,0,3,0,3,1,3,3,1,4,1,1,0,0,3,1},
     {0,0,0,0,0,0,0,1,1,3,3,3,3,3,1,3,3,3,3,1,3,3,3,3,1},
     {0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,3,1},
-    {0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8,5,3,3,3,3,1,1,1,1},
-    {0,0,0,0,0,1,1,1,1,1,1,8,8,8,1,1,1,1,3,1,1,1,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,5,3,3,3,3,1,1,1,1},
+    {0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,0,0,0},
     {0,0,0,0,0,1,3,3,3,3,3,3,3,3,3,1,1,1,3,1,1,1,1,1,1},
-    {0,0,0,0,1,1,3,1,1,0,3,0,0,3,3,1,8,3,3,3,3,3,3,8,1},
+    {0,0,0,0,1,1,3,1,1,0,3,0,0,3,3,1,10,3,3,3,3,3,3,9,1},
     {0,0,1,1,1,0,3,3,3,3,3,1,1,3,3,0,3,0,4,0,0,0,0,3,1},
-    {0,0,1,6,0,0,3,0,1,1,1,1,1,5,3,3,3,1,8,3,3,3,3,8,1},
+    {0,0,1,6,0,0,3,0,1,1,1,1,1,5,3,3,3,1,8,3,3,3,3,11,1},
     {0,0,1,6,0,0,3,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1},
     {0,0,1,0,0,0,3,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,1,0,0,3,5,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,1,1,1,3,1,1,3,3,3,3,1,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,1,3,3,3,3,3,4,3,1,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,1,1,1,1,3,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0},
-    {0,0,1,1,1,1,8,3,3,4,3,0,0,0,8,1,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,1,1,10,3,3,4,3,0,0,0,9,1,0,0,0,0,0,0,0,0,0},
     {1,1,1,3,3,3,3,3,3,3,1,1,1,0,3,1,0,0,0,0,0,0,0,0,0},
-    {1,6,0,3,0,1,0,0,0,3,1,1,8,3,8,1,0,0,0,0,0,0,0,0,0},
-    {1,1,1,3,0,0,0,0,0,1,1,1,8,3,8,1,0,0,0,0,0,0,0,0,0},
-    {0,0,1,3,3,3,3,4,3,3,1,1,8,3,8,1,0,0,0,0,0,0,0,0,0},
-    {0,0,1,1,1,1,3,0,0,3,1,1,8,4,8,1,0,0,0,0,0,0,0,0,0},
+    {1,6,0,3,0,1,0,0,0,3,1,1,10,3,11,1,0,0,0,0,0,0,0,0,0},
+    {1,1,1,3,0,0,0,0,0,1,1,1,8,3,9,1,0,0,0,0,0,0,0,0,0},
+    {0,0,1,3,3,3,3,4,3,3,1,1,10,3,11,1,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,1,1,3,0,0,3,1,1,8,4,9,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,1,3,0,0,3,1,1,1,0,3,1,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,1,8,3,3,8,1,3,3,3,8,1,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,1,8,3,3,11,1,3,3,3,11,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,1,1,1,1,1,1,3,0,1,1,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,1,3,0,0,1,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,1,1,1,1,1,1,1,3,0,0,1,0,0,0,0,0,0,0,0,0,0},
@@ -309,6 +309,8 @@ static void ResetGameState(GameState* gameState) {
     gameState->initialCharIndex[2] = 0;
     gameState->playerDead = 0;
     gameState->menuOpen = false;
+    gameState->lastBounceTileCol = -1;
+    gameState->lastBounceTileRow = -1;
 
     // Restaurar mapa del nivel activo
     if (gameState->currentLevel == 0)
@@ -370,6 +372,10 @@ void GameLoad(GameState* gameState) {
         SetTextureFilter(gameState->wallTextures[i], TEXTURE_FILTER_POINT);
     }
 
+    gameState->texRebote8 = LoadTexture("resources\\Rebote-D-I-8.png");
+    gameState->texRebote9 = LoadTexture("resources\\Rebote-U-D-9.png");
+    gameState->texRebote10 = LoadTexture("resources\\Rebote-U-I-10.png");
+    gameState->texRebote11 = LoadTexture("resources\\Rebote-D-D-11.png");
     gameState->dotTexture = LoadTexture("resources\\tile_dot.png");
     gameState->coinTexture = LoadTexture("resources\\coin-frame-0.png");
     gameState->starTexture = LoadTexture("resources\\tile_star.png");
@@ -432,6 +438,73 @@ void GameLoad(GameState* gameState) {
     PlaySound(gameState->soundLevelStart);
 }
 
+void HandleBounceCollision(GameState* gameState) {
+    // 1. Usamos un margen pequeño (0.1f) para evitar errores de redondeo en los bordes
+    int tileCol = (int)((gameState->playerX + TILE_SIZE / 2) / TILE_SIZE);
+    int tileRow = (int)((gameState->playerY + TILE_SIZE / 2) / TILE_SIZE);
+
+    if (tileRow < 0 || tileCol < 0) return;
+
+    int currentTile = (gameState->currentLevel == 0) ?
+        gameState->tileMap_1[tileRow][tileCol] :
+        gameState->tileMap_2[tileRow][tileCol];
+
+    // Solo entramos si es un tile de rebote (8 al 11)
+    if (currentTile >= 8 && currentTile <= 11) {
+        int nextVX = 0;
+        int nextVY = 0;
+        bool activated = false;
+
+        // --- LÓGICA DE ESPEJOS SEGÚN ANCLAJES (Esquina Ocupada) ---
+        switch (currentTile) {
+        case 8: // ANCLAJE D-I
+            if (gameState->velocityX < 0) { nextVY = -PLAYER_MOVE_SPEED; activated = true; }
+            else if (gameState->velocityY > 0) { nextVX = PLAYER_MOVE_SPEED;  activated = true; }
+            break;
+        case 9: // ANCLAJE U-D
+            if (gameState->velocityX > 0) { nextVY = PLAYER_MOVE_SPEED;  activated = true; }
+            else if (gameState->velocityY < 0) { nextVX = -PLAYER_MOVE_SPEED; activated = true; }
+            break;
+        case 10: // ANCLAJE U-I
+            if (gameState->velocityX < 0) { nextVY = PLAYER_MOVE_SPEED;  activated = true; }
+            else if (gameState->velocityY < 0) { nextVX = PLAYER_MOVE_SPEED;  activated = true; }
+            break;
+        case 11: // ANCLAJE D-D
+            if (gameState->velocityX > 0) { nextVY = -PLAYER_MOVE_SPEED; activated = true; }
+            else if (gameState->velocityY > 0) { nextVX = -PLAYER_MOVE_SPEED; activated = true; }
+            break;
+        }
+
+        if (activated) {
+            // Aplicamos la dirección
+            gameState->velocityX = nextVX;
+            gameState->velocityY = nextVY;
+
+            // --- EL CAMBIO CLAVE ---
+            // En lugar de teletransportar UNA casilla entera (que puede dar en un muro),
+            // centramos al jugador en el tile actual y lo empujamos 2 píxeles.
+            gameState->playerX = (float)(tileCol * TILE_SIZE);
+            gameState->playerY = (float)(tileRow * TILE_SIZE);
+
+            // Este pequeño empujón saca al jugador del centro para que el siguiente frame
+            // detecte el movimiento, pero no es tan grande como para atravesar muros.
+            float push = 2.0f;
+            if (gameState->velocityX > 0)      gameState->playerX += push;
+            else if (gameState->velocityX < 0) gameState->playerX -= push;
+            if (gameState->velocityY > 0)      gameState->playerY += push;
+            else if (gameState->velocityY < 0) gameState->playerY -= push;
+
+            // Actualizar rotación y sonido
+            if (gameState->velocityX > 0)      gameState->playerRotation = 90;
+            else if (gameState->velocityX < 0) gameState->playerRotation = 270;
+            else if (gameState->velocityY > 0) gameState->playerRotation = 180;
+            else if (gameState->velocityY < 0) gameState->playerRotation = 0;
+
+            PlaySound(gameState->soundDash);
+        }
+    }
+}
+
 // ============================================================
 //  GAMEUPDATE
 // ============================================================
@@ -467,7 +540,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     gameState->blinkTimer += dt;
     if (gameState->blinkTimer > 1.0f) gameState->blinkTimer = 0.0f;
 
-    // --- INICIALES ---
+    // --- INICIALES, VICTORIA Y LEADERBOARD ---
     if (gameState->enteringInitials) {
         int idx = gameState->initialIndex;
         if (IsKeyPressed(KEY_UP)) { gameState->initialCharIndex[idx] = (gameState->initialCharIndex[idx] + 1) % INITIALS_CHAR_COUNT; gameState->initials[idx] = INITIALS_CHARS[gameState->initialCharIndex[idx]]; }
@@ -478,17 +551,15 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         return SCENE_GAME;
     }
 
-    // --- OPCIONES VICTORIA ---
     if (gameState->showingVictoryOptions) {
         if (IsKeyPressed(KEY_L)) { gameState->showingVictoryOptions = 0; gameState->enteringInitials = 1; }
-        if (IsKeyPressed(KEY_M)) return SCENE_MAP;
+        if (IsKeyPressed(KEY_M))     return SCENE_MAP;
         if (IsKeyPressed(KEY_SPACE)) { ResetGameState(gameState); PlaySound(gameState->soundLevelStart); }
         return SCENE_GAME;
     }
 
-    // --- LEADERBOARD ---
     if (gameState->showingLeaderboard) {
-        if (IsKeyPressed(KEY_M)) return SCENE_MAP;
+        if (IsKeyPressed(KEY_M))                              return SCENE_MAP;
         if (IsKeyPressed(KEY_L)) { gameState->showingLeaderboard = 0; gameState->showingVictoryOptions = 1; }
         if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) { ResetGameState(gameState); PlaySound(gameState->soundLevelStart); }
         return SCENE_GAME;
@@ -502,10 +573,10 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
 
     // --- INPUT ---
     if (gameState->velocityX == 0 && gameState->velocityY == 0) {
-        if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) { gameState->velocityX = PLAYER_MOVE_SPEED; gameState->playerRotation = 90; gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
+        if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) { gameState->velocityX = PLAYER_MOVE_SPEED;  gameState->playerRotation = 90;  gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
         else if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) { gameState->velocityX = -PLAYER_MOVE_SPEED; gameState->playerRotation = 270; gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
-        else if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) { gameState->velocityY = PLAYER_MOVE_SPEED; gameState->playerRotation = 180; gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
-        else if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) { gameState->velocityY = -PLAYER_MOVE_SPEED; gameState->playerRotation = 0; gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
+        else if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) { gameState->velocityY = PLAYER_MOVE_SPEED;  gameState->playerRotation = 180; gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
+        else if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) { gameState->velocityY = -PLAYER_MOVE_SPEED; gameState->playerRotation = 0;   gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
     }
 
     // --- MOVIMIENTO X ---
@@ -516,13 +587,13 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         if (gameState->currentLevel == 0) {
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_1 ? MAP_COLUMNS_1 - 1 : nextTileCol);
             if (gameState->tileMap_1[tileRow][nextTileCol] == TILE_WALL) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
-            else if (nextX<0 || nextX + TILE_SIZE>MAP_COLUMNS_1 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
+            else if (nextX < 0 || nextX + TILE_SIZE > MAP_COLUMNS_1 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerX = nextX;
         }
         else {
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_2 ? MAP_COLUMNS_2 - 1 : nextTileCol);
             if (gameState->tileMap_2[tileRow][nextTileCol] == TILE_WALL) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
-            else if (nextX<0 || nextX + TILE_SIZE>MAP_COLUMNS_2 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
+            else if (nextX < 0 || nextX + TILE_SIZE > MAP_COLUMNS_2 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerX = nextX;
         }
     }
@@ -535,15 +606,19 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         if (gameState->currentLevel == 0) {
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_1 ? MAP_ROWS_1 - 1 : nextTileRow);
             if (gameState->tileMap_1[nextTileRow][tileCol] == TILE_WALL) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
-            else if (nextY<0 || nextY + TILE_SIZE>MAP_ROWS_1 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
+            else if (nextY < 0 || nextY + TILE_SIZE > MAP_ROWS_1 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerY = nextY;
         }
         else {
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_2 ? MAP_ROWS_2 - 1 : nextTileRow);
             if (gameState->tileMap_2[nextTileRow][tileCol] == TILE_WALL) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
-            else if (nextY<0 || nextY + TILE_SIZE>MAP_ROWS_2 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
+            else if (nextY < 0 || nextY + TILE_SIZE > MAP_ROWS_2 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerY = nextY;
         }
+    }
+
+    if (gameState->velocityX != 0 || gameState->velocityY != 0) {
+        HandleBounceCollision(gameState);
     }
 
     // --- MURCIELAGOS ---
@@ -553,11 +628,8 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             bat.stopTimer -= dt;
             continue;
         }
-
         float nextX = bat.x + bat.velocityX;
         float nextY = bat.y + bat.velocityY;
-
-        // Detectar el borde según la dirección para no "entrar" en la pared
         float checkX = (bat.velocityX > 0) ? (nextX + TILE_SIZE - 1) : (bat.velocityX < 0 ? nextX : bat.x + 5);
         float checkY = (bat.velocityY > 0) ? (nextY + TILE_SIZE - 1) : (bat.velocityY < 0 ? nextY : bat.y + 5);
 
@@ -572,8 +644,8 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         }
     }
 
+    // --- COLISIONES CON ENEMIGOS ---
     if (!gameState->playerDead && !gameState->levelCompleted) {
-        // Definimos la caja del jugador con un pequeño margen
         float pL = (float)gameState->playerX + 4;
         float pR = pL + TILE_SIZE - 8;
         float pT = (float)gameState->playerY + 4;
@@ -581,48 +653,44 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
 
         for (int i = 0; i < gameState->batCount; i++) {
             Bat& bat = gameState->bats[i];
-
-            // Caja del murciélago
             float bL = bat.x + 4;
             float bR = bL + TILE_SIZE - 8;
             float bT = bat.y + 4;
             float bB = bT + TILE_SIZE - 8;
 
-            // Comprobación de colisión AABB
             if (pL < bR && pR > bL && pT < bB && pB > bT) {
                 gameState->playerDead = 1;
-                break; // No hace falta mirar más murciélagos si ya murió
+                break;
             }
         }
     }
 
     if (gameState->playerDead) {
-        // Reproducir sonido antes de resetear
         PlaySound(gameState->soundHitWall);
-        // Pequeña pausa opcional aquí si quieres que se vea la muerte
         ResetGameState(gameState);
         return SCENE_GAME;
     }
 
+    // --- RECOLECCIÓN DE OBJETOS ---
     CollectTileUnderPlayer(gameState);
 
-    // --- ANIMACIONES ---
+    // --- ANIMACIONES Y TRAIL ---
     int playerIsMoving = (gameState->velocityX != 0 || gameState->velocityY != 0);
     if (playerIsMoving) {
-        gameState->playerAnimFrame = 0; gameState->playerAnimTimer = 0;
+        gameState->playerAnimFrame = 0;
+        gameState->playerAnimTimer = 0;
         for (int i = TRAIL_LENGTH - 1; i > 0; i--) gameState->trailPositions[i] = gameState->trailPositions[i - 1];
-        gameState->trailPositions[0] = { (float)gameState->playerX,(float)gameState->playerY };
+        gameState->trailPositions[0] = { (float)gameState->playerX, (float)gameState->playerY };
     }
     else {
         if (++gameState->playerAnimTimer >= playerAnimSpeed) { gameState->playerAnimTimer = 0; gameState->playerAnimFrame = (gameState->playerAnimFrame + 1) % PLAYER_ANIM_SEQ_LEN; }
-        for (int i = 0; i < TRAIL_LENGTH; i++) gameState->trailPositions[i] = { (float)gameState->playerX,(float)gameState->playerY };
+        for (int i = 0; i < TRAIL_LENGTH; i++) gameState->trailPositions[i] = { (float)gameState->playerX, (float)gameState->playerY };
     }
     if (++gameState->coinAnimTimer >= coinAnimSpeed) { gameState->coinAnimTimer = 0; gameState->coinAnimFrame = (gameState->coinAnimFrame + 1) % COIN_ANIM_SEQ_LEN; }
     if (++gameState->batFrameCounter >= batAnimSpeed) { gameState->batFrameCounter = 0; gameState->batCurrentFrames = (gameState->batCurrentFrames + 1) % BAT_ANIM_SEQ_LEN; }
 
     return SCENE_GAME;
 }
-
 // ============================================================
 //  GAMEDRAW - Helpers
 // ============================================================
@@ -725,12 +793,14 @@ void GameDraw(GameState* gameState) {
     const float cs = 0.15f;
     gameState->cameraX += (targetCX - gameState->cameraX) * cs;
     gameState->cameraY += (targetCY - gameState->cameraY) * cs;
+
     if (gameState->cameraX < 0) gameState->cameraX = 0;
     if (gameState->cameraX > mapPixelWidth - SCREEN_WIDTH)  gameState->cameraX = (float)(mapPixelWidth - SCREEN_WIDTH);
     if (mapPixelWidth < SCREEN_WIDTH)  gameState->cameraX = -(float)(SCREEN_WIDTH - mapPixelWidth) / 2.0f;
     if (gameState->cameraY < 0) gameState->cameraY = 0;
     if (gameState->cameraY > mapPixelHeight - SCREEN_HEIGHT) gameState->cameraY = (float)(mapPixelHeight - SCREEN_HEIGHT);
     if (mapPixelHeight < SCREEN_HEIGHT) gameState->cameraY = -(float)(SCREEN_HEIGHT - mapPixelHeight) / 2.0f;
+
     int cameraX = (int)gameState->cameraX, cameraY = (int)gameState->cameraY;
 
     Color collectibleColor = (gameState->blinkTimer < 0.5f) ? Color{ 255,220,0,255 } : Color{ 180,0,220,255 };
@@ -740,51 +810,98 @@ void GameDraw(GameState* gameState) {
         for (int col = 0; col < gameState->currentMapCols; col++) {
             int tt = (gameState->currentLevel == 1) ? gameState->tileMap_2[row][col] : gameState->tileMap_1[row][col];
             if (tt == TILE_EMPTY) continue;
+
             int sx = col * TILE_SIZE - cameraX, sy = row * TILE_SIZE - cameraY;
-            if (sx<-TILE_SIZE || sx>SCREEN_WIDTH + TILE_SIZE || sy<-TILE_SIZE || sy>SCREEN_HEIGHT + TILE_SIZE) continue;
-            Rectangle src = { 0,0,(float)TILE_SIZE,(float)TILE_SIZE };
-            Rectangle dst = { (float)sx,(float)sy,(float)TILE_SIZE,(float)TILE_SIZE };
-            Vector2 orig = { 0,0 };
+            if (sx < -TILE_SIZE || sx > SCREEN_WIDTH + TILE_SIZE || sy < -TILE_SIZE || sy > SCREEN_HEIGHT + TILE_SIZE) continue;
+
+            Rectangle src = { 0, 0, (float)TILE_SIZE, (float)TILE_SIZE };
+            Rectangle dst = { (float)sx, (float)sy, (float)TILE_SIZE, (float)TILE_SIZE };
+            Vector2 orig = { 0, 0 };
+
             switch (tt) {
-            case TILE_WALL: { int wv = (gameState->currentLevel == 1) ? GetWallVariant2(gameState->tileMap_2, row, col) : GetWallVariant1(gameState->tileMap_1, row, col); DrawTexturePro(gameState->wallTextures[wv], src, dst, orig, 0, WHITE); break; }
-            case TILE_DOT: DrawTexturePro(gameState->dotTexture, { 0,0,(float)gameState->dotTexture.width,(float)gameState->dotTexture.height }, dst, orig, 0, collectibleColor); break;
-            case TILE_COIN: { Texture2D& ct = gameState->coinFrames[coinAnimSequence[gameState->coinAnimFrame]]; DrawTexturePro(ct, { 0,0,(float)ct.width,(float)ct.height }, dst, orig, 0, WHITE); break; }
-            case TILE_STAR: DrawTexturePro(gameState->starTexture, { 0,0,(float)gameState->starTexture.width,(float)gameState->starTexture.height }, dst, orig, 0, collectibleColor); break;
-            case TILE_LEVEL_END: DrawTexturePro(gameState->levelEndTexture, { 0,0,(float)gameState->levelEndTexture.width,(float)gameState->levelEndTexture.height }, dst, orig, 0, WHITE); break;
+            case TILE_WALL: {
+                int wv = (gameState->currentLevel == 1) ? GetWallVariant2(gameState->tileMap_2, row, col) : GetWallVariant1(gameState->tileMap_1, row, col);
+                DrawTexturePro(gameState->wallTextures[wv], src, dst, orig, 0, WHITE);
+                break;
+            }
+            case TILE_DOT:
+                DrawTexturePro(gameState->dotTexture, { 0,0,(float)gameState->dotTexture.width,(float)gameState->dotTexture.height }, dst, orig, 0, collectibleColor);
+                break;
+            case TILE_COIN: {
+                Texture2D& ct = gameState->coinFrames[coinAnimSequence[gameState->coinAnimFrame]];
+                DrawTexturePro(ct, { 0,0,(float)ct.width,(float)ct.height }, dst, orig, 0, WHITE);
+                break;
+            }
+            case TILE_STAR:
+                DrawTexturePro(gameState->starTexture, { 0,0,(float)gameState->starTexture.width,(float)gameState->starTexture.height }, dst, orig, 0, collectibleColor);
+                break;
+
+                // --- REBOTES ---
+            case 8:
+                DrawTexturePro(gameState->texRebote8, { 0,0,(float)gameState->texRebote8.width,(float)gameState->texRebote8.height }, dst, orig, 0, WHITE);
+                break;
+            case 9:
+                DrawTexturePro(gameState->texRebote9, { 0,0,(float)gameState->texRebote9.width,(float)gameState->texRebote9.height }, dst, orig, 0, WHITE);
+                break;
+            case 10:
+                DrawTexturePro(gameState->texRebote10, { 0,0,(float)gameState->texRebote10.width,(float)gameState->texRebote10.height }, dst, orig, 0, WHITE);
+                break;
+            case 11:
+                DrawTexturePro(gameState->texRebote11, { 0,0,(float)gameState->texRebote11.width,(float)gameState->texRebote11.height }, dst, orig, 0, WHITE);
+                break;
+
+                // --- META (USA SOLO UNO) ---
+            case 12:
+                DrawTexturePro(gameState->levelEndTexture, { 0,0,(float)gameState->levelEndTexture.width,(float)gameState->levelEndTexture.height }, dst, orig, 0, WHITE);
+                break;
             }
         }
     }
 
-    // TRAIL
+    // TRAIL (Rastro)
     if (gameState->velocityX != 0 || gameState->velocityY != 0) {
         Texture2D at = (gameState->velocityY != 0) ? gameState->trailVertical : gameState->trailHorizontal;
-        for (int i = TRAIL_LENGTH - 1; i >= 0; i--) { float op = (float)(TRAIL_LENGTH - i) / (float)TRAIL_LENGTH; Color tc = { 255,255,255,(unsigned char)(255 * op) }; Rectangle td = { gameState->trailPositions[i].x - cameraX,gameState->trailPositions[i].y - cameraY,(float)TILE_SIZE,(float)TILE_SIZE }; DrawTexturePro(at, { 0,0,(float)at.width,(float)at.height }, td, { 0,0 }, 0.0f, tc); }
+        for (int i = TRAIL_LENGTH - 1; i >= 0; i--) {
+            float op = (float)(TRAIL_LENGTH - i) / (float)TRAIL_LENGTH;
+            Color tc = { 255,255,255,(unsigned char)(255 * op) };
+            Rectangle td = { gameState->trailPositions[i].x - cameraX, gameState->trailPositions[i].y - cameraY, (float)TILE_SIZE, (float)TILE_SIZE };
+            DrawTexturePro(at, { 0,0,(float)at.width,(float)at.height }, td, { 0,0 }, 0.0f, tc);
+        }
     }
+
+    // MURCIELAGOS, JUGADOR Y HUD... (el resto sigue igual)
+    // [Se mantiene el resto de tu código original para murciélagos, jugador y HUD]
 
     // MURCIELAGOS
     for (int i = 0; i < gameState->batCount; i++) {
         Bat& bat = gameState->bats[i];
         int bsx = (int)bat.x - cameraX, bsy = (int)bat.y - cameraY;
-        if (bsx<-TILE_SIZE || bsx>SCREEN_WIDTH + TILE_SIZE || bsy<-TILE_SIZE || bsy>SCREEN_HEIGHT + TILE_SIZE) continue;
+        if (bsx < -TILE_SIZE || bsx > SCREEN_WIDTH + TILE_SIZE || bsy < -TILE_SIZE || bsy > SCREEN_HEIGHT + TILE_SIZE) continue;
         Texture2D& bt = gameState->batTextures[batAnimSequence[gameState->batCurrentFrames]];
         DrawTexturePro(bt, { 0,0,(float)bt.width,(float)bt.height }, { (float)bsx,(float)bsy,(float)TILE_SIZE,(float)TILE_SIZE }, { 0,0 }, 0.0f, WHITE);
     }
 
     // JUGADOR
     Texture2D cpf = gameState->playerFrames[playerAnimSequence[gameState->playerAnimFrame]];
-    Rectangle pd = { (float)(gameState->playerX - cameraX) + TILE_SIZE / 2.0f,(float)(gameState->playerY - cameraY) + TILE_SIZE / 2.0f,(float)TILE_SIZE,(float)TILE_SIZE };
+    Rectangle pd = { (float)(gameState->playerX - cameraX) + TILE_SIZE / 2.0f, (float)(gameState->playerY - cameraY) + TILE_SIZE / 2.0f, (float)TILE_SIZE, (float)TILE_SIZE };
     DrawTexturePro(cpf, { 0,0,(float)cpf.width,(float)cpf.height }, pd, { TILE_SIZE / 2.0f,TILE_SIZE / 2.0f }, gameState->playerRotation + 180, WHITE);
 
-    // HUD
+    // HUD Y PANELES
     DrawRectangle(0, 0, SCREEN_WIDTH, 60, BLACK);
     DrawText(TextFormat("SCORE: %d", gameState->score), 10, 10, 20, WHITE);
     int sc = (int)gameState->timer, cc = (int)((gameState->timer - sc) * 100);
     DrawText(TextFormat("%d.%02d", sc, cc), 10, 32, 24, gameState->timerStarted ? WHITE : GRAY);
+
     int ssz = 32, stx = (SCREEN_WIDTH - (gameState->starsTotal * 48)) / 2;
-    for (int i = 0; i < gameState->starsTotal; i++) { Texture2D& st = (i < gameState->starsCollected) ? gameState->starCollectedTexture : gameState->starEmptyTexture; DrawTextureEx(st, { (float)(stx + i * 48),10.0f }, 0, (float)ssz / (st.width > 0 ? st.width : ssz), WHITE); }
+    for (int i = 0; i < gameState->starsTotal; i++) {
+        Texture2D& st = (i < gameState->starsCollected) ? gameState->starCollectedTexture : gameState->starEmptyTexture;
+        DrawTextureEx(st, { (float)(stx + i * 48),10.0f }, 0, (float)ssz / (st.width > 0 ? st.width : ssz), WHITE);
+    }
 
     if (!gameState->levelCompleted && !gameState->showingVictoryOptions && !gameState->enteringInitials && !gameState->showingLeaderboard) {
-        DrawRectangle(SCREEN_WIDTH - 50, 15, 35, 35, YELLOW); DrawRectangle(SCREEN_WIDTH - 43, 21, 8, 23, BLACK); DrawRectangle(SCREEN_WIDTH - 28, 21, 8, 23, BLACK);
+        DrawRectangle(SCREEN_WIDTH - 50, 15, 35, 35, YELLOW);
+        DrawRectangle(SCREEN_WIDTH - 43, 21, 8, 23, BLACK);
+        DrawRectangle(SCREEN_WIDTH - 28, 21, 8, 23, BLACK);
     }
 
     if (gameState->menuOpen)              DrawMenuPanel(gameState);
