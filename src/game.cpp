@@ -110,7 +110,7 @@ static const int LEVEL_2_DATA[47][25] = {
     {0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,1,3,3,3,3,3,4,1},
     {0,0,0,0,1,6,0,0,0,0,1,1,1,1,1,1,1,1,4,0,0,0,0,3,1},
     {0,0,0,0,1,1,1,1,0,3,3,3,3,3,3,0,0,0,3,0,0,0,0,4,1},
-    {0,0,0,0,0,0,0,1,0,3,3,3,3,1,3,3,3,3,3,0,0,0,0,3,1},
+    {0,0,0,0,0,0,0,1,0,3,3,3,3,1,1,3,3,3,3,0,0,0,0,3,1},
     {0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,2,0,4,1},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -127,33 +127,30 @@ static int TileIsWall1(const int map[MAP_ROWS_1][MAP_COLUMNS_1], int row, int co
 }
 
 static int GetWallVariant1(const int map[MAP_ROWS_1][MAP_COLUMNS_1], int row, int col) {
-    int U = TileIsWall1(map, row - 1, col);
-    int D = TileIsWall1(map, row + 1, col);
-    int L = TileIsWall1(map, row, col - 1);
-    int R = TileIsWall1(map, row, col + 1);
-    int UL = TileIsWall1(map, row - 1, col - 1);
-    int UR = TileIsWall1(map, row - 1, col + 1);
-    int DL = TileIsWall1(map, row + 1, col - 1);
-    int DR = TileIsWall1(map, row + 1, col + 1);
+    int hasWallAbove = TileIsWall1(map, row - 1, col);
+    int hasWallBelow = TileIsWall1(map, row + 1, col);
+    int hasWallLeft = TileIsWall1(map, row, col - 1);
+    int hasWallRight = TileIsWall1(map, row, col + 1);
+    int hasWallAboveLeft = TileIsWall1(map, row - 1, col - 1);
+    int hasWallAboveRight = TileIsWall1(map, row - 1, col + 1);
+    int hasWallBelowLeft = TileIsWall1(map, row + 1, col - 1);
+    int hasWallBelowRight = TileIsWall1(map, row + 1, col + 1);
 
-    // Esquinas exteriores
-    if (!U && !L) return WALL_CORNER_TL;
-    if (!U && !R) return WALL_CORNER_TR;
-    if (!D && !L) return WALL_CORNER_BL;
-    if (!D && !R) return WALL_CORNER_BR;
-
-    // Bordes
-    if (!U) return WALL_BORDER_TOP;
-    if (!D) return WALL_BORDER_BOTTOM;
-    if (!L) return WALL_BORDER_LEFT;
-    if (!R) return WALL_BORDER_RIGHT;
-
-    // Esquinas interiores (rodeada por los 4 cardinales, falta una diagonal)
-    if (!UL) return WALL_INNER_CORNER_TL;
-    if (!UR) return WALL_INNER_CORNER_TR;
-    if (!DL) return WALL_INNER_CORNER_BL;
-    if (!DR) return WALL_INNER_CORNER_BR;
-
+    if (!hasWallAbove && !hasWallLeft)  return WALL_CORNER_TL;
+    if (!hasWallAbove && !hasWallRight) return WALL_CORNER_TR;
+    if (!hasWallBelow && !hasWallLeft)  return WALL_CORNER_BL;
+    if (!hasWallBelow && !hasWallRight) return WALL_CORNER_BR;
+    if (!hasWallAbove) return WALL_BORDER_TOP;
+    if (!hasWallBelow) return WALL_BORDER_BOTTOM;
+    if (!hasWallLeft)  return WALL_BORDER_LEFT;
+    if (!hasWallRight) return WALL_BORDER_RIGHT;
+    int md = (!hasWallAboveLeft) + (!hasWallAboveRight) + (!hasWallBelowLeft) + (!hasWallBelowRight);
+    if (md >= 1) {
+        if (!hasWallAboveLeft)  return WALL_INNER_CORNER_TL;
+        if (!hasWallAboveRight) return WALL_INNER_CORNER_TR;
+        if (!hasWallBelowLeft)  return WALL_INNER_CORNER_BL;
+        if (!hasWallBelowRight) return WALL_INNER_CORNER_BR;
+    }
     return WALL_SOLID;
 }
 
