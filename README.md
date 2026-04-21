@@ -2,7 +2,7 @@
 
 **Repository:** [https://github.com/Soul02G/Tomb-of-the-Task]
 
-**Gameplay Showcase:** [Link to 1-minute video (YouTube or Vimeo) showing all implemented features]
+**Gameplay Showcase:** [Link yt]
 
 ## Team Members
 
