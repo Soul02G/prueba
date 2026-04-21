@@ -17,7 +17,6 @@ struct MapState {
     int           totalCoins;       // monedas totales acumuladas
     int           selectedLevel;    // nivel seleccionado en el mapa (0-based)
     int           settingsOpen;     // 1 = panel ajustes abierto
-
     int           settingsOption;   // 0 para SFX, 1 para VOLUMEN
     bool          musicEnabled;     // ON/OFF
     float         masterVolume;     // 0.0 a 1.0
@@ -31,6 +30,7 @@ void      MapLoad(struct MapState* mapState);
 SceneType MapUpdate(struct MapState* mapState);
 void      MapDraw(const struct MapState* mapState, int screenWidth, int screenHeight);
 void      MapUnload(struct MapState* mapState);
+void      MapAddCoins(MapState* mapState, int amount);
 
 // Registra progreso: Asegúrate de que en map.cpp la función reciba estos 4 parámetros
 void      MapRegisterLevelComplete(struct MapState* mapState, int levelIndex, int starsEarned, int coinsEarned);

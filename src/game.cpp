@@ -9,7 +9,7 @@
 
 // --- 1. PROTOTIPOS ---
 static void CollectTileUnderPlayer(GameState* gameState);
-static void ResetGameState(GameState* gameState);
+void ResetGameState(GameState* gameState);
 static void PlacePlayerAtSpawn(GameState* gameState);
 static void InsertLeaderboard(GameState* gs);
 static int GetWallVariant1(const int map[MAP_ROWS_1][MAP_COLUMNS_1], int row, int col);
@@ -228,7 +228,12 @@ static void CollectTileUnderPlayer(GameState* gameState) {
 
     switch (tileValue) {
     case TILE_DOT:       gameState->score += 10;  PlaySound(gameState->soundCollectDot);   break;
-    case TILE_COIN:      gameState->score += 100; PlaySound(gameState->soundCollectCoin);  break;
+    case TILE_COIN:
+        gameState->coinsCollected += 1;
+        printf("Moneda recogida! Llevas: %d\n", gameState->coinsCollected); // <--- DEBUG
+        gameState->score += 100;
+        PlaySound(gameState->soundCollectCoin);
+        break;
     case TILE_STAR:      gameState->starsCollected++; PlaySound(gameState->soundCollectStar); break;
     case TILE_LEVEL_END: gameState->levelCompleted = true; PlaySound(gameState->soundLevelComplete); break;
     }
@@ -281,7 +286,7 @@ static void InsertLeaderboard(GameState* gs) {
 }
 
 // --- RESET ---
-static void ResetGameState(GameState* gameState) {
+void ResetGameState(GameState* gameState) {
     gameState->playerAnimFrame = 0;
     gameState->playerAnimTimer = 0;
     gameState->velocityX = 0;
@@ -290,6 +295,7 @@ static void ResetGameState(GameState* gameState) {
     gameState->score = 0;
     gameState->levelCompleted = 0;
     gameState->blinkTimer = 0.0f;
+    gameState->coinsCollected = 0;
     gameState->starsCollected = 0;
     gameState->victoryStarTimer = 0.0f;
     gameState->victoryStarsShown = 0;

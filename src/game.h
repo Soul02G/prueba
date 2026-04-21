@@ -138,6 +138,7 @@ typedef struct {
 
     // Lógica de Juego y UI
     int score;
+    int coinsCollected;
     bool levelCompleted;
     float blinkTimer;
     int starsCollected;
@@ -159,6 +160,7 @@ typedef struct {
     LeaderboardEntry leaderboard[LEADERBOARD_SIZE];
     int leaderboardCount;
 
+
     // Enemigos y Sistema
     Bat bats[MAX_BATS];
     int batCount;
@@ -179,4 +181,4 @@ void GameDraw(GameState* gameState);
 void GameUnload(GameState* gameState);
 void ResetGameState(GameState* gameState);
 
-#endif // GAME_H
+#endif

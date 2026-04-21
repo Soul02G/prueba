@@ -20,7 +20,7 @@ int main() {
     // Empezamos en los créditos
     SceneType currentScene = SCENE_CREDITS;
 
-    // Carga inicial de recursos para que el Menú esté listo al pulsar espacio
+    // Carga inicial de recursos
     MenuLoad(&menuState);
     MapLoad(&mapState);
 
@@ -30,7 +30,7 @@ int main() {
 
         // --- 1. LÓGICA / ACTUALIZACIÓN ---
         if (currentScene == SCENE_CREDITS) {
-            // UpdateDrawCredits gestiona su propio dibujado y actualiza la escena a MENU si se pulsa tecla
+            // UpdateDrawCredits gestiona su propio dibujado y actualiza la escena a MENU
             UpdateDrawCredits(&currentScene);
             nextScene = currentScene;
         }
@@ -57,11 +57,19 @@ int main() {
         if (nextScene != currentScene) {
 
             // Lógica al SALIR de una escena
-            if (currentScene == SCENE_GAME && gameState.levelCompleted) {
-                MapRegisterLevelComplete(&mapState, mapState.selectedLevel, gameState.starsCollected, gameState.score / 10);
-            }
             if (currentScene == SCENE_GAME) {
+                if (gameState.levelCompleted) {
+                    // LLAMADA CLAVE: Enviamos las monedas reales recogidas (1, 2, 3...) al mapa
+                    MapAddCoins(&mapState, gameState.coinsCollected);
+
+                    // Registramos el nivel completado y las estrellas
+                    MapRegisterLevelComplete(&mapState, mapState.selectedLevel, gameState.starsCollected, 0);
+                }
+
+                // Descargamos recursos del nivel antes de salir
                 GameUnload(&gameState);
+                // Reseteamos el estado para que la próxima vez coinsCollected empiece en 0
+                ResetGameState(&gameState);
             }
 
             // Lógica al ENTRAR en una escena nueva
@@ -82,7 +90,6 @@ int main() {
         }
 
         // --- 3. DIBUJADO ---
-        // Solo dibujamos aquí si NO estamos en créditos (porque la intro ya dibujó arriba)
         if (currentScene != SCENE_CREDITS) {
             BeginDrawing();
             ClearBackground(BLACK);
