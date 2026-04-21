@@ -3,8 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 
-// Nombre del archivo de guardado
-#define SAVE_FILE_NAME "save.dat"
+#define SAVE_FILE_NAME "save.bin"
 
 static const int LEVEL_GRID_COL[MAX_LEVELS] = { 0, 0, 1, 1, 2, 2 };
 static const int LEVEL_GRID_ROW[MAX_LEVELS] = { 0, 1, 1, 0, 0, 1 };
@@ -14,19 +13,15 @@ static const int CONNECTION_COUNT = 5;
 static Texture2D texStarCollected;
 static Texture2D texStarEmpty;
 
-// --- 1. FUNCIONES AUXILIARES DE DIBUJO (Definidas arriba para evitar E0020) ---
 
 static void DrawLevelNode(int levelIndex, int screenX, int screenY, const LevelProgress* progress, int isSelected, float pulse) {
     int nodeW = 110, nodeH = 110;
     int nx = screenX - nodeW / 2, ny = screenY - nodeH / 2;
 
-    // Bloqueado si es nivel > 1 (solo permitimos nivel 1 y 2) o si el anterior no está completado
     bool isLocked = (levelIndex > 1) || (levelIndex > 0 && !progress[levelIndex - 1].completed);
 
-    // Sombra
     DrawRectangle(nx + 4, ny + 4, nodeW, nodeH, Color{ 40, 30, 0, 200 });
 
-    // Color: Dorado para accesibles, Gris para bloqueados
     Color bgColor = isLocked ? Color{ 100, 90, 40, 255 } : (isSelected ? Color{ 255, 230, 0, 255 } : Color{ 210, 180, 0, 255 });
 
     DrawRectangle(nx, ny, nodeW, nodeH, bgColor);
@@ -37,12 +32,16 @@ static void DrawLevelNode(int levelIndex, int screenX, int screenY, const LevelP
         DrawRectangleLines(nx - 3, ny - 3, nodeW + 6, nodeH + 6, Color{ 255, 255, 0, (unsigned char)(180 * alpha) });
     }
 
-    const char* numText = TextFormat("%d", levelIndex + 1);
-    DrawText(numText, nx + (nodeW - MeasureText(numText, 36)) / 2, ny + 8, 36, isLocked ? DARKGRAY : Color{ 30, 20, 0, 255 });
-
     // Estrellas
     int starSize = 28, starPad = 4;
     int starY = ny + nodeH - starSize - 6;
+
+    // Número centrado verticalmente entre el top del nodo y la zona de estrellas
+    int textAreaH = starY - ny;
+    int textY = ny + (textAreaH - 36) / 2;
+    const char* numText = TextFormat("%d", levelIndex + 1);
+    DrawText(numText, nx + (nodeW - MeasureText(numText, 36)) / 2, textY, 36, isLocked ? DARKGRAY : Color{ 30, 20, 0, 255 });
+
     for (int s = 0; s < 3; s++) {
         int sx = nx + (nodeW - (3 * starSize + 2 * starPad)) / 2 + s * (starSize + starPad);
         Texture2D tex = (s < progress[levelIndex].starsEarned) ? texStarCollected : texStarEmpty;
@@ -72,7 +71,6 @@ static void DrawSettings(const MapState* mapState, int screenWidth, int screenHe
     DrawRectangle(sliderX + (int)(mapState->masterVolume * (sliderW - 15)), sliderY - 5, 15, 30, WHITE);
 }
 
-// --- 2. PERSISTENCIA ---
 
 void SaveGameProgress(const MapState* mapState) {
     SaveFileData(SAVE_FILE_NAME, (void*)mapState, sizeof(MapState));
@@ -80,7 +78,7 @@ void SaveGameProgress(const MapState* mapState) {
 
 void LoadGameProgress(MapState* mapState) {
     if (FileExists(SAVE_FILE_NAME)) {
-        int bytesRead = 0; // Se usa int para cumplir con LoadFileData de Raylib
+        int bytesRead = 0;
         unsigned char* data = LoadFileData(SAVE_FILE_NAME, &bytesRead);
 
         if (data != NULL && bytesRead == sizeof(MapState)) {
@@ -89,7 +87,7 @@ void LoadGameProgress(MapState* mapState) {
             return;
         }
     }
-    // Inicialización por defecto
+
     for (int i = 0; i < MAX_LEVELS; i++) {
         mapState->levels[i].starsEarned = 0;
         mapState->levels[i].completed = 0;
@@ -97,7 +95,6 @@ void LoadGameProgress(MapState* mapState) {
     mapState->totalCoins = 0;
 }
 
-// --- 3. FUNCIONES DE ESCENA ---
 
 void MapLoad(MapState* mapState) {
     LoadGameProgress(mapState);
@@ -159,7 +156,6 @@ SceneType MapUpdate(MapState* mapState) {
     }
 
     if (nextLevel != -1 && nextLevel < MAX_LEVELS) {
-        // Permitimos movernos si es nivel 0 o si el anterior está completado
         if (nextLevel == 0 || mapState->levels[nextLevel - 1].completed) {
             mapState->selectedLevel = nextLevel;
         }
@@ -168,7 +164,6 @@ SceneType MapUpdate(MapState* mapState) {
     if (IsKeyPressed(KEY_M)) mapState->settingsOpen = 1;
     if (IsKeyPressed(KEY_ESCAPE)) return SCENE_MENU;
     if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER)) {
-        // Solo permitimos jugar nivel 1 o 2 (índices 0 y 1) según tu bloqueo
         if (mapState->selectedLevel <= 1) return SCENE_GAME;
     }
 
@@ -196,7 +191,7 @@ void MapDraw(const MapState* mapState, int screenWidth, int screenHeight) {
     if (mapState == NULL) return;
     ClearBackground(BLACK);
 
-    // HEADER - Monedas y Perfil
+    // HEADER
     DrawRectangle(0, 0, screenWidth, 50, Color{ 30, 25, 0, 255 });
     DrawCircle(screenWidth - 130, 25, 14, Color{ 255, 220, 0, 255 });
     DrawCircleLines(screenWidth - 130, 25, 14, Color{ 80, 60, 0, 255 });
@@ -208,24 +203,29 @@ void MapDraw(const MapState* mapState, int screenWidth, int screenHeight) {
 
     DrawText("~~~ MAPA ~~~", (screenWidth - MeasureText("~~~ MAPA ~~~", 22)) / 2, 65, 22, YELLOW);
 
-    // GRID - Calcular posiciones de nodos
+    // GRID - Centrado uniforme
     int gridStartY = 130;
     int gridEndY = screenHeight - 80;
     int nodeX[MAX_LEVELS], nodeY[MAX_LEVELS];
 
+    int gridCols = 3; // columnas 0, 1, 2
+    int gridRows = 2; // filas 0, 1
+    int cellW = screenWidth / (gridCols + 1);
+    int cellH = (gridEndY - gridStartY) / gridRows;
+
     for (int i = 0; i < MAX_LEVELS; i++) {
-        nodeX[i] = (screenWidth / 4) * (LEVEL_GRID_COL[i] + 1);
-        nodeY[i] = gridStartY + ((gridEndY - gridStartY) / 2) * LEVEL_GRID_ROW[i] + 50;
+        nodeX[i] = cellW * (LEVEL_GRID_COL[i] + 1);
+        nodeY[i] = gridStartY + cellH * LEVEL_GRID_ROW[i] + cellH / 2;
     }
 
-    // Dibujar conexiones
+    // Conexiones
     for (int c = 0; c < CONNECTION_COUNT; c++) {
         DrawLineEx({ (float)nodeX[LEVEL_CONNECTIONS[c][0]], (float)nodeY[LEVEL_CONNECTIONS[c][0]] },
             { (float)nodeX[LEVEL_CONNECTIONS[c][1]], (float)nodeY[LEVEL_CONNECTIONS[c][1]] },
             4.0f, Color{ 255, 220, 0, 150 });
     }
 
-    // Dibujar cada nodo
+    // Nodos
     for (int i = 0; i < MAX_LEVELS; i++) {
         DrawLevelNode(i, nodeX[i], nodeY[i], mapState->levels, (i == mapState->selectedLevel), mapState->selectPulse);
     }
@@ -233,7 +233,6 @@ void MapDraw(const MapState* mapState, int screenWidth, int screenHeight) {
     const char* navHint = "FLECHAS: navegar    ESPACIO: jugar    M: ajustes";
     DrawText(navHint, (screenWidth - MeasureText(navHint, 12)) / 2, screenHeight - 42, 12, Color{ 200, 170, 0, 255 });
 
-    // Ajustes por encima
     if (mapState->settingsOpen) DrawSettings(mapState, screenWidth, screenHeight);
 }
 
