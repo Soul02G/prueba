@@ -36,6 +36,7 @@
 #define TILE_REBOTE_U_I       10
 #define TILE_REBOTE_D_D       11
 #define TILE_LEVEL_END        12
+#define TILE_SPIKE        13
 
 // --- VARIANTES DE PAREDES (AUTO-TILING) ---
 #define WALL_SOLID            0
@@ -93,6 +94,7 @@ typedef struct {
     Texture2D coinTexture;
     Texture2D starTexture;
     Texture2D levelEndTexture;
+    Texture2D spikeTexture;
     Texture2D trailHorizontal;
     Texture2D trailVertical;
     Texture2D playerFrames[PLAYER_ANIM_FRAMES];

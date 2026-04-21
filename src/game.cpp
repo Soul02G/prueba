@@ -61,9 +61,8 @@ static const int initialMap[MAP_ROWS_1][MAP_COLUMNS_1] = {
     {0,0,0,0,0,1,3,0,0,3,1,0,0,1,1,1,1,1,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,1,3,3,3,3,1,0,0,0,1,0,0,0,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,0,0,0,3,1,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,2,0,0,3,1,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,0,0,2,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -119,6 +118,7 @@ static const int LEVEL_2_DATA[47][25] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
+
 
 // --- FUNCIONES DE PAREDES NIVEL 1 ---
 static int TileIsWall1(const int map[MAP_ROWS_1][MAP_COLUMNS_1], int row, int col) {
@@ -383,6 +383,7 @@ void GameLoad(GameState* gameState) {
     gameState->coinTexture = LoadTexture("resources\\coin-frame-0.png");
     gameState->starTexture = LoadTexture("resources\\tile_star.png");
     gameState->levelEndTexture = LoadTexture("resources\\tile_end.png");
+    gameState->spikeTexture = LoadTexture("resources\\pinchos.png");
     gameState->trailHorizontal = LoadTexture("resources\\trail.png");
     gameState->trailVertical = LoadTexture("resources\\trailVert.png");
     gameState->starCollectedTexture = LoadTexture("resources\\star_collected.png");
@@ -404,6 +405,7 @@ void GameLoad(GameState* gameState) {
     SetTextureFilter(gameState->dotTexture, TEXTURE_FILTER_POINT);
     SetTextureFilter(gameState->starTexture, TEXTURE_FILTER_POINT);
     SetTextureFilter(gameState->levelEndTexture, TEXTURE_FILTER_POINT);
+    SetTextureFilter(gameState->spikeTexture, TEXTURE_FILTER_POINT);
     SetTextureFilter(gameState->trailHorizontal, TEXTURE_FILTER_POINT);
     SetTextureFilter(gameState->trailVertical, TEXTURE_FILTER_POINT);
     SetTextureFilter(gameState->starCollectedTexture, TEXTURE_FILTER_POINT);
@@ -659,13 +661,14 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         }
     }
 
-    // --- COLISIONES CON ENEMIGOS ---
+    // --- COLISIONES CON ENEMIGOS Y PINCHOS ---
     if (!gameState->playerDead && !gameState->levelCompleted) {
         float pL = (float)gameState->playerX + 4;
         float pR = pL + TILE_SIZE - 8;
         float pT = (float)gameState->playerY + 4;
         float pB = pT + TILE_SIZE - 8;
 
+        // Chequear murciélagos
         for (int i = 0; i < gameState->batCount; i++) {
             Bat& bat = gameState->bats[i];
             float bL = bat.x + 4;
@@ -676,6 +679,27 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             if (pL < bR && pR > bL && pT < bB && pB > bT) {
                 gameState->playerDead = 1;
                 break;
+            }
+        }
+
+        // Chequear pinchos
+        if (!gameState->playerDead) {
+            int col = (int)((gameState->playerX + (TILE_SIZE / 2)) / TILE_SIZE);
+            int row = (int)((gameState->playerY + (TILE_SIZE / 2)) / TILE_SIZE);
+
+            if (gameState->currentLevel == 0) {
+                if (row >= 0 && row < MAP_ROWS_1 && col >= 0 && col < MAP_COLUMNS_1) {
+                    if (gameState->tileMap_1[row][col] == TILE_SPIKE) {
+                        gameState->playerDead = 1;
+                    }
+                }
+            }
+            else {
+                if (row >= 0 && row < MAP_ROWS_2 && col >= 0 && col < MAP_COLUMNS_2) {
+                    if (gameState->tileMap_2[row][col] == TILE_SPIKE) {
+                        gameState->playerDead = 1;
+                    }
+                }
             }
         }
     }
@@ -887,6 +911,11 @@ void GameDraw(GameState* gameState) {
             case 12:
                 DrawTexturePro(gameState->levelEndTexture, { 0,0,(float)gameState->levelEndTexture.width,(float)gameState->levelEndTexture.height }, dst, orig, 0, WHITE);
                 break;
+
+            // --- PINCHOS ---
+            case 13:
+                DrawTexturePro(gameState->spikeTexture, { 0,0,(float)gameState->spikeTexture.width,(float)gameState->spikeTexture.height }, dst, orig, 0, WHITE);
+          break;
             }
         }
     }
@@ -948,6 +977,7 @@ void GameUnload(GameState* gameState) {
     for (int i = 0; i < WALL_VARIANT_COUNT; i++) UnloadTexture(gameState->wallTextures[i]);
     UnloadTexture(gameState->dotTexture); UnloadTexture(gameState->coinTexture);
     UnloadTexture(gameState->starTexture); UnloadTexture(gameState->levelEndTexture);
+    UnloadTexture(gameState->spikeTexture);
     UnloadTexture(gameState->trailHorizontal); UnloadTexture(gameState->trailVertical);
     for (int i = 0; i < PLAYER_ANIM_FRAMES; i++) UnloadTexture(gameState->playerFrames[i]);
     UnloadTexture(gameState->starCollectedTexture); UnloadTexture(gameState->starEmptyTexture);
