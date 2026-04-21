@@ -128,6 +128,7 @@ typedef struct {
     int batCurrentFrames;
     Vector2 trailPositions[TRAIL_LENGTH];
     bool playerDead;
+    bool playerDeadScreen;
 
     // Gestión de Niveles y Mapas
     int currentLevel;
@@ -159,7 +160,6 @@ typedef struct {
     int initialCharIndex[3];
     LeaderboardEntry leaderboard[LEADERBOARD_SIZE];
     int leaderboardCount;
-
 
     // Enemigos y Sistema
     Bat bats[MAX_BATS];

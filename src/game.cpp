@@ -57,7 +57,7 @@ static const int initialMap[MAP_ROWS_1][MAP_COLUMNS_1] = {
     {0,0,0,0,0,0,0,0,1,3,1,1,3,4,3,3,3,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0},
     {0,0,0,0,0,1,3,3,3,3,3,3,3,3,3,1,1,5,3,4,3,1,0,0,0,0,0},
-    {0,0,0,0,0,1,3,6,0,4,1,1,1,1,3,3,3,3,0,0,3,1,0,0,0,0,0},
+    {0,0,0,0,0,1,3,0,0,4,1,1,1,1,3,3,3,3,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,1,3,0,0,3,1,0,0,1,1,1,1,1,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,1,3,3,3,3,1,0,0,0,1,0,0,0,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,0,0,0,3,1,0,0,0,0,0},
@@ -188,17 +188,15 @@ static int GetWallVariant2(const int map[MAP_ROWS_2][MAP_COLUMNS_2], int row, in
     return WALL_SOLID;
 }
 
-// --- CHECKWALLCOLLISION (a nivel de archivo, NO dentro de GameUpdate) ---
+// --- CHECKWALLCOLLISION ---
 static bool CheckWallCollision(GameState* gameState, float x, float y) {
     int col = (int)(x / TILE_SIZE);
     int row = (int)(y / TILE_SIZE);
 
-    // Nivel 2 (currentLevel es 1)
     if (gameState->currentLevel == 1) {
         if (row < 0 || row >= MAP_ROWS_2 || col < 0 || col >= MAP_COLUMNS_2) return true;
         return (gameState->tileMap_2[row][col] == TILE_WALL);
     }
-    // Nivel 1 (currentLevel es 0)
     else {
         if (row < 0 || row >= MAP_ROWS_1 || col < 0 || col >= MAP_COLUMNS_1) return true;
         return (gameState->tileMap_1[row][col] == TILE_WALL);
@@ -230,7 +228,7 @@ static void CollectTileUnderPlayer(GameState* gameState) {
     case TILE_DOT:       gameState->score += 10;  PlaySound(gameState->soundCollectDot);   break;
     case TILE_COIN:
         gameState->coinsCollected += 1;
-        printf("Moneda recogida! Llevas: %d\n", gameState->coinsCollected); // <--- DEBUG
+        printf("Moneda recogida! Llevas: %d\n", gameState->coinsCollected);
         gameState->score += 100;
         PlaySound(gameState->soundCollectCoin);
         break;
@@ -291,7 +289,7 @@ void ResetGameState(GameState* gameState) {
     gameState->playerAnimTimer = 0;
     gameState->velocityX = 0;
     gameState->velocityY = 0;
-    gameState->playerRotation = 0.0f;
+    gameState->playerRotation = 180.0f;
     gameState->score = 0;
     gameState->levelCompleted = 0;
     gameState->blinkTimer = 0.0f;
@@ -314,17 +312,16 @@ void ResetGameState(GameState* gameState) {
     gameState->initialCharIndex[1] = 0;
     gameState->initialCharIndex[2] = 0;
     gameState->playerDead = 0;
+    gameState->playerDeadScreen = false;
     gameState->menuOpen = false;
     gameState->lastBounceTileCol = -1;
     gameState->lastBounceTileRow = -1;
 
-    // Restaurar mapa del nivel activo
     if (gameState->currentLevel == 0)
         memcpy(gameState->tileMap_1, initialMap, sizeof(initialMap));
     else
         memcpy(gameState->tileMap_2, LEVEL_2_DATA, sizeof(LEVEL_2_DATA));
 
-    // Contar estrellas y spawnear murcielagos
     gameState->starsTotal = 0;
     gameState->batCount = 0;
     int rows = (gameState->currentLevel == 0) ? MAP_ROWS_1 : MAP_ROWS_2;
@@ -445,7 +442,6 @@ void GameLoad(GameState* gameState) {
 }
 
 void HandleBounceCollision(GameState* gameState) {
-    // 1. Usamos un margen pequeño (0.1f) para evitar errores de redondeo en los bordes
     int tileCol = (int)((gameState->playerX + TILE_SIZE / 2) / TILE_SIZE);
     int tileRow = (int)((gameState->playerY + TILE_SIZE / 2) / TILE_SIZE);
 
@@ -455,52 +451,43 @@ void HandleBounceCollision(GameState* gameState) {
         gameState->tileMap_1[tileRow][tileCol] :
         gameState->tileMap_2[tileRow][tileCol];
 
-    // Solo entramos si es un tile de rebote (8 al 11)
     if (currentTile >= 8 && currentTile <= 11) {
         int nextVX = 0;
         int nextVY = 0;
         bool activated = false;
 
-        // --- LÓGICA DE ESPEJOS SEGÚN ANCLAJES (Esquina Ocupada) ---
         switch (currentTile) {
-        case 8: // ANCLAJE D-I
+        case 8:
             if (gameState->velocityX < 0) { nextVY = -PLAYER_MOVE_SPEED; activated = true; }
             else if (gameState->velocityY > 0) { nextVX = PLAYER_MOVE_SPEED;  activated = true; }
             break;
-        case 9: // ANCLAJE U-D
+        case 9:
             if (gameState->velocityX > 0) { nextVY = PLAYER_MOVE_SPEED;  activated = true; }
             else if (gameState->velocityY < 0) { nextVX = -PLAYER_MOVE_SPEED; activated = true; }
             break;
-        case 10: // ANCLAJE U-I
+        case 10:
             if (gameState->velocityX < 0) { nextVY = PLAYER_MOVE_SPEED;  activated = true; }
             else if (gameState->velocityY < 0) { nextVX = PLAYER_MOVE_SPEED;  activated = true; }
             break;
-        case 11: // ANCLAJE D-D
+        case 11:
             if (gameState->velocityX > 0) { nextVY = -PLAYER_MOVE_SPEED; activated = true; }
             else if (gameState->velocityY > 0) { nextVX = -PLAYER_MOVE_SPEED; activated = true; }
             break;
         }
 
         if (activated) {
-            // Aplicamos la dirección
             gameState->velocityX = nextVX;
             gameState->velocityY = nextVY;
 
-            // --- EL CAMBIO CLAVE ---
-            // En lugar de teletransportar UNA casilla entera (que puede dar en un muro),
-            // centramos al jugador en el tile actual y lo empujamos 2 píxeles.
             gameState->playerX = (float)(tileCol * TILE_SIZE);
             gameState->playerY = (float)(tileRow * TILE_SIZE);
 
-            // Este pequeño empujón saca al jugador del centro para que el siguiente frame
-            // detecte el movimiento, pero no es tan grande como para atravesar muros.
             float push = 2.0f;
             if (gameState->velocityX > 0)      gameState->playerX += push;
             else if (gameState->velocityX < 0) gameState->playerX -= push;
             if (gameState->velocityY > 0)      gameState->playerY += push;
             else if (gameState->velocityY < 0) gameState->playerY -= push;
 
-            // Actualizar rotación y sonido
             if (gameState->velocityX > 0)      gameState->playerRotation = 90;
             else if (gameState->velocityX < 0) gameState->playerRotation = 270;
             else if (gameState->velocityY > 0) gameState->playerRotation = 180;
@@ -516,8 +503,10 @@ void HandleBounceCollision(GameState* gameState) {
 // ============================================================
 SceneType GameUpdate(GameState* gameState, MapState* mapState) {
 
+    // --- MENU PAUSA ---
     if (IsKeyPressed(KEY_M) && !gameState->levelCompleted &&
-        !gameState->showingVictoryOptions && !gameState->enteringInitials && !gameState->showingLeaderboard)
+        !gameState->showingVictoryOptions && !gameState->enteringInitials && !gameState->showingLeaderboard
+        && !gameState->playerDeadScreen)
         gameState->menuOpen = !gameState->menuOpen;
 
     if (gameState->menuOpen) {
@@ -540,6 +529,26 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         else if (gameState->menuOption == 3) { if (IsKeyPressed(KEY_ENTER)) return SCENE_MAP; }
         SetMasterVolume(gameState->musicEnabled ? gameState->masterVolume : 0.0f);
         return SCENE_GAME;
+    }
+
+    // --- MUERTE: va AQUI, antes de cualquier movimiento o logica ---
+    if (gameState->playerDead && !gameState->playerDeadScreen) {
+        PlaySound(gameState->soundHitWall);
+        gameState->playerDeadScreen = true;
+        gameState->velocityX = 0;
+        gameState->velocityY = 0;
+    }
+    if (gameState->playerDeadScreen) {
+        if (IsKeyPressed(KEY_SPACE)) {
+            gameState->playerDeadScreen = false;
+            ResetGameState(gameState);
+            PlaySound(gameState->soundLevelStart);
+        }
+        if (IsKeyPressed(KEY_M)) {
+            gameState->playerDeadScreen = false;
+            return SCENE_MAP;
+        }
+        return SCENE_GAME;  // Corta aqui: nada mas se ejecuta (todo congelado)
     }
 
     float dt = GetFrameTime();
@@ -671,12 +680,6 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         }
     }
 
-    if (gameState->playerDead) {
-        PlaySound(gameState->soundHitWall);
-        ResetGameState(gameState);
-        return SCENE_GAME;
-    }
-
     // --- RECOLECCIÓN DE OBJETOS ---
     CollectTileUnderPlayer(gameState);
 
@@ -697,6 +700,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
 
     return SCENE_GAME;
 }
+
 // ============================================================
 //  GAMEDRAW - Helpers
 // ============================================================
@@ -786,6 +790,33 @@ static void DrawLeaderboardPanel(GameState* gs) {
     DrawText(h, px + (W - MeasureText(h, 11)) / 2, py + H - 18, 11, Color{ 80,60,0,200 });
 }
 
+static void DrawDeathPanel(GameState* gs) {
+    const int W = 340, H = 260;
+    DrawPanel(W, H);
+    int px = (SCREEN_WIDTH - W) / 2, py = (SCREEN_HEIGHT - H) / 2;
+    DrawPanelTitle("HAS MUERTO", W, H, 26);
+
+    const char* sub = "Mejor suerte la proxima vez...";
+    DrawText(sub, px + (W - MeasureText(sub, 14)) / 2, py + 58, 14, Color{ 60, 45, 0, 220 });
+
+    DrawLine(px + 30, py + 80, px + W - 30, py + 80, Color{ 100, 80, 0, 150 });
+
+    struct { const char* k; const char* d; } opts[] = {
+        { "[ESPACIO]", "Reintentar" },
+        { "[M]",       "Volver al mapa" }
+    };
+    for (int i = 0; i < 2; i++) {
+        int oy = py + 100 + i * 50;
+        DrawRectangle(px + 16, oy - 6, W - 32, 40, Color{ 255, 245, 120, 80 });
+        DrawRectangleLines(px + 16, oy - 6, W - 32, 40, Color{ 80, 60, 0, 120 });
+        DrawText(opts[i].k, px + 50, oy + 6, 18, Color{ 80, 60, 0, 255 });
+        DrawText(opts[i].d, px + 50 + MeasureText(opts[i].k, 18) + 12, oy + 6, 18, Color{ 30, 20, 0, 255 });
+    }
+
+    const char* h = "ESPACIO: reintentar    M: mapa";
+    DrawText(h, px + (W - MeasureText(h, 11)) / 2, py + H - 18, 11, Color{ 100, 80, 0, 200 });
+}
+
 // ============================================================
 //  GAMEDRAW - Principal
 // ============================================================
@@ -841,8 +872,6 @@ void GameDraw(GameState* gameState) {
             case TILE_STAR:
                 DrawTexturePro(gameState->starTexture, { 0,0,(float)gameState->starTexture.width,(float)gameState->starTexture.height }, dst, orig, 0, collectibleColor);
                 break;
-
-                // --- REBOTES ---
             case 8:
                 DrawTexturePro(gameState->texRebote8, { 0,0,(float)gameState->texRebote8.width,(float)gameState->texRebote8.height }, dst, orig, 0, WHITE);
                 break;
@@ -855,8 +884,6 @@ void GameDraw(GameState* gameState) {
             case 11:
                 DrawTexturePro(gameState->texRebote11, { 0,0,(float)gameState->texRebote11.width,(float)gameState->texRebote11.height }, dst, orig, 0, WHITE);
                 break;
-
-                // --- META (USA SOLO UNO) ---
             case 12:
                 DrawTexturePro(gameState->levelEndTexture, { 0,0,(float)gameState->levelEndTexture.width,(float)gameState->levelEndTexture.height }, dst, orig, 0, WHITE);
                 break;
@@ -864,7 +891,7 @@ void GameDraw(GameState* gameState) {
         }
     }
 
-    // TRAIL (Rastro)
+    // TRAIL
     if (gameState->velocityX != 0 || gameState->velocityY != 0) {
         Texture2D at = (gameState->velocityY != 0) ? gameState->trailVertical : gameState->trailHorizontal;
         for (int i = TRAIL_LENGTH - 1; i >= 0; i--) {
@@ -874,9 +901,6 @@ void GameDraw(GameState* gameState) {
             DrawTexturePro(at, { 0,0,(float)at.width,(float)at.height }, td, { 0,0 }, 0.0f, tc);
         }
     }
-
-    // MURCIELAGOS, JUGADOR Y HUD... (el resto sigue igual)
-    // [Se mantiene el resto de tu código original para murciélagos, jugador y HUD]
 
     // MURCIELAGOS
     for (int i = 0; i < gameState->batCount; i++) {
@@ -892,7 +916,7 @@ void GameDraw(GameState* gameState) {
     Rectangle pd = { (float)(gameState->playerX - cameraX) + TILE_SIZE / 2.0f, (float)(gameState->playerY - cameraY) + TILE_SIZE / 2.0f, (float)TILE_SIZE, (float)TILE_SIZE };
     DrawTexturePro(cpf, { 0,0,(float)cpf.width,(float)cpf.height }, pd, { TILE_SIZE / 2.0f,TILE_SIZE / 2.0f }, gameState->playerRotation + 180, WHITE);
 
-    // HUD Y PANELES
+    // HUD
     DrawRectangle(0, 0, SCREEN_WIDTH, 60, BLACK);
     DrawText(TextFormat("SCORE: %d", gameState->score), 10, 10, 20, WHITE);
     int sc = (int)gameState->timer, cc = (int)((gameState->timer - sc) * 100);
@@ -904,7 +928,7 @@ void GameDraw(GameState* gameState) {
         DrawTextureEx(st, { (float)(stx + i * 48),10.0f }, 0, (float)ssz / (st.width > 0 ? st.width : ssz), WHITE);
     }
 
-    if (!gameState->levelCompleted && !gameState->showingVictoryOptions && !gameState->enteringInitials && !gameState->showingLeaderboard) {
+    if (!gameState->levelCompleted && !gameState->showingVictoryOptions && !gameState->enteringInitials && !gameState->showingLeaderboard && !gameState->playerDeadScreen) {
         DrawRectangle(SCREEN_WIDTH - 50, 15, 35, 35, YELLOW);
         DrawRectangle(SCREEN_WIDTH - 43, 21, 8, 23, BLACK);
         DrawRectangle(SCREEN_WIDTH - 28, 21, 8, 23, BLACK);
@@ -914,6 +938,7 @@ void GameDraw(GameState* gameState) {
     if (gameState->showingVictoryOptions) DrawVictoryPanel(gameState);
     if (gameState->enteringInitials)      DrawInitialsPanel(gameState);
     if (gameState->showingLeaderboard)    DrawLeaderboardPanel(gameState);
+    if (gameState->playerDeadScreen)      DrawDeathPanel(gameState);
 }
 
 // ============================================================

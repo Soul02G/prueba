@@ -53,22 +53,37 @@ static void DrawLevelNode(int levelIndex, int screenX, int screenY, const LevelP
 
 static void DrawSettings(const MapState* mapState, int screenWidth, int screenHeight) {
     DrawRectangle(0, 0, screenWidth, screenHeight, ColorAlpha(BLACK, 0.7f));
-    int panelW = 400, panelH = 250;
+    int panelW = 400, panelH = 280;
     int px = (screenWidth - panelW) / 2, py = (screenHeight - panelH) / 2;
 
     DrawRectangle(px, py, panelW, panelH, Color{ 255, 220, 0, 255 });
     DrawRectangleLines(px, py, panelW, panelH, Color{ 80, 60, 0, 255 });
     DrawText("AJUSTES", px + (panelW - MeasureText("AJUSTES", 28)) / 2, py + 20, 28, Color{ 30, 20, 0, 255 });
 
-    int sfxY = py + 85;
-    if (mapState->settingsOption == 0) DrawRectangle(px + 40, sfxY - 5, panelW - 80, 45, Color{ 255, 240, 100, 255 });
+    // --- SFX ON/OFF ---
+    int sfxY = py + 75;
+    if (mapState->settingsOption == 0) DrawRectangle(px + 40, sfxY - 5, panelW - 80, 40, Color{ 255, 240, 100, 255 });
     DrawText(mapState->musicEnabled ? "SFX: ON" : "SFX: OFF", px + (panelW - MeasureText("SFX: ON", 22)) / 2, sfxY + 6, 22, BLACK);
 
-    int sliderW = 200, sliderX = px + (panelW - sliderW) / 2;
-    int sliderY = py + 150 + 25;
-    DrawRectangle(sliderX, sliderY, sliderW, 20, Color{ 100, 80, 0, 255 });
-    DrawRectangle(sliderX, sliderY, (int)(mapState->masterVolume * sliderW), 20, Color{ 200, 160, 0, 255 });
-    DrawRectangle(sliderX + (int)(mapState->masterVolume * (sliderW - 15)), sliderY - 5, 15, 30, WHITE);
+    // --- VOLUMEN ---
+    int volLabelY = py + 135;
+    if (mapState->settingsOption == 1) DrawRectangle(px + 40, volLabelY - 5, panelW - 80, 100, Color{ 255, 240, 100, 255 });
+
+    // Etiqueta "VOLUMEN"
+    DrawText("VOLUMEN", px + (panelW - MeasureText("VOLUMEN", 20)) / 2, volLabelY, 20, Color{ 30, 20, 0, 255 });
+
+    // Porcentaje
+    const char* volPct = TextFormat("%d%%", (int)(mapState->masterVolume * 100));
+    DrawText(volPct, px + (panelW - MeasureText(volPct, 20)) / 2, volLabelY + 26, 20, Color{ 30, 20, 0, 255 });
+
+    // Slider
+    int sliderW = 280, sliderX = px + (panelW - sliderW) / 2;
+    int sliderY = volLabelY + 58;
+    DrawRectangle(sliderX, sliderY, sliderW, 14, Color{ 100, 80, 0, 255 });
+    DrawRectangle(sliderX, sliderY, (int)(mapState->masterVolume * sliderW), 14, Color{ 200, 160, 0, 255 });
+    int handleX = sliderX + (int)(mapState->masterVolume * (sliderW - 14));
+    DrawRectangle(handleX, sliderY - 5, 14, 24, WHITE);
+    DrawRectangleLines(handleX, sliderY - 5, 14, 24, Color{ 80, 60, 0, 255 });
 }
 
 
@@ -208,8 +223,8 @@ void MapDraw(const MapState* mapState, int screenWidth, int screenHeight) {
     int gridEndY = screenHeight - 80;
     int nodeX[MAX_LEVELS], nodeY[MAX_LEVELS];
 
-    int gridCols = 3; // columnas 0, 1, 2
-    int gridRows = 2; // filas 0, 1
+    int gridCols = 3;
+    int gridRows = 2;
     int cellW = screenWidth / (gridCols + 1);
     int cellH = (gridEndY - gridStartY) / gridRows;
 
