@@ -14,14 +14,12 @@ int main() {
     GameState gameState = { 0 };
     MenuState menuState = { 0 };
     MapState  mapState = { 0 };
-
     SceneType currentScene = SCENE_CREDITS;
 
     MenuLoad(&menuState);
     MapLoad(&mapState);
 
     while (!WindowShouldClose()) {
-
         SceneType nextScene = currentScene;
 
         if (currentScene == SCENE_CREDITS) {
@@ -38,6 +36,12 @@ int main() {
                 break;
             case SCENE_GAME:
                 nextScene = GameUpdate(&gameState, &mapState);
+
+                if (gameState.levelCompleted && !mapState.levels[mapState.selectedLevel].completed) {
+                    MapAddCoins(&mapState, gameState.coinsCollected);
+                    MapRegisterLevelComplete(&mapState, mapState.selectedLevel, gameState.starsCollected, 0);
+                }
+
                 break;
             case SCENE_SETTINGS:
                 nextScene = MapUpdate(&mapState);
@@ -47,20 +51,10 @@ int main() {
         }
 
         if (nextScene != currentScene) {
-
             if (currentScene == SCENE_GAME) {
-                if (gameState.levelCompleted) {
-                    MapAddCoins(&mapState, gameState.coinsCollected);
-
-                    MapRegisterLevelComplete(&mapState, mapState.selectedLevel, gameState.starsCollected, 0);
-                }
-
                 GameUnload(&gameState);
-
                 ResetGameState(&gameState);
             }
-
-
             switch (nextScene) {
             case SCENE_GAME:
                 gameState.currentLevel = mapState.selectedLevel;
@@ -69,19 +63,15 @@ int main() {
                 GameLoad(&gameState);
                 break;
             case SCENE_MENU:
-
                 break;
             default: break;
             }
-
             currentScene = nextScene;
         }
-
 
         if (currentScene != SCENE_CREDITS) {
             BeginDrawing();
             ClearBackground(BLACK);
-
             switch (currentScene) {
             case SCENE_MENU:
                 MenuDraw(&menuState, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -101,13 +91,10 @@ int main() {
         }
     }
 
-
     if (currentScene == SCENE_GAME) GameUnload(&gameState);
     MenuUnload(&menuState);
     MapUnload(&mapState);
-
     CloseAudioDevice();
     CloseWindow();
-
     return 0;
 }

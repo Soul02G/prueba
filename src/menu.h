@@ -19,9 +19,6 @@ typedef struct {
     int       currentZoomFrame;
     int       zoomFrameTimer;
 
-    // 0 = esperando input
-    // 1 = sonido reproduciéndose (timer activo)
-    // 2 = zoom reproduciéndose
     int       transitionState;
     float     soundTimer;       // tiempo transcurrido desde que empezó el sonido
     float     soundDuration;    // duración del sonido en segundos

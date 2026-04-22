@@ -11,7 +11,6 @@ typedef struct {
     int   completed;     // 1 si completado
 } LevelProgress;
 
-// Definimos el struct directamente para evitar el error C2371
 struct MapState {
     LevelProgress levels[MAX_LEVELS];
     int           totalCoins;       // monedas totales acumuladas

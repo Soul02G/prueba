@@ -359,9 +359,7 @@ void ResetGameState(GameState* gameState) {
     gameState->cameraY = (float)(gameState->playerY - SCREEN_HEIGHT / 2 + TILE_SIZE / 2);
 }
 
-// ============================================================
 //  GAMELOAD
-// ============================================================
 void GameLoad(GameState* gameState) {
     const char* wallTextureFiles[WALL_VARIANT_COUNT] = {
         "resources\\tile_wall_solid.png","resources\\tile_wall_top.png","resources\\tile_wall_bottom.png",
@@ -498,9 +496,7 @@ void HandleBounceCollision(GameState* gameState) {
     }
 }
 
-// ============================================================
 //  GAMEUPDATE
-// ============================================================
 SceneType GameUpdate(GameState* gameState, MapState* mapState) {
 
     // --- MENU PAUSA ---
@@ -548,7 +544,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             gameState->playerDeadScreen = false;
             return SCENE_MAP;
         }
-        return SCENE_GAME;  // Corta aqui: nada mas se ejecuta (todo congelado)
+        return SCENE_GAME;
     }
 
     float dt = GetFrameTime();
@@ -701,9 +697,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     return SCENE_GAME;
 }
 
-// ============================================================
 //  GAMEDRAW - Helpers
-// ============================================================
 static void DrawPanel(int panelW, int panelH) {
     int px = (SCREEN_WIDTH - panelW) / 2, py = (SCREEN_HEIGHT - panelH) / 2;
     DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ColorAlpha(BLACK, 0.82f));
@@ -817,9 +811,7 @@ static void DrawDeathPanel(GameState* gs) {
     DrawText(h, px + (W - MeasureText(h, 11)) / 2, py + H - 18, 11, Color{ 100, 80, 0, 200 });
 }
 
-// ============================================================
 //  GAMEDRAW - Principal
-// ============================================================
 void GameDraw(GameState* gameState) {
     ClearBackground(BLACK);
 
@@ -941,9 +933,7 @@ void GameDraw(GameState* gameState) {
     if (gameState->playerDeadScreen)      DrawDeathPanel(gameState);
 }
 
-// ============================================================
 //  GAMEUNLOAD
-// ============================================================
 void GameUnload(GameState* gameState) {
     for (int i = 0; i < WALL_VARIANT_COUNT; i++) UnloadTexture(gameState->wallTextures[i]);
     UnloadTexture(gameState->dotTexture); UnloadTexture(gameState->coinTexture);
