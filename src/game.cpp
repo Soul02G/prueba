@@ -16,7 +16,21 @@ static int GetWallVariant1(const int map[MAP_ROWS_1][MAP_COLUMNS_1], int row, in
 static int GetWallVariant2(const int map[MAP_ROWS_2][MAP_COLUMNS_2], int row, int col);
 static bool CheckWallCollision(GameState* gameState, float x, float y);
 
-// --- 2. DATOS DE ANIMACION ---
+// Devuelve true si el tile es cualquier pincho (todos son sólidos)
+static inline bool TileIsSpike(int t) {
+    return t == TILE_SPIKE_UP || t == TILE_SPIKE_DOWN || t == TILE_SPIKE_LEFT || t == TILE_SPIKE_RIGHT;
+}
+
+// Dado un tile de pincho, devuelve el offset de la casilla peligrosa (dRow, dCol)
+static inline void SpikeHazardOffset(int t, int* dRow, int* dCol) {
+    *dRow = 0; *dCol = 0;
+    if (t == TILE_SPIKE_UP)    *dRow = -1;
+    if (t == TILE_SPIKE_DOWN)  *dRow = 1;
+    if (t == TILE_SPIKE_LEFT)  *dCol = -1;
+    if (t == TILE_SPIKE_RIGHT) *dCol = 1;
+}
+
+
 static const int playerAnimSequence[PLAYER_ANIM_SEQ_LEN] = { 0, 1, 0, 2, 3, 2, 0, 4 };
 static const int playerAnimSpeed = 10;
 static const int coinAnimSequence[COIN_ANIM_SEQ_LEN] = { 0, 1, 2, 3 };
@@ -316,6 +330,7 @@ void ResetGameState(GameState* gameState) {
     gameState->menuOpen = false;
     gameState->lastBounceTileCol = -1;
     gameState->lastBounceTileRow = -1;
+    gameState->spikeCount = 0;
 
     if (gameState->currentLevel == 0)
         memcpy(gameState->tileMap_1, initialMap, sizeof(initialMap));
@@ -348,6 +363,13 @@ void ResetGameState(GameState* gameState) {
                 }
                 if (gameState->currentLevel == 0) gameState->tileMap_1[row][col] = TILE_EMPTY;
                 else                              gameState->tileMap_2[row][col] = TILE_EMPTY;
+            }
+            else if (TileIsSpike(tile) && gameState->spikeCount < MAX_SPIKES) {
+                int i = gameState->spikeCount++;
+                gameState->spikeCol[i] = col;
+                gameState->spikeRow[i] = row;
+                gameState->spikeState[i] = 0;   // empieza desactivado
+                gameState->spikeTimer[i] = 0.0f;
             }
         }
     }
@@ -529,7 +551,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         return SCENE_GAME;
     }
 
-    // MUERTE antes de cualquier movimiento o logica
+    // --- MUERTE: va AQUI, antes de cualquier movimiento o logica ---
     if (gameState->playerDead && !gameState->playerDeadScreen) {
         PlaySound(gameState->soundHitWall);
         gameState->playerDeadScreen = true;
@@ -553,7 +575,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     gameState->blinkTimer += dt;
     if (gameState->blinkTimer > 1.0f) gameState->blinkTimer = 0.0f;
 
-    // INICIALES, VICTORIA Y LEADERBOARD
+    // --- INICIALES, VICTORIA Y LEADERBOARD ---
     if (gameState->enteringInitials) {
         int idx = gameState->initialIndex;
         if (IsKeyPressed(KEY_UP)) { gameState->initialCharIndex[idx] = (gameState->initialCharIndex[idx] + 1) % INITIALS_CHAR_COUNT; gameState->initials[idx] = INITIALS_CHARS[gameState->initialCharIndex[idx]]; }
@@ -584,7 +606,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         gameState->showingVictoryOptions = 1;
     if (gameState->levelCompleted) return SCENE_GAME;
 
-    // INPUT
+    // --- INPUT ---
     if (gameState->velocityX == 0 && gameState->velocityY == 0) {
         if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) { gameState->velocityX = PLAYER_MOVE_SPEED;  gameState->playerRotation = 90;  gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
         else if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) { gameState->velocityX = -PLAYER_MOVE_SPEED; gameState->playerRotation = 270; gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
@@ -592,39 +614,55 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         else if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) { gameState->velocityY = -PLAYER_MOVE_SPEED; gameState->playerRotation = 0;   gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
     }
 
-    // MOVIMIENTO X 
+    // --- MOVIMIENTO X ---
     if (gameState->velocityX != 0) {
         int nextX = gameState->playerX + gameState->velocityX;
         int tileRow = gameState->playerY / TILE_SIZE;
         int nextTileCol = (gameState->velocityX > 0) ? (nextX + TILE_SIZE - 1) / TILE_SIZE : nextX / TILE_SIZE;
         if (gameState->currentLevel == 0) {
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_1 ? MAP_COLUMNS_1 - 1 : nextTileCol);
-            if (gameState->tileMap_1[tileRow][nextTileCol] == TILE_WALL) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
+            int hitTile1X = gameState->tileMap_1[tileRow][nextTileCol];
+            if (hitTile1X == TILE_WALL || TileIsSpike(hitTile1X)) {
+                gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE;
+                gameState->velocityX = 0; PlaySound(gameState->soundHitWall);
+            }
             else if (nextX < 0 || nextX + TILE_SIZE > MAP_COLUMNS_1 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerX = nextX;
         }
         else {
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_2 ? MAP_COLUMNS_2 - 1 : nextTileCol);
-            if (gameState->tileMap_2[tileRow][nextTileCol] == TILE_WALL) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
+            int hitTile2X = gameState->tileMap_2[tileRow][nextTileCol];
+            if (hitTile2X == TILE_WALL || TileIsSpike(hitTile2X)) {
+                gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE;
+                gameState->velocityX = 0; PlaySound(gameState->soundHitWall);
+            }
             else if (nextX < 0 || nextX + TILE_SIZE > MAP_COLUMNS_2 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerX = nextX;
         }
     }
 
-    // MOVIMIENTO Y
+    // --- MOVIMIENTO Y ---
     if (gameState->velocityY != 0) {
         int nextY = gameState->playerY + gameState->velocityY;
         int tileCol = gameState->playerX / TILE_SIZE;
         int nextTileRow = (gameState->velocityY > 0) ? (nextY + TILE_SIZE - 1) / TILE_SIZE : nextY / TILE_SIZE;
         if (gameState->currentLevel == 0) {
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_1 ? MAP_ROWS_1 - 1 : nextTileRow);
-            if (gameState->tileMap_1[nextTileRow][tileCol] == TILE_WALL) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
+            int hitTile1Y = gameState->tileMap_1[nextTileRow][tileCol];
+            if (hitTile1Y == TILE_WALL || TileIsSpike(hitTile1Y)) {
+                gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE;
+                gameState->velocityY = 0; PlaySound(gameState->soundHitWall);
+            }
             else if (nextY < 0 || nextY + TILE_SIZE > MAP_ROWS_1 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerY = nextY;
         }
         else {
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_2 ? MAP_ROWS_2 - 1 : nextTileRow);
-            if (gameState->tileMap_2[nextTileRow][tileCol] == TILE_WALL) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
+            int hitTile2Y = gameState->tileMap_2[nextTileRow][tileCol];
+            if (hitTile2Y == TILE_WALL || TileIsSpike(hitTile2Y)) {
+                gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE;
+                gameState->velocityY = 0; PlaySound(gameState->soundHitWall);
+            }
             else if (nextY < 0 || nextY + TILE_SIZE > MAP_ROWS_2 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerY = nextY;
         }
@@ -634,7 +672,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         HandleBounceCollision(gameState);
     }
 
-    // --- MURCIELAGOS
+    // --- MURCIELAGOS ---
     for (int i = 0; i < gameState->batCount; i++) {
         Bat& bat = gameState->bats[i];
         if (bat.stopTimer > 0.0f) {
@@ -678,23 +716,56 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             }
         }
 
-        // Chequear pinchos
+        // --- PINCHOS: máquina de estados por tile ---
+        // Estado 0: desactivado (espera a que el jugador pise la casilla adyacente)
+        // Estado 1: tick de activación (0.2s, aviso visual)
+        // Estado 2: activado (1s, pincho fuera pero no mata aún)
+        // Estado 3: daño (0.5s, mata si el jugador está en la casilla adyacente)
         if (!gameState->playerDead) {
-            int col = (int)((gameState->playerX + (TILE_SIZE / 2)) / TILE_SIZE);
-            int row = (int)((gameState->playerY + (TILE_SIZE / 2)) / TILE_SIZE);
+            int pCol = (int)((gameState->playerX + TILE_SIZE / 2) / TILE_SIZE);
+            int pRow = (int)((gameState->playerY + TILE_SIZE / 2) / TILE_SIZE);
+            int mapRows = (gameState->currentLevel == 0) ? MAP_ROWS_1 : MAP_ROWS_2;
+            int mapCols = (gameState->currentLevel == 0) ? MAP_COLUMNS_1 : MAP_COLUMNS_2;
 
-            if (gameState->currentLevel == 0) {
-                if (row >= 0 && row < MAP_ROWS_1 && col >= 0 && col < MAP_COLUMNS_1) {
-                    if (gameState->tileMap_1[row][col] == TILE_SPIKE) {
+            for (int i = 0; i < gameState->spikeCount; i++) {
+                int sc = gameState->spikeCol[i], sr = gameState->spikeRow[i];
+                int t = (gameState->currentLevel == 0) ? gameState->tileMap_1[sr][sc] : gameState->tileMap_2[sr][sc];
+                int dRow, dCol;
+                SpikeHazardOffset(t, &dRow, &dCol);
+                int hCol = sc + dCol, hRow = sr + dRow; // casilla peligrosa
+                bool playerOnHazard = (pCol == hCol && pRow == hRow);
+
+                switch (gameState->spikeState[i]) {
+                case 0: // desactivado: esperar a que el jugador pise la casilla adyacente
+                    if (playerOnHazard) {
+                        gameState->spikeState[i] = 1;
+                        gameState->spikeTimer[i] = 0.0f;
+                    }
+                    break;
+                case 1: // tick de activación (0.2s)
+                    gameState->spikeTimer[i] += dt;
+                    if (gameState->spikeTimer[i] >= 0.2f) {
+                        gameState->spikeState[i] = 2;
+                        gameState->spikeTimer[i] = 0.0f;
+                    }
+                    break;
+                case 2: // activado (1s)
+                    gameState->spikeTimer[i] += dt;
+                    if (gameState->spikeTimer[i] >= 1.0f) {
+                        gameState->spikeState[i] = 3;
+                        gameState->spikeTimer[i] = 0.0f;
+                    }
+                    break;
+                case 3: // daño (0.5s): mata si el jugador está en la casilla peligrosa
+                    if (playerOnHazard) {
                         gameState->playerDead = 1;
                     }
-                }
-            }
-            else {
-                if (row >= 0 && row < MAP_ROWS_2 && col >= 0 && col < MAP_COLUMNS_2) {
-                    if (gameState->tileMap_2[row][col] == TILE_SPIKE) {
-                        gameState->playerDead = 1;
+                    gameState->spikeTimer[i] += dt;
+                    if (gameState->spikeTimer[i] >= 0.5f) {
+                        gameState->spikeState[i] = 0;
+                        gameState->spikeTimer[i] = 0.0f;
                     }
+                    break;
                 }
             }
         }
@@ -904,10 +975,62 @@ void GameDraw(GameState* gameState) {
                 DrawTexturePro(gameState->levelEndTexture, { 0,0,(float)gameState->levelEndTexture.width,(float)gameState->levelEndTexture.height }, dst, orig, 0, WHITE);
                 break;
 
-            // --- PINCHOS ---
-            case 13:
-                DrawTexturePro(gameState->spikeTexture, { 0,0,(float)gameState->spikeTexture.width,(float)gameState->spikeTexture.height }, dst, orig, 0, WHITE);
-          break;
+                // --- PINCHOS (4 direcciones) ---
+            case TILE_SPIKE_UP:
+            case TILE_SPIKE_DOWN:
+            case TILE_SPIKE_LEFT:
+            case TILE_SPIKE_RIGHT: {
+                // Buscar el estado de este pincho
+                int spikeIdx = -1;
+                for (int i = 0; i < gameState->spikeCount; i++) {
+                    if (gameState->spikeCol[i] == col && gameState->spikeRow[i] == row) { spikeIdx = i; break; }
+                }
+                int state = (spikeIdx >= 0) ? gameState->spikeState[spikeIdx] : 0;
+                float stimer = (spikeIdx >= 0) ? gameState->spikeTimer[spikeIdx] : 0.0f;
+
+                float rot = 0.0f;
+                if (tt == TILE_SPIKE_DOWN)  rot = 180.0f;
+                if (tt == TILE_SPIKE_LEFT)  rot = 270.0f;
+                if (tt == TILE_SPIKE_RIGHT) rot = 90.0f;
+
+                // Estado 0: pincho retraído (dibuja solo la base, más oscuro)
+                // Estado 1: tick (parpadeo amarillo rápido)
+                // Estado 2: activado (pincho completo)
+                // Estado 3: daño (rojo)
+                Color spkColor = WHITE;
+                if (state == 0) spkColor = Color{ 100, 100, 100, 180 };
+                else if (state == 1) { float b = sinf(stimer / 0.2f * 3.14159f * 6); spkColor = Color{ 255, (unsigned char)(200 + 55 * b), 0, 255 }; }
+                else if (state == 3) spkColor = Color{ 255, 60, 60, 255 };
+
+                Vector2 center = { (float)sx + TILE_SIZE / 2.0f, (float)sy + TILE_SIZE / 2.0f };
+                Rectangle spkSrc = { 0, 0, (float)gameState->spikeTexture.width, (float)gameState->spikeTexture.height };
+                Rectangle spkDst = { center.x, center.y, (float)TILE_SIZE, (float)TILE_SIZE };
+                DrawTexturePro(gameState->spikeTexture, spkSrc, spkDst, { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f }, rot, spkColor);
+
+                // Overlay en la casilla peligrosa durante estado 1, 2 y 3
+                if (state >= 1 && spikeIdx >= 0) {
+                    int dRow, dCol;
+                    SpikeHazardOffset(tt, &dRow, &dCol);
+                    int hx = (col + dCol) * TILE_SIZE - cameraX;
+                    int hy = (row + dRow) * TILE_SIZE - cameraY;
+                    if (state == 1) {
+                        // Tick: overlay amarillo parpadeante
+                        DrawRectangle(hx, hy, TILE_SIZE, TILE_SIZE, Color{ 255, 220, 0, 80 });
+                    }
+                    else if (state == 2) {
+                        // Activado: barra de progreso naranja (cuánto queda)
+                        float progress = stimer / 1.0f;
+                        DrawRectangle(hx, hy + TILE_SIZE - 5, TILE_SIZE, 5, Color{ 80, 40, 0, 200 });
+                        DrawRectangle(hx, hy + TILE_SIZE - 5, (int)(TILE_SIZE * progress), 5, Color{ 255, 140, 0, 230 });
+                    }
+                    else if (state == 3) {
+                        // Daño: overlay rojo parpadeante
+                        float b = fabsf(sinf(stimer * 3.14159f * 8));
+                        DrawRectangle(hx, hy, TILE_SIZE, TILE_SIZE, Color{ 255, 30, 0, (unsigned char)(150 * b) });
+                    }
+                }
+                break;
+            }
             }
         }
     }

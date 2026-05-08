@@ -36,7 +36,10 @@
 #define TILE_REBOTE_U_I       10
 #define TILE_REBOTE_D_D       11
 #define TILE_LEVEL_END        12
-#define TILE_SPIKE        13
+#define TILE_SPIKE_UP     13   // Pincho apuntando arriba    → zona peligrosa en row-1
+#define TILE_SPIKE_DOWN   14   // Pincho apuntando abajo     → zona peligrosa en row+1
+#define TILE_SPIKE_LEFT   15   // Pincho apuntando izquierda → zona peligrosa en col-1
+#define TILE_SPIKE_RIGHT  16   // Pincho apuntando derecha   → zona peligrosa en col+1
 
 // --- VARIANTES DE PAREDES (AUTO-TILING) ---
 #define WALL_SOLID            0
@@ -173,6 +176,17 @@ typedef struct {
 
     int lastBounceTileCol;
     int lastBounceTileRow;
+
+    // --- SISTEMA DE PINCHOS (ciclo por tile) ---
+    // Estado de cada pincho: 0=desactivado, 1=tick, 2=activado, 3=daño
+    // Usamos arrays paralelos indexados por posición (row*MAX_COLS + col)
+    // Guardamos hasta MAX_SPIKES pinchos activos en el nivel
+#define MAX_SPIKES 64
+    int   spikeCount;
+    int   spikeCol[MAX_SPIKES];
+    int   spikeRow[MAX_SPIKES];
+    int   spikeState[MAX_SPIKES];  // 0=off 1=tick 2=on 3=damage
+    float spikeTimer[MAX_SPIKES];
 
 } GameState;
 
