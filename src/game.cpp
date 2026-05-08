@@ -61,7 +61,7 @@ static const int initialMap[MAP_ROWS_1][MAP_COLUMNS_1] = {
     {0,0,0,0,0,1,3,0,0,3,1,0,0,1,1,1,1,1,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,1,3,3,3,3,1,0,0,0,1,0,0,0,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,0,0,0,3,1,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,0,0,2,0,0,3,1,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,2,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -529,7 +529,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         return SCENE_GAME;
     }
 
-    // --- MUERTE: va AQUI, antes de cualquier movimiento o logica ---
+    // MUERTE antes de cualquier movimiento o logica
     if (gameState->playerDead && !gameState->playerDeadScreen) {
         PlaySound(gameState->soundHitWall);
         gameState->playerDeadScreen = true;
@@ -553,7 +553,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     gameState->blinkTimer += dt;
     if (gameState->blinkTimer > 1.0f) gameState->blinkTimer = 0.0f;
 
-    // --- INICIALES, VICTORIA Y LEADERBOARD ---
+    // INICIALES, VICTORIA Y LEADERBOARD
     if (gameState->enteringInitials) {
         int idx = gameState->initialIndex;
         if (IsKeyPressed(KEY_UP)) { gameState->initialCharIndex[idx] = (gameState->initialCharIndex[idx] + 1) % INITIALS_CHAR_COUNT; gameState->initials[idx] = INITIALS_CHARS[gameState->initialCharIndex[idx]]; }
@@ -584,7 +584,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         gameState->showingVictoryOptions = 1;
     if (gameState->levelCompleted) return SCENE_GAME;
 
-    // --- INPUT ---
+    // INPUT
     if (gameState->velocityX == 0 && gameState->velocityY == 0) {
         if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) { gameState->velocityX = PLAYER_MOVE_SPEED;  gameState->playerRotation = 90;  gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
         else if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) { gameState->velocityX = -PLAYER_MOVE_SPEED; gameState->playerRotation = 270; gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
@@ -592,7 +592,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         else if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) { gameState->velocityY = -PLAYER_MOVE_SPEED; gameState->playerRotation = 0;   gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
     }
 
-    // --- MOVIMIENTO X ---
+    // MOVIMIENTO X 
     if (gameState->velocityX != 0) {
         int nextX = gameState->playerX + gameState->velocityX;
         int tileRow = gameState->playerY / TILE_SIZE;
@@ -611,7 +611,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         }
     }
 
-    // --- MOVIMIENTO Y ---
+    // MOVIMIENTO Y
     if (gameState->velocityY != 0) {
         int nextY = gameState->playerY + gameState->velocityY;
         int tileCol = gameState->playerX / TILE_SIZE;
@@ -634,7 +634,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         HandleBounceCollision(gameState);
     }
 
-    // --- MURCIELAGOS ---
+    // --- MURCIELAGOS
     for (int i = 0; i < gameState->batCount; i++) {
         Bat& bat = gameState->bats[i];
         if (bat.stopTimer > 0.0f) {
