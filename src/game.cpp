@@ -16,12 +16,14 @@ static int GetWallVariant1(const int map[MAP_ROWS_1][MAP_COLUMNS_1], int row, in
 static int GetWallVariant2(const int map[MAP_ROWS_2][MAP_COLUMNS_2], int row, int col);
 static bool CheckWallCollision(GameState* gameState, float x, float y);
 
-// Devuelve true si el tile es cualquier pincho (todos son sólidos)
 static inline bool TileIsSpike(int t) {
     return t == TILE_SPIKE_UP || t == TILE_SPIKE_DOWN || t == TILE_SPIKE_LEFT || t == TILE_SPIKE_RIGHT;
 }
 
-// Dado un tile de pincho, devuelve el offset de la casilla peligrosa (dRow, dCol)
+static inline bool TileIsTotem(int t) {
+    return t >= TILE_TOTEM_UP && t <= TILE_TOTEM_RIGHT;
+}
+
 static inline void SpikeHazardOffset(int t, int* dRow, int* dCol) {
     *dRow = 0; *dCol = 0;
     if (t == TILE_SPIKE_UP)    *dRow = -1;
@@ -37,8 +39,11 @@ static const int coinAnimSequence[COIN_ANIM_SEQ_LEN] = { 0, 1, 2, 3 };
 static const int coinAnimSpeed = 20;
 static const int batAnimSequence[BAT_ANIM_SEQ_LEN] = { 0, 1, 2, 3, 2, 1 };
 static const int batAnimSpeed = 10;
+static const int monkeyAnimSequence[MONKEY_FRAMES] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 static const char* INITIALS_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 static const int INITIALS_CHAR_COUNT = 36;
+
+
 
 // --- DATOS DEL NIVEL 1 ---
 static const int initialMap[MAP_ROWS_1][MAP_COLUMNS_1] = {
@@ -61,22 +66,23 @@ static const int initialMap[MAP_ROWS_1][MAP_COLUMNS_1] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,1,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,1,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,1,1,1,3,1,1,1,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,1,3,3,3,3,3,1,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,1,3,3,3,3,3,19,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,1,3,0,3,1,4,1,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,1,3,0,3,1,3,1,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,22,0,1,3,0,3,1,3,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,1,3,3,5,1,3,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,3,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,1,3,3,3,3,1,0,1,3,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,1,3,1,1,3,1,1,1,3,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,1,3,1,1,3,4,3,3,3,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0},
-    {0,0,0,0,0,1,3,3,3,3,3,3,3,3,3,1,1,5,3,4,3,1,0,0,0,0,0},
-    {0,0,0,0,0,1,3,0,0,4,1,1,1,1,3,3,3,3,0,0,3,1,0,0,0,0,0},
+    {0,0,0,0,0,1,21,3,3,3,3,3,3,3,3,1,1,5,3,4,3,1,0,0,0,0,0},
+    {0,0,0,0,0,1,3,0,0,4,1,1,1,1,3,3,3,3,0,0,3,19,0,0,0,0,0},
     {0,0,0,0,0,1,3,0,0,3,1,0,0,1,1,1,1,1,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,1,3,3,3,3,1,0,0,0,1,0,0,0,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,0,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,2,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -331,6 +337,11 @@ void ResetGameState(GameState* gameState) {
     gameState->lastBounceTileCol = -1;
     gameState->lastBounceTileRow = -1;
     gameState->spikeCount = 0;
+    gameState->totemCount = 0;
+    gameState->arrowCount = 0;
+
+    // Resetear el trigger del mono
+    gameState->monkeyTriggered = false;
 
     if (gameState->currentLevel == 0)
         memcpy(gameState->tileMap_1, initialMap, sizeof(initialMap));
@@ -342,12 +353,19 @@ void ResetGameState(GameState* gameState) {
     int rows = (gameState->currentLevel == 0) ? MAP_ROWS_1 : MAP_ROWS_2;
     int cols = (gameState->currentLevel == 0) ? MAP_COLUMNS_1 : MAP_COLUMNS_2;
 
+    int monkeySpawnRow = -1;
+    int monkeySpawnCol = -1;
+
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
             int tile = (gameState->currentLevel == 0) ? gameState->tileMap_1[row][col] : gameState->tileMap_2[row][col];
 
             if (tile == TILE_STAR) {
                 gameState->starsTotal++;
+            }
+            else if (tile == TILE_MONKEY_SPAWN) {
+                monkeySpawnRow = row;
+                monkeySpawnCol = col;
             }
             else if (tile == TILE_HORIZONTAL_BAT || tile == TILE_VERTICAL_BAT) {
                 if (gameState->batCount < MAX_BATS) {
@@ -368,11 +386,42 @@ void ResetGameState(GameState* gameState) {
                 int i = gameState->spikeCount++;
                 gameState->spikeCol[i] = col;
                 gameState->spikeRow[i] = row;
-                gameState->spikeState[i] = 0;   // empieza desactivado
+                gameState->spikeState[i] = 0;
                 gameState->spikeTimer[i] = 0.0f;
+            }
+            else if (TileIsTotem(tile) && gameState->totemCount < MAX_TOTEMS) {
+                int ti = gameState->totemCount++;
+                gameState->totemCol[ti] = col;
+                gameState->totemRow[ti] = row;
+                gameState->totemDir[ti] = tile - TILE_TOTEM_UP;
+                gameState->totemTimers[ti] = TOTEM_FIRE_INTERVAL;
             }
         }
     }
+
+    gameState->monkey.active = true;
+    gameState->monkey.hasDropped = false;
+    gameState->monkey.frame = 0;
+    gameState->monkey.animTimer = 0.0f;
+    gameState->monkey.pauseTimer = 0.0f;
+    gameState->monkey.state = MONKEY_IDLE;
+    gameState->monkeyDrop.active = false;
+
+    if (monkeySpawnRow != -1 && monkeySpawnCol != -1) {
+        gameState->monkey.x = (float)(monkeySpawnCol * TILE_SIZE);
+        gameState->monkey.y = (float)(monkeySpawnRow * TILE_SIZE);
+        if (gameState->currentLevel == 0) gameState->tileMap_1[monkeySpawnRow][monkeySpawnCol] = TILE_EMPTY;
+        else                              gameState->tileMap_2[monkeySpawnRow][monkeySpawnCol] = TILE_EMPTY;
+    }
+    else {
+        gameState->monkey.x = (float)(6 * TILE_SIZE);
+        gameState->monkey.y = (float)(22 * TILE_SIZE);
+    }
+
+    // Sincronizar posicion inicial del coco con el mono
+    gameState->monkeyDrop.x = gameState->monkey.x - TILE_SIZE + (TILE_SIZE * 1.0f);
+    gameState->monkeyDrop.y = gameState->monkey.y + TILE_SIZE * 0.5f;
+    gameState->monkeyDrop.speed = 350.0f;
 
     PlacePlayerAtSpawn(gameState);
     for (int i = 0; i < TRAIL_LENGTH; i++)
@@ -417,10 +466,19 @@ void GameLoad(GameState* gameState) {
     gameState->playerFrames[2] = LoadTexture("resources\\totm_2.png");
     gameState->playerFrames[3] = LoadTexture("resources\\totm_3.png");
     gameState->playerFrames[4] = LoadTexture("resources\\totm_4.png");
+    for (int i = 0; i < MONKEY_FRAMES; i++) {
+        gameState->texMonkeyFrames[i] = LoadTexture(TextFormat("resources\\MonkeyFrames_%d.png", i));
+    }
+    gameState->texMonkeyDrop = LoadTexture("resources\\coco.png");
     for (int i = 0; i < 4; i++) {
         gameState->batTextures[i] = LoadTexture(TextFormat("resources/bat-frame-%d.png", i + 1));
         SetTextureFilter(gameState->batTextures[i], TEXTURE_FILTER_POINT);
     }
+
+    gameState->texTotem = LoadTexture("resources\\tiraflechas.png");
+    gameState->texArrow = LoadTexture("resources\\flecha.png");
+    SetTextureFilter(gameState->texTotem, TEXTURE_FILTER_POINT);
+    SetTextureFilter(gameState->texArrow, TEXTURE_FILTER_POINT);
 
     SetTextureFilter(gameState->dotTexture, TEXTURE_FILTER_POINT);
     SetTextureFilter(gameState->starTexture, TEXTURE_FILTER_POINT);
@@ -458,6 +516,8 @@ void GameLoad(GameState* gameState) {
 
     gameState->batFrameCounter = 0;
     gameState->batCurrentFrames = 0;
+    gameState->totemCount = 0;
+    gameState->arrowCount = 0;
 
     ResetGameState(gameState);
     PlaySound(gameState->soundLevelStart);
@@ -520,10 +580,7 @@ void HandleBounceCollision(GameState* gameState) {
     }
 }
 
-//  GAMEUPDATE
 SceneType GameUpdate(GameState* gameState, MapState* mapState) {
-
-    // --- MENU PAUSA ---
     if (IsKeyPressed(KEY_M) && !gameState->levelCompleted &&
         !gameState->showingVictoryOptions && !gameState->enteringInitials && !gameState->showingLeaderboard
         && !gameState->playerDeadScreen)
@@ -551,7 +608,6 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         return SCENE_GAME;
     }
 
-    // --- MUERTE: va AQUI, antes de cualquier movimiento o logica ---
     if (gameState->playerDead && !gameState->playerDeadScreen) {
         PlaySound(gameState->soundHitWall);
         gameState->playerDeadScreen = true;
@@ -575,7 +631,6 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     gameState->blinkTimer += dt;
     if (gameState->blinkTimer > 1.0f) gameState->blinkTimer = 0.0f;
 
-    // --- INICIALES, VICTORIA Y LEADERBOARD ---
     if (gameState->enteringInitials) {
         int idx = gameState->initialIndex;
         if (IsKeyPressed(KEY_UP)) { gameState->initialCharIndex[idx] = (gameState->initialCharIndex[idx] + 1) % INITIALS_CHAR_COUNT; gameState->initials[idx] = INITIALS_CHARS[gameState->initialCharIndex[idx]]; }
@@ -594,7 +649,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     }
 
     if (gameState->showingLeaderboard) {
-        if (IsKeyPressed(KEY_M))                              return SCENE_MAP;
+        if (IsKeyPressed(KEY_M))                                      return SCENE_MAP;
         if (IsKeyPressed(KEY_L)) { gameState->showingLeaderboard = 0; gameState->showingVictoryOptions = 1; }
         if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) { ResetGameState(gameState); PlaySound(gameState->soundLevelStart); }
         return SCENE_GAME;
@@ -606,7 +661,6 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         gameState->showingVictoryOptions = 1;
     if (gameState->levelCompleted) return SCENE_GAME;
 
-    // --- INPUT ---
     if (gameState->velocityX == 0 && gameState->velocityY == 0) {
         if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) { gameState->velocityX = PLAYER_MOVE_SPEED;  gameState->playerRotation = 90;  gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
         else if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) { gameState->velocityX = -PLAYER_MOVE_SPEED; gameState->playerRotation = 270; gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
@@ -614,7 +668,6 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         else if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) { gameState->velocityY = -PLAYER_MOVE_SPEED; gameState->playerRotation = 0;   gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
     }
 
-    // --- MOVIMIENTO X ---
     if (gameState->velocityX != 0) {
         int nextX = gameState->playerX + gameState->velocityX;
         int tileRow = gameState->playerY / TILE_SIZE;
@@ -622,7 +675,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         if (gameState->currentLevel == 0) {
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_1 ? MAP_COLUMNS_1 - 1 : nextTileCol);
             int hitTile1X = gameState->tileMap_1[tileRow][nextTileCol];
-            if (hitTile1X == TILE_WALL || TileIsSpike(hitTile1X)) {
+            if (hitTile1X == TILE_WALL || TileIsSpike(hitTile1X) || TileIsTotem(hitTile1X)) {
                 gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE;
                 gameState->velocityX = 0; PlaySound(gameState->soundHitWall);
             }
@@ -632,7 +685,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         else {
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_2 ? MAP_COLUMNS_2 - 1 : nextTileCol);
             int hitTile2X = gameState->tileMap_2[tileRow][nextTileCol];
-            if (hitTile2X == TILE_WALL || TileIsSpike(hitTile2X)) {
+            if (hitTile2X == TILE_WALL || TileIsSpike(hitTile2X) || TileIsTotem(hitTile2X)) {
                 gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE;
                 gameState->velocityX = 0; PlaySound(gameState->soundHitWall);
             }
@@ -641,7 +694,6 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         }
     }
 
-    // --- MOVIMIENTO Y ---
     if (gameState->velocityY != 0) {
         int nextY = gameState->playerY + gameState->velocityY;
         int tileCol = gameState->playerX / TILE_SIZE;
@@ -649,7 +701,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         if (gameState->currentLevel == 0) {
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_1 ? MAP_ROWS_1 - 1 : nextTileRow);
             int hitTile1Y = gameState->tileMap_1[nextTileRow][tileCol];
-            if (hitTile1Y == TILE_WALL || TileIsSpike(hitTile1Y)) {
+            if (hitTile1Y == TILE_WALL || TileIsSpike(hitTile1Y) || TileIsTotem(hitTile1Y)) {
                 gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE;
                 gameState->velocityY = 0; PlaySound(gameState->soundHitWall);
             }
@@ -659,7 +711,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         else {
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_2 ? MAP_ROWS_2 - 1 : nextTileRow);
             int hitTile2Y = gameState->tileMap_2[nextTileRow][tileCol];
-            if (hitTile2Y == TILE_WALL || TileIsSpike(hitTile2Y)) {
+            if (hitTile2Y == TILE_WALL || TileIsSpike(hitTile2Y) || TileIsTotem(hitTile2Y)) {
                 gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE;
                 gameState->velocityY = 0; PlaySound(gameState->soundHitWall);
             }
@@ -672,7 +724,6 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         HandleBounceCollision(gameState);
     }
 
-    // --- MURCIELAGOS ---
     for (int i = 0; i < gameState->batCount; i++) {
         Bat& bat = gameState->bats[i];
         if (bat.stopTimer > 0.0f) {
@@ -695,14 +746,12 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         }
     }
 
-    // --- COLISIONES CON ENEMIGOS Y PINCHOS ---
     if (!gameState->playerDead && !gameState->levelCompleted) {
         float pL = (float)gameState->playerX + 4;
         float pR = pL + TILE_SIZE - 8;
         float pT = (float)gameState->playerY + 4;
         float pB = pT + TILE_SIZE - 8;
 
-        // Chequear murciélagos
         for (int i = 0; i < gameState->batCount; i++) {
             Bat& bat = gameState->bats[i];
             float bL = bat.x + 4;
@@ -716,65 +765,216 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             }
         }
 
-        // --- PINCHOS: máquina de estados por tile ---
-        // Estado 0: desactivado (espera a que el jugador pise la casilla adyacente)
-        // Estado 1: tick de activación (0.2s, aviso visual)
-        // Estado 2: activado (1s, pincho fuera pero no mata aún)
-        // Estado 3: daño (0.5s, mata si el jugador está en la casilla adyacente)
         if (!gameState->playerDead) {
             int pCol = (int)((gameState->playerX + TILE_SIZE / 2) / TILE_SIZE);
             int pRow = (int)((gameState->playerY + TILE_SIZE / 2) / TILE_SIZE);
-            int mapRows = (gameState->currentLevel == 0) ? MAP_ROWS_1 : MAP_ROWS_2;
-            int mapCols = (gameState->currentLevel == 0) ? MAP_COLUMNS_1 : MAP_COLUMNS_2;
 
             for (int i = 0; i < gameState->spikeCount; i++) {
                 int sc = gameState->spikeCol[i], sr = gameState->spikeRow[i];
                 int t = (gameState->currentLevel == 0) ? gameState->tileMap_1[sr][sc] : gameState->tileMap_2[sr][sc];
                 int dRow, dCol;
                 SpikeHazardOffset(t, &dRow, &dCol);
-                int hCol = sc + dCol, hRow = sr + dRow; // casilla peligrosa
+                int hCol = sc + dCol, hRow = sr + dRow;
                 bool playerOnHazard = (pCol == hCol && pRow == hRow);
 
                 switch (gameState->spikeState[i]) {
-                case 0: // desactivado: esperar a que el jugador pise la casilla adyacente
-                    if (playerOnHazard) {
-                        gameState->spikeState[i] = 1;
-                        gameState->spikeTimer[i] = 0.0f;
-                    }
+                case 0:
+                    if (playerOnHazard) { gameState->spikeState[i] = 1; gameState->spikeTimer[i] = 0.0f; }
                     break;
-                case 1: // tick de activación (0.2s)
+                case 1:
                     gameState->spikeTimer[i] += dt;
-                    if (gameState->spikeTimer[i] >= 0.2f) {
-                        gameState->spikeState[i] = 2;
-                        gameState->spikeTimer[i] = 0.0f;
-                    }
+                    if (gameState->spikeTimer[i] >= 0.2f) { gameState->spikeState[i] = 2; gameState->spikeTimer[i] = 0.0f; }
                     break;
-                case 2: // activado (1s)
+                case 2:
                     gameState->spikeTimer[i] += dt;
-                    if (gameState->spikeTimer[i] >= 1.0f) {
-                        gameState->spikeState[i] = 3;
-                        gameState->spikeTimer[i] = 0.0f;
-                    }
+                    if (gameState->spikeTimer[i] >= 1.0f) { gameState->spikeState[i] = 3; gameState->spikeTimer[i] = 0.0f; }
                     break;
-                case 3: // daño (0.5s): mata si el jugador está en la casilla peligrosa
-                    if (playerOnHazard) {
-                        gameState->playerDead = 1;
-                    }
+                case 3:
+                    if (playerOnHazard) gameState->playerDead = 1;
                     gameState->spikeTimer[i] += dt;
-                    if (gameState->spikeTimer[i] >= 0.5f) {
-                        gameState->spikeState[i] = 0;
-                        gameState->spikeTimer[i] = 0.0f;
-                    }
+                    if (gameState->spikeTimer[i] >= 0.5f) { gameState->spikeState[i] = 0; gameState->spikeTimer[i] = 0.0f; }
                     break;
                 }
             }
         }
     }
 
-    // --- RECOLECCIÓN DE OBJETOS ---
+    for (int i = 0; i < gameState->totemCount; i++) {
+        gameState->totemTimers[i] -= dt;
+        if (gameState->totemTimers[i] <= 0.0f) {
+            gameState->totemTimers[i] = TOTEM_FIRE_INTERVAL;
+            if (gameState->arrowCount < MAX_ARROWS) {
+                Arrow& a = gameState->arrows[gameState->arrowCount++];
+                int spawnCol = gameState->totemCol[i];
+                int spawnRow = gameState->totemRow[i];
+                switch (gameState->totemDir[i]) {
+                case 0: spawnRow -= 1; a.vx = 0;            a.vy = -ARROW_SPEED; a.rotation = 90.0f;  break;
+                case 1: spawnRow += 1; a.vx = 0;            a.vy = ARROW_SPEED;  a.rotation = 270.0f; break;
+                case 2: spawnCol -= 1; a.vx = -ARROW_SPEED; a.vy = 0;            a.rotation = 0.0f;   break;
+                case 3: spawnCol += 1; a.vx = ARROW_SPEED;  a.vy = 0;            a.rotation = 180.0f; break;
+                }
+                a.x = (float)(spawnCol * TILE_SIZE);
+                a.y = (float)(spawnRow * TILE_SIZE);
+                a.active = true;
+            }
+        }
+    }
+
+    {
+        int mapRows = (gameState->currentLevel == 0) ? MAP_ROWS_1 : MAP_ROWS_2;
+        int mapCols = (gameState->currentLevel == 0) ? MAP_COLUMNS_1 : MAP_COLUMNS_2;
+        float pL = (float)gameState->playerX + 4;
+        float pR = pL + TILE_SIZE - 8;
+        float pT = (float)gameState->playerY + 4;
+        float pB = pT + TILE_SIZE - 8;
+
+        int alive = 0;
+        for (int i = 0; i < gameState->arrowCount; i++) {
+            Arrow& a = gameState->arrows[i];
+            if (!a.active) continue;
+
+            a.x += a.vx;
+            a.y += a.vy;
+
+            int ac = (int)((a.x + TILE_SIZE / 2) / TILE_SIZE);
+            int ar = (int)((a.y + TILE_SIZE / 2) / TILE_SIZE);
+            bool hitWall = (ac < 0 || ac >= mapCols || ar < 0 || ar >= mapRows);
+            if (!hitWall) {
+                int t = (gameState->currentLevel == 0)
+                    ? gameState->tileMap_1[ar][ac]
+                    : gameState->tileMap_2[ar][ac];
+                hitWall = (t == TILE_WALL) || TileIsTotem(t);
+            }
+            if (hitWall) { a.active = false; continue; }
+
+            if (!gameState->playerDead) {
+                float aL = a.x + 4, aR = a.x + TILE_SIZE - 4;
+                float aT = a.y + 4, aB = a.y + TILE_SIZE - 4;
+                if (aL < pR && aR > pL && aT < pB && aB > pT) {
+                    gameState->playerDead = 1;
+                    a.active = false;
+                    continue;
+                }
+            }
+
+            gameState->arrows[alive++] = a;
+        }
+        gameState->arrowCount = alive;
+    }
+
+    // =========================================================
+    // --- SISTEMA DEL MONO ---
+    // =========================================================
+    {
+        int rows = gameState->currentMapRows;
+        int cols = gameState->currentMapCols;
+
+        // Busqueda de spawn si el mono no tiene posicion valida
+        if (gameState->monkey.x == 0.0f && gameState->monkey.y == 0.0f) {
+            int spawnRow = -1, spawnCol = -1;
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < cols; c++) {
+                    int t = (gameState->currentLevel == 1) ? gameState->tileMap_2[r][c] : gameState->tileMap_1[r][c];
+                    if (t == TILE_MONKEY_SPAWN) { spawnRow = r; spawnCol = c; break; }
+                }
+                if (spawnRow != -1) break;
+            }
+            if (spawnRow != -1) {
+                gameState->monkey.active = true;
+                gameState->monkey.state = MONKEY_IDLE;
+                gameState->monkey.hasDropped = false;
+                gameState->monkey.x = (float)(spawnCol * TILE_SIZE);
+                gameState->monkey.y = (float)(spawnRow * TILE_SIZE);
+                gameState->monkey.frame = 0;
+                gameState->monkey.animTimer = 0.0f;
+                gameState->monkey.pauseTimer = 0.0f;
+            }
+        }
+
+        if (gameState->monkey.active) {
+            // --- PASO 1: detectar si el jugador pisa el trigger y activar el flag ---
+            // Solo buscamos el trigger si aún no fue activado y no hay coco cayendo.
+            if (!gameState->monkeyTriggered && !gameState->monkeyDrop.active) {
+                int pColLeft = (int)(gameState->playerX / TILE_SIZE);
+                int pColRight = (int)((gameState->playerX + TILE_SIZE - 1) / TILE_SIZE);
+                int pRowTop = (int)(gameState->playerY / TILE_SIZE);
+                int pRowBottom = (int)((gameState->playerY + TILE_SIZE - 1) / TILE_SIZE);
+
+                for (int r = pRowTop; r <= pRowBottom && !gameState->monkeyTriggered; r++) {
+                    for (int c = pColLeft; c <= pColRight && !gameState->monkeyTriggered; c++) {
+                        if (r >= 0 && r < rows && c >= 0 && c < cols) {
+                            int tile = (gameState->currentLevel == 1)
+                                ? gameState->tileMap_2[r][c]
+                                : gameState->tileMap_1[r][c];
+                            if (tile == TILE_MONKEY_TRIGGER || tile == 21)
+                                gameState->monkeyTriggered = true;
+                        }
+                    }
+                }
+            }
+
+            // --- PASO 2: animar el mono continuamente ---
+            gameState->monkey.animTimer += dt;
+            if (gameState->monkey.animTimer >= 0.12f) {
+                gameState->monkey.animTimer = 0.0f;
+                gameState->monkey.frame = (gameState->monkey.frame + 1) % MONKEY_FRAMES;
+
+                // --- PASO 3: lanzar el coco en el frame 8 si el trigger fue activado ---
+                // El jugador ya no necesita estar en el trigger; basta con que
+                // monkeyTriggered sea true para que el coco salga al llegar al frame 8.
+                if (gameState->monkey.frame == 8
+                    && !gameState->monkeyDrop.active
+                    && gameState->monkeyTriggered)
+                {
+                    gameState->monkeyDrop.active = true;
+                    gameState->monkeyDrop.x = gameState->monkey.x - TILE_SIZE + (TILE_SIZE * 1.0f);
+                    gameState->monkeyDrop.y = gameState->monkey.y + TILE_SIZE * 0.5f;
+                    gameState->monkeyDrop.speed = 350.0f;
+
+                    // Resetear el flag para que el mono pueda volver a disparar
+                    // la próxima vez que el jugador pise el trigger.
+                    gameState->monkeyTriggered = false;
+                }
+            }
+
+            switch (gameState->monkey.state) {
+            default: break;
+            }
+        }
+    }
+
+    // COCO PEGADO AL MONO cuando no esta cayendo
+    if (!gameState->monkeyDrop.active) {
+        gameState->monkeyDrop.x = gameState->monkey.x - TILE_SIZE + (TILE_SIZE * 1.0f);
+        gameState->monkeyDrop.y = gameState->monkey.y + TILE_SIZE * 0.5f;
+    }
+
+    // CAIDA DEL COCO
+    if (gameState->monkeyDrop.active) {
+        gameState->monkeyDrop.y += gameState->monkeyDrop.speed * dt;
+
+        float pL = (float)gameState->playerX + 4;
+        float pR = pL + TILE_SIZE - 8;
+        float pT = (float)gameState->playerY + 4;
+        float pB = pT + TILE_SIZE - 8;
+
+        float cL = gameState->monkeyDrop.x + 2;
+        float cR = cL + TILE_SIZE * 1.5f - 4;
+        float cT = gameState->monkeyDrop.y + 2;
+        float cB = cT + TILE_SIZE * 1.5f - 4;
+
+        if (!gameState->playerDead && cL < pR && cR > pL && cT < pB && cB > pT) {
+            gameState->playerDead = 1;
+            gameState->monkeyDrop.active = false;
+        }
+
+        if (gameState->monkeyDrop.y > (float)(gameState->currentMapRows * TILE_SIZE)) {
+            gameState->monkeyDrop.active = false;
+        }
+    }
+
     CollectTileUnderPlayer(gameState);
 
-    // --- ANIMACIONES Y TRAIL ---
     int playerIsMoving = (gameState->velocityX != 0 || gameState->velocityY != 0);
     if (playerIsMoving) {
         gameState->playerAnimFrame = 0;
@@ -906,7 +1106,6 @@ static void DrawDeathPanel(GameState* gs) {
     DrawText(h, px + (W - MeasureText(h, 11)) / 2, py + H - 18, 11, Color{ 100, 80, 0, 200 });
 }
 
-//  GAMEDRAW - Principal
 void GameDraw(GameState* gameState) {
     ClearBackground(BLACK);
 
@@ -929,7 +1128,6 @@ void GameDraw(GameState* gameState) {
 
     Color collectibleColor = (gameState->blinkTimer < 0.5f) ? Color{ 255,220,0,255 } : Color{ 180,0,220,255 };
 
-    // MAPA
     for (int row = 0; row < gameState->currentMapRows; row++) {
         for (int col = 0; col < gameState->currentMapCols; col++) {
             int tt = (gameState->currentLevel == 1) ? gameState->tileMap_2[row][col] : gameState->tileMap_1[row][col];
@@ -971,16 +1169,35 @@ void GameDraw(GameState* gameState) {
             case 11:
                 DrawTexturePro(gameState->texRebote11, { 0,0,(float)gameState->texRebote11.width,(float)gameState->texRebote11.height }, dst, orig, 0, WHITE);
                 break;
-            case 12:
+            case TILE_LEVEL_END:
                 DrawTexturePro(gameState->levelEndTexture, { 0,0,(float)gameState->levelEndTexture.width,(float)gameState->levelEndTexture.height }, dst, orig, 0, WHITE);
                 break;
-
-                // --- PINCHOS (4 direcciones) ---
+            case TILE_MONKEY_TRIGGER:
+                DrawTexture(gameState->dotTexture, sx, sy, WHITE);
+                break;
+            case TILE_MONKEY_SPAWN:
+                break;
+            case TILE_TOTEM_UP:
+            case TILE_TOTEM_DOWN:
+            case TILE_TOTEM_LEFT:
+            case TILE_TOTEM_RIGHT: {
+                float rot = 0.0f;
+                if (tt == TILE_TOTEM_UP)    rot = 90.0f;
+                if (tt == TILE_TOTEM_DOWN)  rot = 270.0f;
+                if (tt == TILE_TOTEM_LEFT)  rot = 0.0f;
+                if (tt == TILE_TOTEM_RIGHT) rot = 180.0f;
+                Vector2 center = { (float)sx + TILE_SIZE / 2.0f, (float)sy + TILE_SIZE / 2.0f };
+                DrawTexturePro(gameState->texTotem,
+                    { 0, 0, (float)gameState->texTotem.width, (float)gameState->texTotem.height },
+                    { center.x, center.y, (float)TILE_SIZE, (float)TILE_SIZE },
+                    { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f },
+                    rot, WHITE);
+                break;
+            }
             case TILE_SPIKE_UP:
             case TILE_SPIKE_DOWN:
             case TILE_SPIKE_LEFT:
             case TILE_SPIKE_RIGHT: {
-                // Buscar el estado de este pincho
                 int spikeIdx = -1;
                 for (int i = 0; i < gameState->spikeCount; i++) {
                     if (gameState->spikeCol[i] == col && gameState->spikeRow[i] == row) { spikeIdx = i; break; }
@@ -989,14 +1206,10 @@ void GameDraw(GameState* gameState) {
                 float stimer = (spikeIdx >= 0) ? gameState->spikeTimer[spikeIdx] : 0.0f;
 
                 float rot = 0.0f;
-                if (tt == TILE_SPIKE_DOWN)  rot = 180.0f;
+                if (tt == TILE_SPIKE_DOWN) rot = 180.0f;
                 if (tt == TILE_SPIKE_LEFT)  rot = 270.0f;
                 if (tt == TILE_SPIKE_RIGHT) rot = 90.0f;
 
-                // Estado 0: pincho retraído (dibuja solo la base, más oscuro)
-                // Estado 1: tick (parpadeo amarillo rápido)
-                // Estado 2: activado (pincho completo)
-                // Estado 3: daño (rojo)
                 Color spkColor = WHITE;
                 if (state == 0) spkColor = Color{ 100, 100, 100, 180 };
                 else if (state == 1) { float b = sinf(stimer / 0.2f * 3.14159f * 6); spkColor = Color{ 255, (unsigned char)(200 + 55 * b), 0, 255 }; }
@@ -1007,24 +1220,20 @@ void GameDraw(GameState* gameState) {
                 Rectangle spkDst = { center.x, center.y, (float)TILE_SIZE, (float)TILE_SIZE };
                 DrawTexturePro(gameState->spikeTexture, spkSrc, spkDst, { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f }, rot, spkColor);
 
-                // Overlay en la casilla peligrosa durante estado 1, 2 y 3
                 if (state >= 1 && spikeIdx >= 0) {
                     int dRow, dCol;
                     SpikeHazardOffset(tt, &dRow, &dCol);
                     int hx = (col + dCol) * TILE_SIZE - cameraX;
                     int hy = (row + dRow) * TILE_SIZE - cameraY;
                     if (state == 1) {
-                        // Tick: overlay amarillo parpadeante
                         DrawRectangle(hx, hy, TILE_SIZE, TILE_SIZE, Color{ 255, 220, 0, 80 });
                     }
                     else if (state == 2) {
-                        // Activado: barra de progreso naranja (cuánto queda)
                         float progress = stimer / 1.0f;
                         DrawRectangle(hx, hy + TILE_SIZE - 5, TILE_SIZE, 5, Color{ 80, 40, 0, 200 });
                         DrawRectangle(hx, hy + TILE_SIZE - 5, (int)(TILE_SIZE * progress), 5, Color{ 255, 140, 0, 230 });
                     }
                     else if (state == 3) {
-                        // Daño: overlay rojo parpadeante
                         float b = fabsf(sinf(stimer * 3.14159f * 8));
                         DrawRectangle(hx, hy, TILE_SIZE, TILE_SIZE, Color{ 255, 30, 0, (unsigned char)(150 * b) });
                     }
@@ -1035,7 +1244,19 @@ void GameDraw(GameState* gameState) {
         }
     }
 
-    // TRAIL
+    for (int i = 0; i < gameState->arrowCount; i++) {
+        Arrow& a = gameState->arrows[i];
+        if (!a.active) continue;
+        int ax = (int)a.x - cameraX, ay = (int)a.y - cameraY;
+        if (ax < -TILE_SIZE || ax > SCREEN_WIDTH + TILE_SIZE ||
+            ay < -TILE_SIZE || ay > SCREEN_HEIGHT + TILE_SIZE) continue;
+        Vector2 center = { (float)ax + TILE_SIZE / 2.0f, (float)ay + TILE_SIZE / 2.0f };
+        DrawTexturePro(gameState->texArrow,
+            { 0, 0, (float)gameState->texArrow.width, (float)gameState->texArrow.height },
+            { center.x, center.y, (float)TILE_SIZE, (float)TILE_SIZE },
+            { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f }, a.rotation, WHITE);
+    }
+
     if (gameState->velocityX != 0 || gameState->velocityY != 0) {
         Texture2D at = (gameState->velocityY != 0) ? gameState->trailVertical : gameState->trailHorizontal;
         for (int i = TRAIL_LENGTH - 1; i >= 0; i--) {
@@ -1046,7 +1267,6 @@ void GameDraw(GameState* gameState) {
         }
     }
 
-    // MURCIELAGOS
     for (int i = 0; i < gameState->batCount; i++) {
         Bat& bat = gameState->bats[i];
         int bsx = (int)bat.x - cameraX, bsy = (int)bat.y - cameraY;
@@ -1055,12 +1275,76 @@ void GameDraw(GameState* gameState) {
         DrawTexturePro(bt, { 0,0,(float)bt.width,(float)bt.height }, { (float)bsx,(float)bsy,(float)TILE_SIZE,(float)TILE_SIZE }, { 0,0 }, 0.0f, WHITE);
     }
 
-    // JUGADOR
+    // --- 1. RENDER MONO ---
+    if (gameState->monkey.active) {
+        int frameIdx = gameState->monkey.frame % MONKEY_FRAMES;
+        Texture2D& tex = gameState->texMonkeyFrames[frameIdx];
+        Rectangle srcRec = { 0.0f, 0.0f, (float)tex.width, (float)tex.height };
+        Rectangle destRec = {
+            (float)(gameState->monkey.x - cameraX - TILE_SIZE),
+            (float)(gameState->monkey.y - cameraY - TILE_SIZE),
+            (float)TILE_SIZE * 3.0f,
+            (float)TILE_SIZE * 3.0f
+        };
+        DrawTexturePro(tex, srcRec, destRec, { 0.0f, 0.0f }, 0.0f, WHITE);
+    }
+
+    // --- 2. RENDER COCO (En manos del mono o cayendo) ---
+    Texture2D& texCoco = gameState->texMonkeyDrop;
+    Rectangle srcCoco = { 0.0f, 0.0f, (float)texCoco.width, (float)texCoco.height };
+
+    // Escala del coco reducida al 80% (0.8f) del tamaño original
+    float cocoScale = 0.8f;
+    float cocoRenderWidth = TILE_SIZE * 1.5f * cocoScale;
+    float cocoRenderHeight = TILE_SIZE * 1.5f * cocoScale;
+
+    if (gameState->monkeyDrop.active) {
+        // MODO CAÍDA: Siguiendo la física del Update, aplicando nueva escala
+        Rectangle destRec = {
+            (float)(gameState->monkeyDrop.x - cameraX),
+            (float)(gameState->monkeyDrop.y - cameraY),
+            cocoRenderWidth,
+            cocoRenderHeight
+        };
+
+        if (texCoco.id > 0) {
+            DrawTexturePro(texCoco, srcCoco, destRec, { 0.0f, 0.0f }, 0.0f, WHITE);
+        }
+        else {
+            float centroX = destRec.x + destRec.width / 2.0f;
+            float centroY = destRec.y + destRec.height / 2.0f;
+            DrawCircle((int)centroX, (int)centroY, (float)TILE_SIZE * 0.75f * cocoScale, BROWN);
+        }
+    }
+    else if (gameState->monkey.active && !gameState->monkey.hasDropped) {
+        // MODO ESPERA: Corregido aplicando el desfase del tamaño del mono (- TILE_SIZE) y nueva escala
+        // Se ajusta ligeramente el desplazamiento (+ TILE_SIZE * 0.15f) para re-centrar tras la reducción de tamaño
+        float cocoEnManosX = gameState->monkey.x + (TILE_SIZE * 0.75f) - TILE_SIZE + (TILE_SIZE * 0.15f);
+        float cocoEnManosY = gameState->monkey.y + (TILE_SIZE * 1.0f) - TILE_SIZE + (TILE_SIZE * 0.15f);
+
+        Rectangle destRec = {
+            (float)(cocoEnManosX - cameraX),
+            (float)(cocoEnManosY - cameraY),
+            cocoRenderWidth,
+            cocoRenderHeight
+        };
+
+        if (texCoco.id > 0) {
+            DrawTexturePro(texCoco, srcCoco, destRec, { 0.0f, 0.0f }, 0.0f, WHITE);
+        }
+        else {
+            float centroX = destRec.x + destRec.width / 2.0f;
+            float centroY = destRec.y + destRec.height / 2.0f;
+            DrawCircle((int)centroX, (int)centroY, (float)TILE_SIZE * 0.75f * cocoScale, BROWN);
+        }
+    }
+
+    // --- 3. RENDER JUGADOR ---
     Texture2D cpf = gameState->playerFrames[playerAnimSequence[gameState->playerAnimFrame]];
     Rectangle pd = { (float)(gameState->playerX - cameraX) + TILE_SIZE / 2.0f, (float)(gameState->playerY - cameraY) + TILE_SIZE / 2.0f, (float)TILE_SIZE, (float)TILE_SIZE };
-    DrawTexturePro(cpf, { 0,0,(float)cpf.width,(float)cpf.height }, pd, { TILE_SIZE / 2.0f,TILE_SIZE / 2.0f }, gameState->playerRotation + 180, WHITE);
+    DrawTexturePro(cpf, { 0,0,(float)cpf.width,(float)cpf.height }, pd, { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f }, gameState->playerRotation + 180, WHITE);
 
-    // HUD
+    // --- UI Y PANELES SUPERPUESTOS ---
     DrawRectangle(0, 0, SCREEN_WIDTH, 60, BLACK);
     DrawText(TextFormat("SCORE: %d", gameState->score), 10, 10, 20, WHITE);
     int sc = (int)gameState->timer, cc = (int)((gameState->timer - sc) * 100);
@@ -1095,8 +1379,14 @@ void GameUnload(GameState* gameState) {
     for (int i = 0; i < PLAYER_ANIM_FRAMES; i++) UnloadTexture(gameState->playerFrames[i]);
     UnloadTexture(gameState->starCollectedTexture); UnloadTexture(gameState->starEmptyTexture);
     for (int i = 0; i < 4; i++) UnloadTexture(gameState->batTextures[i]);
+    UnloadTexture(gameState->texTotem);
+    UnloadTexture(gameState->texArrow);
     UnloadSound(gameState->soundDash); UnloadSound(gameState->soundHitWall);
     UnloadSound(gameState->soundCollectDot); UnloadSound(gameState->soundCollectCoin);
     UnloadSound(gameState->soundCollectStar); UnloadSound(gameState->soundLevelComplete);
     UnloadSound(gameState->soundLevelStart);
+    for (int i = 0; i < MONKEY_FRAMES; i++) {
+        UnloadTexture(gameState->texMonkeyFrames[i]);
+    }
+    UnloadTexture(gameState->texMonkeyDrop);
 }

@@ -20,6 +20,7 @@
 #define PLAYER_ANIM_FRAMES     5
 #define COIN_ANIM_FRAMES       4
 #define BAT_ANIM_SEQ_LEN       6
+#define MONKEY_FRAMES          11
 
 // --- DEFINICIONES DE TILES ---
 #define TILE_EMPTY            0
@@ -30,16 +31,21 @@
 #define TILE_STAR             5
 #define TILE_HORIZONTAL_BAT   6
 #define TILE_VERTICAL_BAT     7
-// IMPORTANTE: Los rebotes son 8, 9, 10, 11 y la meta es 12
 #define TILE_REBOTE_D_I       8
 #define TILE_REBOTE_U_D       9
 #define TILE_REBOTE_U_I       10
 #define TILE_REBOTE_D_D       11
 #define TILE_LEVEL_END        12
-#define TILE_SPIKE_UP     13   // Pincho apuntando arriba    → zona peligrosa en row-1
-#define TILE_SPIKE_DOWN   14   // Pincho apuntando abajo     → zona peligrosa en row+1
-#define TILE_SPIKE_LEFT   15   // Pincho apuntando izquierda → zona peligrosa en col-1
-#define TILE_SPIKE_RIGHT  16   // Pincho apuntando derecha   → zona peligrosa en col+1
+#define TILE_SPIKE_UP         13
+#define TILE_SPIKE_DOWN       14
+#define TILE_SPIKE_LEFT       15
+#define TILE_SPIKE_RIGHT      16
+#define TILE_TOTEM_UP         17
+#define TILE_TOTEM_DOWN       18
+#define TILE_TOTEM_LEFT       19
+#define TILE_TOTEM_RIGHT      20
+#define TILE_MONKEY_TRIGGER   21
+#define TILE_MONKEY_SPAWN     22
 
 // --- VARIANTES DE PAREDES (AUTO-TILING) ---
 #define WALL_SOLID            0
@@ -64,6 +70,12 @@
 #define MAP_ROWS_2             47
 #define LEADERBOARD_SIZE       10
 #define MAX_BATS               20
+#define MAX_SPIKES             64
+#define MAX_TOTEMS             32
+#define MAX_ARROWS             64
+#define ARROW_SPEED            4.0f
+#define TOTEM_FIRE_INTERVAL    1.0f
+
 
 // --- ESTRUCTURAS ---
 
@@ -90,6 +102,43 @@ typedef struct {
     float x, y;
 } Bat;
 
+// --- ESTADO DE LA MÁQUINA DEL MONO ---
+typedef enum {
+    MONKEY_IDLE,               // Inactivo, esperando que el jugador pise el trigger
+    MONKEY_WAITING_TO_SPAWN,   // Trigger pisado: esperando 1 segundo oculto
+    MONKEY_DESCENDING,         // Aparece 5 tiles arriba y baja durante 1 segundo exacto
+    MONKEY_AT_SPAWN,           // Llega al spawn original y suelta el coco
+    MONKEY_ASCENDING,          // Regresa a su posición inicial (opcional)
+} MonkeyState;
+
+typedef struct {
+    float x, y;           // Posición actual en píxeles de renderizado
+    float spawnX, spawnY; // Guarda la posición fija del tile TILE_MONKEY_SPAWN original
+    float startY;         // Y de inicio calculada (spawnY - 5 * TILE_SIZE)
+    float targetY;        // Y de destino final (igual a spawnY)
+    MonkeyState state;    // Estado actual de la IA del mono
+    int frame;            // Frame de animación actual
+    float animTimer;      // Acumulador de deltatime para cambiar frames
+    float timer;          // Temporizador unificado para los tiempos de 1s (espera y descenso)
+    float pauseTimer;     // Acumulador para pausas adicionales si se requieren
+    bool active;          // Si el mono está visible y activo en escena
+    bool hasDropped;      // Bandera para evitar soltar múltiples cocos por ciclo
+    int triggerID;        // Reservado para soporte de múltiples triggers
+} Monkey;
+
+typedef struct {
+    float x, y;
+    bool active;
+    float speed;
+} MonkeyDrop;
+
+typedef struct {
+    float x, y;
+    float vx, vy;
+    bool active;
+    float rotation;
+} Arrow;
+
 typedef struct {
     // Texturas y Audio
     Texture2D wallTextures[WALL_VARIANT_COUNT];
@@ -105,12 +154,14 @@ typedef struct {
     Texture2D starCollectedTexture;
     Texture2D starEmptyTexture;
     Texture2D batTextures[4];
+    Texture2D texTotem;
+    Texture2D texArrow;
 
     // Texturas de rebotes
-    Texture2D texRebote8;  // Rebote-D-I-8
-    Texture2D texRebote9;  // Rebote-U-D-9
-    Texture2D texRebote10; // Rebote-U-I-10
-    Texture2D texRebote11; // Rebote-D-D-11
+    Texture2D texRebote8;
+    Texture2D texRebote9;
+    Texture2D texRebote10;
+    Texture2D texRebote11;
 
     // Audio
     Sound soundDash;
@@ -177,16 +228,33 @@ typedef struct {
     int lastBounceTileCol;
     int lastBounceTileRow;
 
-    // --- SISTEMA DE PINCHOS (ciclo por tile) ---
-    // Estado de cada pincho: 0=desactivado, 1=tick, 2=activado, 3=daño
-    // Usamos arrays paralelos indexados por posición (row*MAX_COLS + col)
-    // Guardamos hasta MAX_SPIKES pinchos activos en el nivel
-#define MAX_SPIKES 64
+    // --- SISTEMA DE PINCHOS ---
     int   spikeCount;
     int   spikeCol[MAX_SPIKES];
     int   spikeRow[MAX_SPIKES];
-    int   spikeState[MAX_SPIKES];  // 0=off 1=tick 2=on 3=damage
+    int   spikeState[MAX_SPIKES];
     float spikeTimer[MAX_SPIKES];
+
+    // --- SISTEMA DE TÓTEMS Y FLECHAS ---
+    int   totemCount;
+    int   totemCol[MAX_TOTEMS];
+    int   totemRow[MAX_TOTEMS];
+    int   totemDir[MAX_TOTEMS];     // 0=up 1=down 2=left 3=right
+    float totemTimers[MAX_TOTEMS];
+
+    Arrow arrows[MAX_ARROWS];
+    int   arrowCount;
+
+    // --- MONO Y COCO ---
+    Monkey monkey;
+    MonkeyDrop monkeyDrop;
+    Texture2D texMonkeyFrames[MONKEY_FRAMES];
+    Texture2D texMonkeyDrop;
+
+    // --- TRIGGER DEL MONO ---
+    // Se activa en cuanto el jugador pisa el trigger y permanece true
+    // hasta que el coco es lanzado en el frame 8 de la animación.
+    bool monkeyTriggered;
 
 } GameState;
 

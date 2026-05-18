@@ -4,6 +4,7 @@
 #include "game.h"
 #include "menu.h"
 #include "intro.h"
+#include <cstdlib>
 
 int main() {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Tomb of The Mask");
@@ -11,11 +12,14 @@ int main() {
     SetAudioStreamBufferSizeDefault(2048);
     InitAudioDevice();
 
-    GameState gameState = { 0 };
+    // GameState es demasiado grande para el stack (~500KB+),
+    // se aloja en el heap con calloc para que todos los campos
+    // arranquen a cero (equivale al anterior "= { 0 }").
+    GameState* gameState = (GameState*)calloc(1, sizeof(GameState));
     MenuState menuState = { 0 };
     MapState  mapState = { 0 };
-    SceneType currentScene = SCENE_CREDITS;
 
+    SceneType currentScene = SCENE_CREDITS;
     MenuLoad(&menuState);
     MapLoad(&mapState);
 
@@ -35,13 +39,11 @@ int main() {
                 nextScene = MapUpdate(&mapState);
                 break;
             case SCENE_GAME:
-                nextScene = GameUpdate(&gameState, &mapState);
-
-                if (gameState.levelCompleted && !mapState.levels[mapState.selectedLevel].completed) {
-                    MapAddCoins(&mapState, gameState.coinsCollected);
-                    MapRegisterLevelComplete(&mapState, mapState.selectedLevel, gameState.starsCollected, 0);
+                nextScene = GameUpdate(gameState, &mapState);
+                if (gameState->levelCompleted && !mapState.levels[mapState.selectedLevel].completed) {
+                    MapAddCoins(&mapState, gameState->coinsCollected);
+                    MapRegisterLevelComplete(&mapState, mapState.selectedLevel, gameState->starsCollected, 0);
                 }
-
                 break;
             case SCENE_SETTINGS:
                 nextScene = MapUpdate(&mapState);
@@ -52,15 +54,15 @@ int main() {
 
         if (nextScene != currentScene) {
             if (currentScene == SCENE_GAME) {
-                GameUnload(&gameState);
-                ResetGameState(&gameState);
+                GameUnload(gameState);
+                ResetGameState(gameState);
             }
             switch (nextScene) {
             case SCENE_GAME:
-                gameState.currentLevel = mapState.selectedLevel;
-                gameState.masterVolume = mapState.masterVolume;
-                gameState.musicEnabled = mapState.musicEnabled;
-                GameLoad(&gameState);
+                gameState->currentLevel = mapState.selectedLevel;
+                gameState->masterVolume = mapState.masterVolume;
+                gameState->musicEnabled = mapState.musicEnabled;
+                GameLoad(gameState);
                 break;
             case SCENE_MENU:
                 break;
@@ -80,7 +82,7 @@ int main() {
                 MapDraw(&mapState, SCREEN_WIDTH, SCREEN_HEIGHT);
                 break;
             case SCENE_GAME:
-                GameDraw(&gameState);
+                GameDraw(gameState);
                 break;
             case SCENE_SETTINGS:
                 MapDraw(&mapState, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -91,7 +93,8 @@ int main() {
         }
     }
 
-    if (currentScene == SCENE_GAME) GameUnload(&gameState);
+    if (currentScene == SCENE_GAME) GameUnload(gameState);
+    free(gameState);
     MenuUnload(&menuState);
     MapUnload(&mapState);
     CloseAudioDevice();
