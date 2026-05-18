@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "raylib.h"
 #include "scenes.h"
 
@@ -20,7 +20,7 @@ struct MapState {
     bool          musicEnabled;     // ON/OFF
     float         masterVolume;     // 0.0 a 1.0
 
-    // Animación de selección
+    // Animaciï¿½n de selecciï¿½n
     float           selectPulse;
 };
 
@@ -31,5 +31,5 @@ void      MapDraw(const struct MapState* mapState, int screenWidth, int screenHe
 void      MapUnload(struct MapState* mapState);
 void      MapAddCoins(MapState* mapState, int amount);
 
-// Registra progreso: Asegúrate de que en map.cpp la función reciba estos 4 parámetros
+// Registra progreso: Asegï¿½rate de que en map.cpp la funciï¿½n reciba estos 4 parï¿½metros
 void      MapRegisterLevelComplete(struct MapState* mapState, int levelIndex, int starsEarned, int coinsEarned);

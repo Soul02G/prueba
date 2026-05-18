@@ -18,7 +18,7 @@ static void DrawLevelNode(int levelIndex, int screenX, int screenY, const LevelP
     int nodeW = 110, nodeH = 110;
     int nx = screenX - nodeW / 2, ny = screenY - nodeH / 2;
 
-    bool isLocked = (levelIndex > 1) || (levelIndex > 0 && !progress[levelIndex - 1].completed);
+    bool isLocked = (levelIndex > 0 && !progress[levelIndex - 1].completed);
 
     DrawRectangle(nx + 4, ny + 4, nodeW, nodeH, Color{ 40, 30, 0, 200 });
 
@@ -179,7 +179,8 @@ SceneType MapUpdate(MapState* mapState) {
     if (IsKeyPressed(KEY_M)) mapState->settingsOpen = 1;
     if (IsKeyPressed(KEY_ESCAPE)) return SCENE_MENU;
     if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER)) {
-        if (mapState->selectedLevel <= 1) return SCENE_GAME;
+        bool locked = (mapState->selectedLevel > 0 && !mapState->levels[mapState->selectedLevel - 1].completed);
+        if (!locked) return SCENE_GAME;
     }
 
     return SCENE_MAP;
