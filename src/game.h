@@ -56,6 +56,10 @@
 #define TILE_MONKEY_TRIGGER   21
 #define TILE_MONKEY_SPAWN     22
 
+// Bloques alternantes
+#define TILE_BLOCK_RED        24   // empieza sólido
+#define TILE_BLOCK_BLUE       25   // empieza intangible
+
 // --- VARIANTES DE PAREDES (AUTO-TILING) ---
 #define WALL_SOLID            0
 #define WALL_BORDER_TOP       1
@@ -169,6 +173,8 @@ typedef struct {
     Texture2D levelEndTexture;
     Texture2D spikeTexture;
     Texture2D spikeUnfold;
+    Texture2D texBlockRed;
+    Texture2D texBlockBlue;
     Texture2D trailHorizontal;
     Texture2D trailVertical;
     Texture2D playerFrames[PLAYER_ANIM_FRAMES];
@@ -288,6 +294,11 @@ typedef struct {
     Monkey monkey;
     MonkeyDrop monkeyDrop;
     bool monkeyTriggered;
+
+    // --- BLOQUES ALTERNANTES ---
+    // false = rojo sólido / azul intangible
+    // true  = rojo intangible / azul sólido
+    bool blockToggle;
 
 } GameState;
 

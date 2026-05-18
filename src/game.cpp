@@ -20,6 +20,11 @@ static inline bool TileIsSpike(int t) {
     return t == TILE_SPIKE_UP || t == TILE_SPIKE_DOWN || t == TILE_SPIKE_LEFT || t == TILE_SPIKE_RIGHT;
 }
 
+// Bloques alternantes: rojo sólido cuando !toggle, azul sólido cuando toggle
+static inline bool TileBlockSolid(int t, bool toggle) {
+    return (t == TILE_BLOCK_RED && !toggle) || (t == TILE_BLOCK_BLUE && toggle);
+}
+
 static inline bool TileIsTotem(int t) {
     return t >= TILE_TOTEM_UP && t <= TILE_TOTEM_RIGHT;
 }
@@ -567,6 +572,7 @@ void ResetGameState(GameState* gameState) {
     gameState->totemCount = 0;
     gameState->arrowCount = 0;
     gameState->monkeyTriggered = false;
+    gameState->blockToggle = false;
 
     if (gameState->currentLevel == 0)
         memcpy(gameState->tileMap_1, initialMap, sizeof(initialMap));
@@ -698,6 +704,10 @@ void GameLoad(GameState* gameState) {
     gameState->starTexture = LoadTexture("resources\\tile_star.png");
     gameState->levelEndTexture = LoadTexture("resources\\tile_end.png");
     gameState->spikeTexture = LoadTexture("resources\\pinchos.png");
+    gameState->texBlockRed  = LoadTexture("resources\\red.png");
+    gameState->texBlockBlue = LoadTexture("resources\\blue.png");
+    SetTextureFilter(gameState->texBlockRed,  TEXTURE_FILTER_POINT);
+    SetTextureFilter(gameState->texBlockBlue, TEXTURE_FILTER_POINT);
     gameState->spikeUnfold = LoadTexture("resources\\despliegue.png");
     gameState->trailHorizontal = LoadTexture("resources\\trail.png");
     gameState->trailVertical = LoadTexture("resources\\trailVert.png");
@@ -919,10 +929,12 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
 
     // --- INPUT ---
     if (gameState->velocityX == 0 && gameState->velocityY == 0) {
-        if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) { gameState->velocityX = PLAYER_MOVE_SPEED; gameState->playerRotation = 90; gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
-        else if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) { gameState->velocityX = -PLAYER_MOVE_SPEED; gameState->playerRotation = 270; gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
-        else if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) { gameState->velocityY = PLAYER_MOVE_SPEED; gameState->playerRotation = 180; gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
-        else if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) { gameState->velocityY = -PLAYER_MOVE_SPEED; gameState->playerRotation = 0; gameState->timerStarted = 1; PlaySound(gameState->soundDash); }
+        bool moved = false;
+        if      (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) { gameState->velocityX =  PLAYER_MOVE_SPEED; gameState->playerRotation = 90;  gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
+        else if (IsKeyPressed(KEY_LEFT)  || IsKeyPressed(KEY_A)) { gameState->velocityX = -PLAYER_MOVE_SPEED; gameState->playerRotation = 270; gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
+        else if (IsKeyPressed(KEY_DOWN)  || IsKeyPressed(KEY_S)) { gameState->velocityY =  PLAYER_MOVE_SPEED; gameState->playerRotation = 180; gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
+        else if (IsKeyPressed(KEY_UP)    || IsKeyPressed(KEY_W)) { gameState->velocityY = -PLAYER_MOVE_SPEED; gameState->playerRotation = 0;   gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
+        if (moved) gameState->blockToggle = !gameState->blockToggle;
     }
 
     // --- MOVIMIENTO X ---
@@ -933,35 +945,35 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         if (gameState->currentLevel == 0) {
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_1 ? MAP_COLUMNS_1 - 1 : nextTileCol);
             int h = gameState->tileMap_1[tileRow][nextTileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
+            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
             else if (nextX < 0 || nextX + TILE_SIZE > MAP_COLUMNS_1 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerX = nextX;
         }
         else if (gameState->currentLevel == 1) {
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_2 ? MAP_COLUMNS_2 - 1 : nextTileCol);
             int h = gameState->tileMap_2[tileRow][nextTileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
+            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
             else if (nextX < 0 || nextX + TILE_SIZE > MAP_COLUMNS_2 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerX = nextX;
         }
         else if (gameState->currentLevel == 2) {
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_3 ? MAP_COLUMNS_3 - 1 : nextTileCol);
             int h = gameState->tileMap_3[tileRow][nextTileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
+            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
             else if (nextX < 0 || nextX + TILE_SIZE > MAP_COLUMNS_3 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerX = nextX;
         }
         else if (gameState->currentLevel == 3) {
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_4 ? MAP_COLUMNS_4 - 1 : nextTileCol);
             int h = gameState->tileMap_4[tileRow][nextTileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
+            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
             else if (nextX < 0 || nextX + TILE_SIZE > MAP_COLUMNS_4 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerX = nextX;
         }
         else {
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_5 ? MAP_COLUMNS_5 - 1 : nextTileCol);
             int h = gameState->tileMap_5[tileRow][nextTileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
+            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
             else if (nextX < 0 || nextX + TILE_SIZE > MAP_COLUMNS_5 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerX = nextX;
         }
@@ -975,35 +987,35 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         if (gameState->currentLevel == 0) {
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_1 ? MAP_ROWS_1 - 1 : nextTileRow);
             int h = gameState->tileMap_1[nextTileRow][tileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
+            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
             else if (nextY < 0 || nextY + TILE_SIZE > MAP_ROWS_1 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerY = nextY;
         }
         else if (gameState->currentLevel == 1) {
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_2 ? MAP_ROWS_2 - 1 : nextTileRow);
             int h = gameState->tileMap_2[nextTileRow][tileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
+            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
             else if (nextY < 0 || nextY + TILE_SIZE > MAP_ROWS_2 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerY = nextY;
         }
         else if (gameState->currentLevel == 2) {
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_3 ? MAP_ROWS_3 - 1 : nextTileRow);
             int h = gameState->tileMap_3[nextTileRow][tileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
+            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
             else if (nextY < 0 || nextY + TILE_SIZE > MAP_ROWS_3 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerY = nextY;
         }
         else if (gameState->currentLevel == 3) {
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_4 ? MAP_ROWS_4 - 1 : nextTileRow);
             int h = gameState->tileMap_4[nextTileRow][tileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
+            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
             else if (nextY < 0 || nextY + TILE_SIZE > MAP_ROWS_4 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerY = nextY;
         }
         else {
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_5 ? MAP_ROWS_5 - 1 : nextTileRow);
             int h = gameState->tileMap_5[nextTileRow][tileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
+            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
             else if (nextY < 0 || nextY + TILE_SIZE > MAP_ROWS_5 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
             else gameState->playerY = nextY;
         }
@@ -1420,6 +1432,19 @@ void GameDraw(GameState* gameState) {
             case TILE_LEVEL_END:
                 DrawTexturePro(gameState->levelEndTexture, { 0,0,(float)gameState->levelEndTexture.width,(float)gameState->levelEndTexture.height }, dst, orig, 0, WHITE);
                 break;
+
+            case TILE_BLOCK_RED: {
+                bool solid = !gameState->blockToggle;
+                Color c = solid ? WHITE : Color{ 255, 255, 255, 80 };
+                DrawTexturePro(gameState->texBlockRed, { 0,0,(float)gameState->texBlockRed.width,(float)gameState->texBlockRed.height }, dst, orig, 0, c);
+                break;
+            }
+            case TILE_BLOCK_BLUE: {
+                bool solid = gameState->blockToggle;
+                Color c = solid ? WHITE : Color{ 255, 255, 255, 80 };
+                DrawTexturePro(gameState->texBlockBlue, { 0,0,(float)gameState->texBlockBlue.width,(float)gameState->texBlockBlue.height }, dst, orig, 0, c);
+                break;
+            }
             case TILE_MONKEY_TRIGGER:
                 DrawTexture(gameState->dotTexture, sx, sy, WHITE);
                 break;
@@ -1588,6 +1613,8 @@ void GameUnload(GameState* gameState) {
     UnloadTexture(gameState->dotTexture); UnloadTexture(gameState->coinTexture);
     UnloadTexture(gameState->starTexture); UnloadTexture(gameState->levelEndTexture);
     UnloadTexture(gameState->spikeTexture);
+    UnloadTexture(gameState->texBlockRed);
+    UnloadTexture(gameState->texBlockBlue);
     UnloadTexture(gameState->trailHorizontal); UnloadTexture(gameState->trailVertical);
     for (int i = 0; i < PLAYER_ANIM_FRAMES; i++) UnloadTexture(gameState->playerFrames[i]);
     UnloadTexture(gameState->starCollectedTexture); UnloadTexture(gameState->starEmptyTexture);
