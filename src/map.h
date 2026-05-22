@@ -11,7 +11,7 @@ typedef struct {
     int   completed;     // 1 si completado
 } LevelProgress;
 
-struct MapState {
+typedef struct MapState {
     LevelProgress levels[MAX_LEVELS];
     int           totalCoins;       // monedas totales acumuladas
     int           selectedLevel;    // nivel seleccionado en el mapa (0-based)
@@ -20,16 +20,14 @@ struct MapState {
     bool          musicEnabled;     // ON/OFF
     float         masterVolume;     // 0.0 a 1.0
 
-    // Animaci�n de selecci�n
-    float           selectPulse;
-};
+    // Animación de selección
+    float         selectPulse;
+} MapState;
 
 // Prototipos de funciones
-void      MapLoad(struct MapState* mapState);
-SceneType MapUpdate(struct MapState* mapState);
-void      MapDraw(const struct MapState* mapState, int screenWidth, int screenHeight);
-void      MapUnload(struct MapState* mapState);
+void      MapLoad(MapState* mapState);
+SceneType MapUpdate(MapState* mapState);
+void      MapDraw(const MapState* mapState, int screenWidth, int screenHeight);
+void      MapUnload(MapState* mapState);
 void      MapAddCoins(MapState* mapState, int amount);
-
-// Registra progreso: Aseg�rate de que en map.cpp la funci�n reciba estos 4 par�metros
-void      MapRegisterLevelComplete(struct MapState* mapState, int levelIndex, int starsEarned, int coinsEarned);
+void      MapRegisterLevelComplete(MapState* mapState, int levelIndex, int starsEarned, int coinsEarned);

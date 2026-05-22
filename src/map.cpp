@@ -13,11 +13,11 @@ static const int CONNECTION_COUNT = 5;
 static Texture2D texStarCollected;
 static Texture2D texStarEmpty;
 
-
 static void DrawLevelNode(int levelIndex, int screenX, int screenY, const LevelProgress* progress, int isSelected, float pulse) {
     int nodeW = 110, nodeH = 110;
     int nx = screenX - nodeW / 2, ny = screenY - nodeH / 2;
 
+    // Un nivel está bloqueado si es mayor que 0 Y el nivel anterior no está completado
     bool isLocked = (levelIndex > 0 && !progress[levelIndex - 1].completed);
 
     DrawRectangle(nx + 4, ny + 4, nodeW, nodeH, Color{ 40, 30, 0, 200 });
@@ -36,7 +36,7 @@ static void DrawLevelNode(int levelIndex, int screenX, int screenY, const LevelP
     int starSize = 28, starPad = 4;
     int starY = ny + nodeH - starSize - 6;
 
-    // Número centrado verticalmente entre el top del nodo y la zona de estrellas
+    // Número centrado verticalmente
     int textAreaH = starY - ny;
     int textY = ny + (textAreaH - 36) / 2;
     const char* numText = TextFormat("%d", levelIndex + 1);
@@ -69,14 +69,11 @@ static void DrawSettings(const MapState* mapState, int screenWidth, int screenHe
     int volLabelY = py + 135;
     if (mapState->settingsOption == 1) DrawRectangle(px + 40, volLabelY - 5, panelW - 80, 100, Color{ 255, 240, 100, 255 });
 
-    // Etiqueta "VOLUMEN"
     DrawText("VOLUMEN", px + (panelW - MeasureText("VOLUMEN", 20)) / 2, volLabelY, 20, Color{ 30, 20, 0, 255 });
 
-    // Porcentaje
     const char* volPct = TextFormat("%d%%", (int)(mapState->masterVolume * 100));
     DrawText(volPct, px + (panelW - MeasureText(volPct, 20)) / 2, volLabelY + 26, 20, Color{ 30, 20, 0, 255 });
 
-    // Slider
     int sliderW = 280, sliderX = px + (panelW - sliderW) / 2;
     int sliderY = volLabelY + 58;
     DrawRectangle(sliderX, sliderY, sliderW, 14, Color{ 100, 80, 0, 255 });
@@ -85,7 +82,6 @@ static void DrawSettings(const MapState* mapState, int screenWidth, int screenHe
     DrawRectangle(handleX, sliderY - 5, 14, 24, WHITE);
     DrawRectangleLines(handleX, sliderY - 5, 14, 24, Color{ 80, 60, 0, 255 });
 }
-
 
 void SaveGameProgress(const MapState* mapState) {
     SaveFileData(SAVE_FILE_NAME, (void*)mapState, sizeof(MapState));
@@ -109,7 +105,6 @@ void LoadGameProgress(MapState* mapState) {
     }
     mapState->totalCoins = 0;
 }
-
 
 void MapLoad(MapState* mapState) {
     LoadGameProgress(mapState);
@@ -171,6 +166,7 @@ SceneType MapUpdate(MapState* mapState) {
     }
 
     if (nextLevel != -1 && nextLevel < MAX_LEVELS) {
+        // Permitir moverse al nivel si es el primero (0) o si el anterior está completado
         if (nextLevel == 0 || mapState->levels[nextLevel - 1].completed) {
             mapState->selectedLevel = nextLevel;
         }
@@ -178,9 +174,12 @@ SceneType MapUpdate(MapState* mapState) {
 
     if (IsKeyPressed(KEY_M)) mapState->settingsOpen = 1;
     if (IsKeyPressed(KEY_ESCAPE)) return SCENE_MENU;
+
+    
     if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER)) {
-        bool locked = (mapState->selectedLevel > 0 && !mapState->levels[mapState->selectedLevel - 1].completed);
-        if (!locked) return SCENE_GAME;
+        if (mapState->selectedLevel >= 0 && mapState->selectedLevel < MAX_LEVELS) {
+            return SCENE_GAME; // Ahora funciona con los 6 niveles
+        }
     }
 
     return SCENE_MAP;
@@ -190,10 +189,12 @@ void MapRegisterLevelComplete(MapState* mapState, int levelIndex, int starsEarne
     if (levelIndex < 0 || levelIndex >= MAX_LEVELS) return;
 
     mapState->levels[levelIndex].completed = 1;
-    if (starsEarned > mapState->levels[levelIndex].starsEarned)
+    if (starsEarned > mapState->levels[levelIndex].starsEarned) {
         mapState->levels[levelIndex].starsEarned = starsEarned;
+    }
 
-    SaveGameProgress(mapState);
+    // CORREGIDO: Ahora sumamos las monedas obtenidas al completarlo
+    MapAddCoins(mapState, coinsEarned);
 }
 
 void MapAddCoins(MapState* mapState, int amount) {
@@ -219,7 +220,7 @@ void MapDraw(const MapState* mapState, int screenWidth, int screenHeight) {
 
     DrawText("~~~ MAPA ~~~", (screenWidth - MeasureText("~~~ MAPA ~~~", 22)) / 2, 65, 22, YELLOW);
 
-    // GRID - Centrado uniforme
+    // GRID
     int gridStartY = 130;
     int gridEndY = screenHeight - 80;
     int nodeX[MAX_LEVELS], nodeY[MAX_LEVELS];
