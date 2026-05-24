@@ -1,4 +1,4 @@
-﻿#include "game.h"
+#include "game.h"
 #include "map.h"
 #include "raylib.h"
 #include <string.h>
@@ -181,9 +181,9 @@ static const int LEVEL_3_DATA[MAP_ROWS_3][MAP_COLUMNS_3] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,14,14,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,1,2,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,1,1,0,13,13,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,2,0,24,0,25,0,24,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
@@ -704,9 +704,9 @@ void GameLoad(GameState* gameState) {
     gameState->starTexture = LoadTexture("resources\\tile_star.png");
     gameState->levelEndTexture = LoadTexture("resources\\tile_end.png");
     gameState->spikeTexture = LoadTexture("resources\\pinchos.png");
-    gameState->texBlockRed  = LoadTexture("resources\\red.png");
+    gameState->texBlockRed = LoadTexture("resources\\red.png");
     gameState->texBlockBlue = LoadTexture("resources\\blue.png");
-    SetTextureFilter(gameState->texBlockRed,  TEXTURE_FILTER_POINT);
+    SetTextureFilter(gameState->texBlockRed, TEXTURE_FILTER_POINT);
     SetTextureFilter(gameState->texBlockBlue, TEXTURE_FILTER_POINT);
     gameState->spikeUnfold = LoadTexture("resources\\despliegue.png");
     gameState->trailHorizontal = LoadTexture("resources\\trail.png");
@@ -930,10 +930,10 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     // --- INPUT ---
     if (gameState->velocityX == 0 && gameState->velocityY == 0) {
         bool moved = false;
-        if      (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) { gameState->velocityX =  PLAYER_MOVE_SPEED; gameState->playerRotation = 90;  gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
-        else if (IsKeyPressed(KEY_LEFT)  || IsKeyPressed(KEY_A)) { gameState->velocityX = -PLAYER_MOVE_SPEED; gameState->playerRotation = 270; gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
-        else if (IsKeyPressed(KEY_DOWN)  || IsKeyPressed(KEY_S)) { gameState->velocityY =  PLAYER_MOVE_SPEED; gameState->playerRotation = 180; gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
-        else if (IsKeyPressed(KEY_UP)    || IsKeyPressed(KEY_W)) { gameState->velocityY = -PLAYER_MOVE_SPEED; gameState->playerRotation = 0;   gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
+        if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) { gameState->velocityX = PLAYER_MOVE_SPEED; gameState->playerRotation = 90;  gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
+        else if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) { gameState->velocityX = -PLAYER_MOVE_SPEED; gameState->playerRotation = 270; gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
+        else if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) { gameState->velocityY = PLAYER_MOVE_SPEED; gameState->playerRotation = 180; gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
+        else if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) { gameState->velocityY = -PLAYER_MOVE_SPEED; gameState->playerRotation = 0;   gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
         if (moved) gameState->blockToggle = !gameState->blockToggle;
     }
 
