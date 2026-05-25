@@ -382,26 +382,27 @@ static bool CheckWallCollision(GameState* gameState, float x, float y) {
     int col = (int)(x / TILE_SIZE);
     int row = (int)(y / TILE_SIZE);
 
-    if (gameState->currentLevel == 1) {
-        if (row < 0 || row >= MAP_ROWS_2 || col < 0 || col >= MAP_COLUMNS_2) return true;
-        return (gameState->tileMap_2[row][col] == TILE_WALL);
-    }
-    else if (gameState->currentLevel == 2) {
-        if (row < 0 || row >= MAP_ROWS_3 || col < 0 || col >= MAP_COLUMNS_3) return true;
-        return (gameState->tileMap_3[row][col] == TILE_WALL);
-    }
-    else if (gameState->currentLevel == 3) {
-        if (row < 0 || row >= MAP_ROWS_4 || col < 0 || col >= MAP_COLUMNS_4) return true;
-        return (gameState->tileMap_4[row][col] == TILE_WALL);
-    }
-    else if (gameState->currentLevel == 4) {
-        if (row < 0 || row >= MAP_ROWS_5 || col < 0 || col >= MAP_COLUMNS_5) return true;
-        return (gameState->tileMap_5[row][col] == TILE_WALL);
-    }
-    else {
+    if (gameState->currentLevel == 0) { // Nivel 1
         if (row < 0 || row >= MAP_ROWS_1 || col < 0 || col >= MAP_COLUMNS_1) return true;
         return (gameState->tileMap_1[row][col] == TILE_WALL);
     }
+    else if (gameState->currentLevel == 1) { // Nivel 2
+        if (row < 0 || row >= MAP_ROWS_2 || col < 0 || col >= MAP_COLUMNS_2) return true;
+        return (gameState->tileMap_2[row][col] == TILE_WALL);
+    }
+    else if (gameState->currentLevel == 2) { // Nivel 3
+        if (row < 0 || row >= MAP_ROWS_3 || col < 0 || col >= MAP_COLUMNS_3) return true;
+        return (gameState->tileMap_3[row][col] == TILE_WALL);
+    }
+    else if (gameState->currentLevel == 3) { // Nivel 4
+        if (row < 0 || row >= MAP_ROWS_4 || col < 0 || col >= MAP_COLUMNS_4) return true;
+        return (gameState->tileMap_4[row][col] == TILE_WALL);
+    }
+    else if (gameState->currentLevel == 4) { // Nivel 5
+        if (row < 0 || row >= MAP_ROWS_5 || col < 0 || col >= MAP_COLUMNS_5) return true;
+        return (gameState->tileMap_5[row][col] == TILE_WALL);
+    }
+    return true;
 }
 
 // --- RECOLECCION ---
@@ -454,8 +455,15 @@ static void CollectTileUnderPlayer(GameState* gameState) {
         gameState->score += 100;
         PlaySound(gameState->soundCollectCoin);
         break;
-    case TILE_STAR:      gameState->starsCollected++; PlaySound(gameState->soundCollectStar); break;
-    case TILE_LEVEL_END: gameState->levelCompleted = true; PlaySound(gameState->soundLevelComplete); break;
+    case TILE_STAR:
+        gameState->starsCollected++;
+        printf("Estrella recogida! Total: %d / %d\n", gameState->starsCollected, gameState->starsTotal);
+        PlaySound(gameState->soundCollectStar);
+        break;
+    case TILE_LEVEL_END:
+        gameState->levelCompleted = true;
+        PlaySound(gameState->soundLevelComplete);
+        break;
     }
 }
 
@@ -682,7 +690,7 @@ void ResetGameState(GameState* gameState) {
 }
 
 //  GAMELOAD
-void GameLoad(GameState* gameState) {
+void GameLoad(GameState* gameState, MapState* mapState) {
     const char* wallTextureFiles[WALL_VARIANT_COUNT] = {
         "resources\\tile_wall_solid.png","resources\\tile_wall_top.png","resources\\tile_wall_bottom.png",
         "resources\\tile_wall_left.png","resources\\tile_wall_right.png","resources\\tile_wall_tl.png",
@@ -704,9 +712,9 @@ void GameLoad(GameState* gameState) {
     gameState->starTexture = LoadTexture("resources\\tile_star.png");
     gameState->levelEndTexture = LoadTexture("resources\\tile_end.png");
     gameState->spikeTexture = LoadTexture("resources\\pinchos.png");
-    gameState->texBlockRed  = LoadTexture("resources\\red.png");
+    gameState->texBlockRed = LoadTexture("resources\\red.png");
     gameState->texBlockBlue = LoadTexture("resources\\blue.png");
-    SetTextureFilter(gameState->texBlockRed,  TEXTURE_FILTER_POINT);
+    SetTextureFilter(gameState->texBlockRed, TEXTURE_FILTER_POINT);
     SetTextureFilter(gameState->texBlockBlue, TEXTURE_FILTER_POINT);
     gameState->spikeUnfold = LoadTexture("resources\\despliegue.png");
     gameState->trailHorizontal = LoadTexture("resources\\trail.png");
@@ -717,11 +725,12 @@ void GameLoad(GameState* gameState) {
     gameState->coinFrames[1] = LoadTexture("resources\\coin-frame-1.png");
     gameState->coinFrames[2] = LoadTexture("resources\\coin-frame-2.png");
     gameState->coinFrames[3] = LoadTexture("resources\\coin-frame-3.png");
-    gameState->playerFrames[0] = LoadTexture("resources\\totm.png");
-    gameState->playerFrames[1] = LoadTexture("resources\\totm_1.png");
-    gameState->playerFrames[2] = LoadTexture("resources\\totm_2.png");
-    gameState->playerFrames[3] = LoadTexture("resources\\totm_3.png");
-    gameState->playerFrames[4] = LoadTexture("resources\\totm_4.png");
+    const char* skinPrefix = (mapState->playerSkinIndex == 1) ? "totmS" : "totm";
+    gameState->playerFrames[0] = LoadTexture(TextFormat("resources\\%s.png", skinPrefix));
+    gameState->playerFrames[1] = LoadTexture(TextFormat("resources\\%s_1.png", skinPrefix));
+    gameState->playerFrames[2] = LoadTexture(TextFormat("resources\\%s_2.png", skinPrefix));
+    gameState->playerFrames[3] = LoadTexture(TextFormat("resources\\%s_3.png", skinPrefix));
+    gameState->playerFrames[4] = LoadTexture(TextFormat("resources\\%s_4.png", skinPrefix));
     for (int i = 0; i < MONKEY_FRAMES; i++)
         gameState->texMonkeyFrames[i] = LoadTexture(TextFormat("resources\\MonkeyFrames_%d.png", i));
     gameState->texMonkeyDrop = LoadTexture("resources\\coco.png");
@@ -923,17 +932,29 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
 
     if (gameState->timerStarted && !gameState->levelCompleted) gameState->timer += dt;
 
-    if (gameState->levelCompleted && !gameState->showingVictoryOptions && !gameState->enteringInitials && !gameState->showingLeaderboard)
+    // --- FIX: registrar progreso al completar el nivel por primera vez ---
+    if (gameState->levelCompleted && !gameState->showingVictoryOptions && !gameState->enteringInitials && !gameState->showingLeaderboard) {
         gameState->showingVictoryOptions = 1;
+        // currentLevel es 0-based (0=nivel1, 1=nivel2, 3=nivel4, 4=nivel5)
+        // El nivel 2 (índice 2) es la tienda, se salta automáticamente en MapUpdate
+        // así que los niveles jugables mapean directamente a sus índices en mapState
+        int mapIdx = gameState->currentLevel;
+        // Si currentLevel > 1 (porque la tienda ocupa el índice 2 del mapa),
+        // hay que sumar 1 para saltar el slot de la tienda
+        if (gameState->currentLevel >= 2) mapIdx = gameState->currentLevel + 1;
+        printf("Nivel completado! currentLevel=%d mapIdx=%d stars=%d coins=%d\n",
+            gameState->currentLevel, mapIdx, gameState->starsCollected, gameState->coinsCollected);
+        MapRegisterLevelComplete(mapState, mapIdx, gameState->starsCollected, gameState->coinsCollected);
+    }
     if (gameState->levelCompleted) return SCENE_GAME;
 
     // --- INPUT ---
     if (gameState->velocityX == 0 && gameState->velocityY == 0) {
         bool moved = false;
-        if      (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) { gameState->velocityX =  PLAYER_MOVE_SPEED; gameState->playerRotation = 90;  gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
-        else if (IsKeyPressed(KEY_LEFT)  || IsKeyPressed(KEY_A)) { gameState->velocityX = -PLAYER_MOVE_SPEED; gameState->playerRotation = 270; gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
-        else if (IsKeyPressed(KEY_DOWN)  || IsKeyPressed(KEY_S)) { gameState->velocityY =  PLAYER_MOVE_SPEED; gameState->playerRotation = 180; gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
-        else if (IsKeyPressed(KEY_UP)    || IsKeyPressed(KEY_W)) { gameState->velocityY = -PLAYER_MOVE_SPEED; gameState->playerRotation = 0;   gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
+        if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) { gameState->velocityX = PLAYER_MOVE_SPEED; gameState->playerRotation = 90;  gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
+        else if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) { gameState->velocityX = -PLAYER_MOVE_SPEED; gameState->playerRotation = 270; gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
+        else if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) { gameState->velocityY = PLAYER_MOVE_SPEED; gameState->playerRotation = 180; gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
+        else if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) { gameState->velocityY = -PLAYER_MOVE_SPEED; gameState->playerRotation = 0;   gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
         if (moved) gameState->blockToggle = !gameState->blockToggle;
     }
 
@@ -1428,7 +1449,6 @@ void GameDraw(GameState* gameState) {
                 DrawTexturePro(gameState->texRebote10, { 0,0,(float)gameState->texRebote10.width,(float)gameState->texRebote10.height }, dst, orig, 0, WHITE); break;
             case 11:
                 DrawTexturePro(gameState->texRebote11, { 0,0,(float)gameState->texRebote11.width,(float)gameState->texRebote11.height }, dst, orig, 0, WHITE); break;
-                // FIX (doc2): usar TILE_LEVEL_END en vez del literal 12
             case TILE_LEVEL_END:
                 DrawTexturePro(gameState->levelEndTexture, { 0,0,(float)gameState->levelEndTexture.width,(float)gameState->levelEndTexture.height }, dst, orig, 0, WHITE);
                 break;

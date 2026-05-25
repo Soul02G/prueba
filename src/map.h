@@ -1,30 +1,26 @@
 ﻿#pragma once
 #include "raylib.h"
 #include "scenes.h"
-
 #define MAX_LEVELS        6
 #define MAX_STARS         3
 #define TOTAL_COINS_KEY   "totalCoins"
-
 typedef struct {
-    int   starsEarned;   // 0-3 estrellas conseguidas
-    int   completed;     // 1 si completado
+    int   starsEarned;
+    int   completed;
 } LevelProgress;
-
 typedef struct MapState {
     LevelProgress levels[MAX_LEVELS];
-    int           totalCoins;       // monedas totales acumuladas
-    int           selectedLevel;    // nivel seleccionado en el mapa (0-based)
-    int           settingsOpen;     // 1 = panel ajustes abierto
-    int           settingsOption;   // 0 para SFX, 1 para VOLUMEN
-    bool          musicEnabled;     // ON/OFF
-    float         masterVolume;     // 0.0 a 1.0
-
-    // Animación de selección
+    int           totalCoins;
+    int           selectedLevel;
+    int           settingsOpen;
+    int           settingsOption;
+    bool          musicEnabled;
+    float         masterVolume;
     float         selectPulse;
+    // --- Skins ---
+    bool          playerSkinBought;  // true si ya compro la skin especial
+    int           playerSkinIndex;   // 0 = base (totm), 1 = especial (totmS)
 } MapState;
-
-// Prototipos de funciones
 void      MapLoad(MapState* mapState);
 SceneType MapUpdate(MapState* mapState);
 void      MapDraw(const MapState* mapState, int screenWidth, int screenHeight);

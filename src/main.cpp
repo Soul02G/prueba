@@ -4,6 +4,7 @@
 #include "game.h"
 #include "menu.h"
 #include "intro.h"
+#include "shop.h"
 #include <cstdlib>
 
 int main() {
@@ -12,9 +13,7 @@ int main() {
     SetAudioStreamBufferSizeDefault(2048);
     InitAudioDevice();
 
-    // GameState es demasiado grande para el stack (~500KB+),
-    // se aloja en el heap con calloc para que todos los campos
-    // arranquen a cero (equivale al anterior "= { 0 }").
+    // gameState ya es un puntero (GameState*)
     GameState* gameState = (GameState*)calloc(1, sizeof(GameState));
     MenuState menuState = { 0 };
     MapState  mapState = { 0 };
@@ -38,31 +37,38 @@ int main() {
             case SCENE_MAP:
                 nextScene = MapUpdate(&mapState);
                 break;
+            case SCENE_SHOP:
+                nextScene = ShopUpdate(&mapState);
+                break;
             case SCENE_GAME:
                 nextScene = GameUpdate(gameState, &mapState);
-                if (gameState->levelCompleted && !mapState.levels[mapState.selectedLevel].completed) {
-                    MapAddCoins(&mapState, gameState->coinsCollected);
-                    MapRegisterLevelComplete(&mapState, mapState.selectedLevel, gameState->starsCollected, 0);
-                }
-                break;
-            case SCENE_SETTINGS:
-                nextScene = MapUpdate(&mapState);
                 break;
             default: break;
             }
         }
 
         if (nextScene != currentScene) {
+            // --- DESCARGAR ESCENA SALIENTE ---
             if (currentScene == SCENE_GAME) {
                 GameUnload(gameState);
                 ResetGameState(gameState);
             }
+            if (currentScene == SCENE_SHOP) {
+                ShopUnload();
+            }
+
+            // --- CARGAR ESCENA ENTRANTE ---
             switch (nextScene) {
             case SCENE_GAME:
                 gameState->currentLevel = mapState.selectedLevel;
                 gameState->masterVolume = mapState.masterVolume;
                 gameState->musicEnabled = mapState.musicEnabled;
-                GameLoad(gameState);
+
+                // CAMBIO 4 CORREGIDO: Pasamos gameState (que ya es puntero) y &mapState
+                GameLoad(gameState, &mapState);
+                break;
+            case SCENE_SHOP:
+                ShopLoad(&mapState);
                 break;
             case SCENE_MENU:
                 break;
@@ -71,6 +77,7 @@ int main() {
             currentScene = nextScene;
         }
 
+        // --- RENDERIZADO ---
         if (currentScene != SCENE_CREDITS) {
             BeginDrawing();
             ClearBackground(BLACK);
@@ -80,6 +87,9 @@ int main() {
                 break;
             case SCENE_MAP:
                 MapDraw(&mapState, SCREEN_WIDTH, SCREEN_HEIGHT);
+                break;
+            case SCENE_SHOP:
+                ShopDraw(&mapState, SCREEN_WIDTH, SCREEN_HEIGHT);
                 break;
             case SCENE_GAME:
                 GameDraw(gameState);
@@ -94,10 +104,13 @@ int main() {
     }
 
     if (currentScene == SCENE_GAME) GameUnload(gameState);
+    if (currentScene == SCENE_SHOP) ShopUnload(); 
+
     free(gameState);
     MenuUnload(&menuState);
     MapUnload(&mapState);
     CloseAudioDevice();
     CloseWindow();
+
     return 0;
 }

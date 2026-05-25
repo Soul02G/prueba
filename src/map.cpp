@@ -12,13 +12,19 @@ static const int CONNECTION_COUNT = 5;
 
 static Texture2D texStarCollected;
 static Texture2D texStarEmpty;
+static Texture2D texShopIcon;
 
 static void DrawLevelNode(int levelIndex, int screenX, int screenY, const LevelProgress* progress, int isSelected, float pulse) {
     int nodeW = 110, nodeH = 110;
     int nx = screenX - nodeW / 2, ny = screenY - nodeH / 2;
 
-    // Un nivel está bloqueado si es mayor que 0 Y el nivel anterior no está completado
-    bool isLocked = (levelIndex > 0 && !progress[levelIndex - 1].completed);
+    bool isLocked = false;
+    if (levelIndex == 0) {
+        isLocked = false;
+    }
+    else {
+        isLocked = !progress[levelIndex - 1].completed;
+    }
 
     DrawRectangle(nx + 4, ny + 4, nodeW, nodeH, Color{ 40, 30, 0, 200 });
 
@@ -32,21 +38,44 @@ static void DrawLevelNode(int levelIndex, int screenX, int screenY, const LevelP
         DrawRectangleLines(nx - 3, ny - 3, nodeW + 6, nodeH + 6, Color{ 255, 255, 0, (unsigned char)(180 * alpha) });
     }
 
-    // Estrellas
-    int starSize = 28, starPad = 4;
-    int starY = ny + nodeH - starSize - 6;
+    if (levelIndex == 2) {
+        if (texShopIcon.id > 0) {
+            float iconW = (float)nodeW;
+            float iconH = (float)nodeH;
+            float ix = (float)nx;
+            float iy = (float)ny;
 
-    // Número centrado verticalmente
-    int textAreaH = starY - ny;
-    int textY = ny + (textAreaH - 36) / 2;
-    const char* numText = TextFormat("%d", levelIndex + 1);
-    DrawText(numText, nx + (nodeW - MeasureText(numText, 36)) / 2, textY, 36, isLocked ? DARKGRAY : Color{ 30, 20, 0, 255 });
+            DrawTexturePro(
+                texShopIcon,
+                { 0.0f, 0.0f, (float)texShopIcon.width, (float)texShopIcon.height },
+                { ix, iy, iconW, iconH },
+                { 0.0f, 0.0f },
+                0.0f,
+                isLocked ? GRAY : WHITE
+            );
+        }
+        else {
+            DrawText("SHOP", nx + (nodeW - MeasureText("SHOP", 24)) / 2, ny + (nodeH - 24) / 2, 24, isLocked ? DARKGRAY : Color{ 30, 20, 0, 255 });
+        }
+    }
+    else {
+        int visualLevelNum = levelIndex + 1;
+        if (levelIndex > 2) visualLevelNum = levelIndex;
 
-    for (int s = 0; s < 3; s++) {
-        int sx = nx + (nodeW - (3 * starSize + 2 * starPad)) / 2 + s * (starSize + starPad);
-        Texture2D tex = (s < progress[levelIndex].starsEarned) ? texStarCollected : texStarEmpty;
-        if (tex.id > 0) {
-            DrawTexturePro(tex, { 0, 0, (float)tex.width, (float)tex.height }, { (float)sx, (float)starY, (float)starSize, (float)starSize }, { 0, 0 }, 0.0f, isLocked ? GRAY : WHITE);
+        int starSize = 28, starPad = 4;
+        int starY = ny + nodeH - starSize - 6;
+
+        int textAreaH = starY - ny;
+        int textY = ny + (textAreaH - 36) / 2;
+        const char* numText = TextFormat("%d", visualLevelNum);
+        DrawText(numText, nx + (nodeW - MeasureText(numText, 36)) / 2, textY, 36, isLocked ? DARKGRAY : Color{ 30, 20, 0, 255 });
+
+        for (int s = 0; s < 3; s++) {
+            int sx = nx + (nodeW - (3 * starSize + 2 * starPad)) / 2 + s * (starSize + starPad);
+            Texture2D tex = (s < progress[levelIndex].starsEarned) ? texStarCollected : texStarEmpty;
+            if (tex.id > 0) {
+                DrawTexturePro(tex, { 0, 0, (float)tex.width, (float)tex.height }, { (float)sx, (float)starY, (float)starSize, (float)starSize }, { 0, 0 }, 0.0f, isLocked ? GRAY : WHITE);
+            }
         }
     }
 }
@@ -60,12 +89,10 @@ static void DrawSettings(const MapState* mapState, int screenWidth, int screenHe
     DrawRectangleLines(px, py, panelW, panelH, Color{ 80, 60, 0, 255 });
     DrawText("AJUSTES", px + (panelW - MeasureText("AJUSTES", 28)) / 2, py + 20, 28, Color{ 30, 20, 0, 255 });
 
-    // --- SFX ON/OFF ---
     int sfxY = py + 75;
     if (mapState->settingsOption == 0) DrawRectangle(px + 40, sfxY - 5, panelW - 80, 40, Color{ 255, 240, 100, 255 });
     DrawText(mapState->musicEnabled ? "SFX: ON" : "SFX: OFF", px + (panelW - MeasureText("SFX: ON", 22)) / 2, sfxY + 6, 22, BLACK);
 
-    // --- VOLUMEN ---
     int volLabelY = py + 135;
     if (mapState->settingsOption == 1) DrawRectangle(px + 40, volLabelY - 5, panelW - 80, 100, Color{ 255, 240, 100, 255 });
 
@@ -119,6 +146,7 @@ void MapLoad(MapState* mapState) {
     SetMasterVolume(mapState->masterVolume);
     texStarCollected = LoadTexture("resources/star_collected.png");
     texStarEmpty = LoadTexture("resources/star_empty.png");
+    texShopIcon = LoadTexture("resources/carrito.png");
 }
 
 SceneType MapUpdate(MapState* mapState) {
@@ -166,8 +194,15 @@ SceneType MapUpdate(MapState* mapState) {
     }
 
     if (nextLevel != -1 && nextLevel < MAX_LEVELS) {
-        // Permitir moverse al nivel si es el primero (0) o si el anterior está completado
-        if (nextLevel == 0 || mapState->levels[nextLevel - 1].completed) {
+        bool canMove = false;
+        if (nextLevel == 0) {
+            canMove = true;
+        }
+        else {
+            canMove = mapState->levels[nextLevel - 1].completed;
+        }
+
+        if (canMove) {
             mapState->selectedLevel = nextLevel;
         }
     }
@@ -175,10 +210,14 @@ SceneType MapUpdate(MapState* mapState) {
     if (IsKeyPressed(KEY_M)) mapState->settingsOpen = 1;
     if (IsKeyPressed(KEY_ESCAPE)) return SCENE_MENU;
 
-    
     if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER)) {
         if (mapState->selectedLevel >= 0 && mapState->selectedLevel < MAX_LEVELS) {
-            return SCENE_GAME; // Ahora funciona con los 6 niveles
+            if (mapState->selectedLevel == 2) {
+                mapState->levels[2].completed = 1;
+                SaveGameProgress(mapState);
+                return SCENE_SHOP;
+            }
+            return SCENE_GAME;
         }
     }
 
@@ -189,11 +228,11 @@ void MapRegisterLevelComplete(MapState* mapState, int levelIndex, int starsEarne
     if (levelIndex < 0 || levelIndex >= MAX_LEVELS) return;
 
     mapState->levels[levelIndex].completed = 1;
+
     if (starsEarned > mapState->levels[levelIndex].starsEarned) {
         mapState->levels[levelIndex].starsEarned = starsEarned;
     }
 
-    // CORREGIDO: Ahora sumamos las monedas obtenidas al completarlo
     MapAddCoins(mapState, coinsEarned);
 }
 
@@ -208,7 +247,6 @@ void MapDraw(const MapState* mapState, int screenWidth, int screenHeight) {
     if (mapState == NULL) return;
     ClearBackground(BLACK);
 
-    // HEADER
     DrawRectangle(0, 0, screenWidth, 50, Color{ 30, 25, 0, 255 });
     DrawCircle(screenWidth - 130, 25, 14, Color{ 255, 220, 0, 255 });
     DrawCircleLines(screenWidth - 130, 25, 14, Color{ 80, 60, 0, 255 });
@@ -220,7 +258,6 @@ void MapDraw(const MapState* mapState, int screenWidth, int screenHeight) {
 
     DrawText("~~~ MAPA ~~~", (screenWidth - MeasureText("~~~ MAPA ~~~", 22)) / 2, 65, 22, YELLOW);
 
-    // GRID
     int gridStartY = 130;
     int gridEndY = screenHeight - 80;
     int nodeX[MAX_LEVELS], nodeY[MAX_LEVELS];
@@ -235,19 +272,17 @@ void MapDraw(const MapState* mapState, int screenWidth, int screenHeight) {
         nodeY[i] = gridStartY + cellH * LEVEL_GRID_ROW[i] + cellH / 2;
     }
 
-    // Conexiones
     for (int c = 0; c < CONNECTION_COUNT; c++) {
         DrawLineEx({ (float)nodeX[LEVEL_CONNECTIONS[c][0]], (float)nodeY[LEVEL_CONNECTIONS[c][0]] },
             { (float)nodeX[LEVEL_CONNECTIONS[c][1]], (float)nodeY[LEVEL_CONNECTIONS[c][1]] },
             4.0f, Color{ 255, 220, 0, 150 });
     }
 
-    // Nodos
     for (int i = 0; i < MAX_LEVELS; i++) {
         DrawLevelNode(i, nodeX[i], nodeY[i], mapState->levels, (i == mapState->selectedLevel), mapState->selectPulse);
     }
 
-    const char* navHint = "FLECHAS: navegar    ESPACIO: jugar    M: ajustes";
+    const char* navHint = "FLECHAS: navegar    ESPACIO: jugar/entrar    M: ajustes";
     DrawText(navHint, (screenWidth - MeasureText(navHint, 12)) / 2, screenHeight - 42, 12, Color{ 200, 170, 0, 255 });
 
     if (mapState->settingsOpen) DrawSettings(mapState, screenWidth, screenHeight);
@@ -256,4 +291,5 @@ void MapDraw(const MapState* mapState, int screenWidth, int screenHeight) {
 void MapUnload(MapState* mapState) {
     UnloadTexture(texStarCollected);
     UnloadTexture(texStarEmpty);
+    UnloadTexture(texShopIcon);
 }

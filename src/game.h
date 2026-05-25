@@ -304,7 +304,7 @@ typedef struct {
 
 // --- PROTOTIPOS ---
 
-void GameLoad(GameState* gameState);
+void GameLoad(GameState* gameState, MapState* mapState);
 SceneType GameUpdate(GameState* gameState, MapState* mapState);
 void GameDraw(GameState* gameState);
 void GameUnload(GameState* gameState);

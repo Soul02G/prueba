@@ -6,5 +6,6 @@ typedef enum {
     SCENE_MENU,
     SCENE_MAP,
     SCENE_GAME,
-    SCENE_SETTINGS
+    SCENE_SETTINGS,
+    SCENE_SHOP
 } SceneType;
