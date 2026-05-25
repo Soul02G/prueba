@@ -656,7 +656,6 @@ void ResetGameState(GameState* gameState) {
         }
     }
 
-    gameState->monkey.active = true;
     gameState->monkey.hasDropped = false;
     gameState->monkey.frame = 0;
     gameState->monkey.animTimer = 0.0f;
@@ -665,17 +664,16 @@ void ResetGameState(GameState* gameState) {
     gameState->monkeyDrop.active = false;
 
     if (monkeySpawnRow != -1 && monkeySpawnCol != -1) {
+
+        gameState->monkey.active = true;
         gameState->monkey.x = (float)(monkeySpawnCol * TILE_SIZE);
         gameState->monkey.y = (float)(monkeySpawnRow * TILE_SIZE);
-        if (gameState->currentLevel == 0) gameState->tileMap_1[monkeySpawnRow][monkeySpawnCol] = TILE_EMPTY;
-        else if (gameState->currentLevel == 1) gameState->tileMap_2[monkeySpawnRow][monkeySpawnCol] = TILE_EMPTY;
-        else if (gameState->currentLevel == 2) gameState->tileMap_3[monkeySpawnRow][monkeySpawnCol] = TILE_EMPTY;
-        else if (gameState->currentLevel == 3) gameState->tileMap_4[monkeySpawnRow][monkeySpawnCol] = TILE_EMPTY;
-        else                                   gameState->tileMap_5[monkeySpawnRow][monkeySpawnCol] = TILE_EMPTY;
     }
     else {
-        gameState->monkey.x = (float)(6 * TILE_SIZE);
-        gameState->monkey.y = (float)(22 * TILE_SIZE);
+
+        gameState->monkey.active = false;
+        gameState->monkey.x = 0.0f;
+        gameState->monkey.y = 0.0f;
     }
 
     gameState->monkeyDrop.x = gameState->monkey.x - TILE_SIZE + (TILE_SIZE * 1.0f);
@@ -941,9 +939,10 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         int mapIdx = gameState->currentLevel;
         // Si currentLevel > 1 (porque la tienda ocupa el índice 2 del mapa),
         // hay que sumar 1 para saltar el slot de la tienda
-        if (gameState->currentLevel >= 2) mapIdx = gameState->currentLevel + 1;
-        printf("Nivel completado! currentLevel=%d mapIdx=%d stars=%d coins=%d\n",
-            gameState->currentLevel, mapIdx, gameState->starsCollected, gameState->coinsCollected);
+        mapIdx = gameState->currentLevel;
+
+        printf("Nivel completado! currentLevel=%d mapIdx=%d stars=%d coins=%d\n", gameState->currentLevel, mapIdx, gameState->starsCollected, gameState->coinsCollected);
+        MapRegisterLevelComplete(mapState, mapIdx, gameState->starsCollected, gameState->coinsCollected);
         MapRegisterLevelComplete(mapState, mapIdx, gameState->starsCollected, gameState->coinsCollected);
     }
     if (gameState->levelCompleted) return SCENE_GAME;

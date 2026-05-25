@@ -25,7 +25,6 @@ static int skinOption[TOTAL_ITEMS] = { 0, 0, 0, 0, 0, 0 };
 // Coste de cada skin alternativa (0 = no tiene skin comprable)
 static const int skinCost[TOTAL_ITEMS] = { 15, 0, 0, 0, 0, 0 };
 
-// ---------------------------------------------------------------
 
 void ShopLoad(MapState* mapState) {
     texPlayer = LoadTexture("resources/totm.png");
