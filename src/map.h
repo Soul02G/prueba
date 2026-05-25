@@ -18,8 +18,10 @@ typedef struct MapState {
     float         masterVolume;
     float         selectPulse;
     // --- Skins ---
-    bool          playerSkinBought;  // true si ya compro la skin especial
-    int           playerSkinIndex;   // 0 = base (totm), 1 = especial (totmS)
+    bool          playerSkinBought;
+    int           playerSkinIndex;
+    bool batSkinBought;
+    int batSkinIndex;
 } MapState;
 void      MapLoad(MapState* mapState);
 SceneType MapUpdate(MapState* mapState);

@@ -3,7 +3,6 @@
 #include "raylib.h"
 #include <stdio.h>
 
-// --- Texturas base (sprite por defecto) ---
 static Texture2D texPlayer;
 static Texture2D texArrow;
 static Texture2D texMonkey;
@@ -11,20 +10,16 @@ static Texture2D texCoco;
 static Texture2D texTotem;
 static Texture2D texBat;
 
-// --- Texturas de las skins alternativas ---
-static Texture2D texPlayerSkin; // totmS.png
+static Texture2D texPlayerSkin;
+static Texture2D texBatSkin;
 
-// --- Estado de la tienda ---
 static int selectedItem = 0;
 static const int TOTAL_ITEMS = 6;
-static const char* itemNames[6] = { "SKIN JUGADOR", "FLECHA", "MONO", "COCO", "TIRAFLECHAS", "MURCIELAGO." };
+static const char* itemNames[6] = { "SKIN JUGADOR", "FLECHA", "MONO", "COCO", "TIRAFLECHAS", "MURCIELAGO" };
 
-// skinOption controla qué estamos VIENDO en pantalla (0 = base, 1 = especial)
 static int skinOption[TOTAL_ITEMS] = { 0, 0, 0, 0, 0, 0 };
 
-// Coste de cada skin alternativa (0 = no tiene skin comprable)
-static const int skinCost[TOTAL_ITEMS] = { 15, 0, 0, 0, 0, 0 };
-
+static const int skinCost[TOTAL_ITEMS] = { 15, 0, 0, 0, 0, 10 };
 
 void ShopLoad(MapState* mapState) {
     texPlayer = LoadTexture("resources/totm.png");
@@ -34,10 +29,15 @@ void ShopLoad(MapState* mapState) {
     texTotem = LoadTexture("resources/tiraflechas.png");
     texBat = LoadTexture("resources/bat-frame-1.png");
     texPlayerSkin = LoadTexture("resources/totmS.png");
+    texBatSkin = LoadTexture("resources/batS-frame-1.png");
     selectedItem = 0;
 
-    // Inicializar la visualización con lo que el jugador ya tenga equipado
     skinOption[0] = mapState->playerSkinIndex;
+    skinOption[1] = 0;
+    skinOption[2] = 0;
+    skinOption[3] = 0;
+    skinOption[4] = 0;
+    skinOption[5] = mapState->batSkinIndex;
 }
 
 SceneType ShopUpdate(MapState* mapState) {
@@ -65,48 +65,60 @@ SceneType ShopUpdate(MapState* mapState) {
     if (IsKeyPressed(KEY_M)) mapState->settingsOpen = 1;
     if (IsKeyPressed(KEY_TAB)) return SCENE_MAP;
 
-    // Navegar entre articulos con izquierda/derecha
     if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) {
         selectedItem++;
         if (selectedItem >= TOTAL_ITEMS) selectedItem = 0;
-        // Al cambiar de ítem, mostramos por defecto lo que esté configurado en el mapa
+
         if (selectedItem == 0) skinOption[0] = mapState->playerSkinIndex;
+        else if (selectedItem == 5) skinOption[5] = mapState->batSkinIndex;
         else skinOption[selectedItem] = 0;
     }
     if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) {
         selectedItem--;
         if (selectedItem < 0) selectedItem = TOTAL_ITEMS - 1;
+
         if (selectedItem == 0) skinOption[0] = mapState->playerSkinIndex;
+        else if (selectedItem == 5) skinOption[5] = mapState->batSkinIndex;
         else skinOption[selectedItem] = 0;
     }
 
-    // --- Logica de Previsualización, Compra y Equipamiento ---
     if (skinCost[selectedItem] > 0) {
         int cost = skinCost[selectedItem];
 
-        // 1. PERMITIR PREVISUALIZAR (Cambiar de skin en pantalla con ARRIBA/ABAJO libremente)
         if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) {
-            skinOption[selectedItem] = 1; // Muestra la skin especial
-            // Si ya está comprada, la equipa inmediatamente en el juego
-            if (mapState->playerSkinBought) {
+            skinOption[selectedItem] = 1;
+
+            if (selectedItem == 0 && mapState->playerSkinBought) {
                 mapState->playerSkinIndex = 1;
+            }
+            if (selectedItem == 5 && mapState->batSkinBought) {
+                mapState->batSkinIndex = 1;
             }
         }
         if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) {
-            skinOption[selectedItem] = 0; // Muestra la skin base
-            if (mapState->playerSkinBought) {
+            skinOption[selectedItem] = 0;
+
+            if (selectedItem == 0 && mapState->playerSkinBought) {
                 mapState->playerSkinIndex = 0;
+            }
+            if (selectedItem == 5 && mapState->batSkinBought) {
+                mapState->batSkinIndex = 0;
             }
         }
 
-        // 2. COMPRAR CON ESPACIO (Solo si estás previsualizando la skin 1 y no la tienes)
         if (IsKeyPressed(KEY_SPACE)) {
-            if (skinOption[selectedItem] == 1 && !mapState->playerSkinBought) {
+            if (selectedItem == 0 && skinOption[0] == 1 && !mapState->playerSkinBought) {
                 if (mapState->totalCoins >= cost) {
                     mapState->totalCoins -= cost;
                     mapState->playerSkinBought = true;
-                    mapState->playerSkinIndex = 1; // Queda equipada tras comprar
-                    printf("Skin comprada! Monedas restantes: %d\n", mapState->totalCoins);
+                    mapState->playerSkinIndex = 1;
+                }
+            }
+            if (selectedItem == 5 && skinOption[5] == 1 && !mapState->batSkinBought) {
+                if (mapState->totalCoins >= cost) {
+                    mapState->totalCoins -= cost;
+                    mapState->batSkinBought = true;
+                    mapState->batSkinIndex = 1;
                 }
             }
         }
@@ -114,8 +126,6 @@ SceneType ShopUpdate(MapState* mapState) {
 
     return SCENE_SHOP;
 }
-
-// ---------------------------------------------------------------
 
 static void DrawSettingsOverlay(const MapState* mapState, int screenWidth, int screenHeight) {
     DrawRectangle(0, 0, screenWidth, screenHeight, ColorAlpha(BLACK, 0.7f));
@@ -148,12 +158,9 @@ static void DrawSettingsOverlay(const MapState* mapState, int screenWidth, int s
     DrawRectangleLines(handleX, sliderY - 5, 14, 24, Color{ 80, 60, 0, 255 });
 }
 
-// ---------------------------------------------------------------
-
 void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
     ClearBackground(BLACK);
 
-    // --- Barra superior ---
     DrawRectangle(0, 0, screenWidth, 50, Color{ 30, 25, 0, 255 });
     DrawCircle(screenWidth - 130, 25, 14, Color{ 255, 220, 0, 255 });
     DrawCircleLines(screenWidth - 130, 25, 14, Color{ 80, 60, 0, 255 });
@@ -165,7 +172,6 @@ void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
 
     DrawText("TIENDA", (screenWidth - MeasureText("TIENDA", 32)) / 2, 65, 32, YELLOW);
 
-    // --- Caja central ---
     int boxW = 200, boxH = 200;
     int bx = (screenWidth - boxW) / 2;
     int by = (screenHeight - boxH) / 2 - 60;
@@ -173,10 +179,12 @@ void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
     DrawRectangle(bx, by, boxW, boxH, Color{ 30, 30, 30, 255 });
     DrawRectangleLines(bx, by, boxW, boxH, YELLOW);
 
-    // Elegir textura a mostrar (Basado en skinOption que cambia dinámicamente)
     Texture2D currentTex = { 0 };
     if (selectedItem == 0) {
         currentTex = (skinOption[0] == 1) ? texPlayerSkin : texPlayer;
+    }
+    else if (selectedItem == 5) {
+        currentTex = (skinOption[5] == 1) ? texBatSkin : texBat;
     }
     else {
         switch (selectedItem) {
@@ -184,7 +192,6 @@ void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
         case 2: currentTex = texMonkey; break;
         case 3: currentTex = texCoco;   break;
         case 4: currentTex = texTotem;  break;
-        case 5: currentTex = texBat;    break;
         }
     }
 
@@ -197,11 +204,9 @@ void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
             { 0.0f, 0.0f }, 0.0f, WHITE);
     }
 
-    // --- Nombre del articulo ---
     const char* itemName = itemNames[selectedItem];
     DrawText(itemName, (screenWidth - MeasureText(itemName, 24)) / 2, by + boxH + 20, 24, WHITE);
 
-    // --- Indicadores de skin ---
     if (skinCost[selectedItem] > 0) {
         int cost = skinCost[selectedItem];
 
@@ -212,16 +217,17 @@ void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
         int flechaAbajoY = by + boxH + 68;
         DrawText("v", bx + boxW / 2 - 8, flechaAbajoY, 28, downColor);
 
-        // Estado visual actual del contenedor
         const char* skinLabel = (skinOption[selectedItem] == 0) ? "VISTA: SKIN BASE" : "VISTA: SKIN ESPECIAL";
         int skinLabelY = flechaAbajoY + 32;
         DrawText(skinLabel, (screenWidth - MeasureText(skinLabel, 16)) / 2, skinLabelY, 16, YELLOW);
 
-        // Mensaje dinámico de compra o equipamiento
         int priceLabelY = skinLabelY + 28;
-        if (!mapState->playerSkinBought) {
+
+        bool isBought = (selectedItem == 0) ? mapState->playerSkinBought : mapState->batSkinBought;
+        int activeIndex = (selectedItem == 0) ? mapState->playerSkinIndex : mapState->batSkinIndex;
+
+        if (!isBought) {
             if (skinOption[selectedItem] == 1) {
-                // Si está viendo la skin bloqueada
                 const char* priceLabel = TextFormat("PRECIO: %d monedas [ESPACIO] comprar", cost);
                 Color priceColor = (mapState->totalCoins >= cost) ? Color{ 255, 220, 0, 255 } : Color{ 200, 80, 80, 255 };
                 DrawText(priceLabel, (screenWidth - MeasureText(priceLabel, 14)) / 2, priceLabelY, 14, priceColor);
@@ -232,25 +238,21 @@ void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
                 }
             }
             else {
-                // Si está viendo su skin base normal pero el artículo es vendible
                 const char* previewHint = "[ARRIBA] para previsualizar skin especial";
                 DrawText(previewHint, (screenWidth - MeasureText(previewHint, 14)) / 2, priceLabelY, 14, LIGHTGRAY);
             }
         }
         else {
-            // Ya es dueño: Indica si está equipada o no
-            bool isActive = (skinOption[selectedItem] == mapState->playerSkinIndex);
+            bool isActive = (skinOption[selectedItem] == activeIndex);
             const char* owned = isActive ? "EQUIPADA [ARRIBA/ABAJO] para cambiar" : "COMPRADA [ARRIBA/ABAJO] para equipar";
             Color ownedColor = isActive ? Color{ 100, 255, 100, 255 } : Color{ 150, 220, 150, 255 };
             DrawText(owned, (screenWidth - MeasureText(owned, 14)) / 2, priceLabelY, 14, ownedColor);
         }
     }
 
-    // --- Flechas laterales de navegacion ---
     DrawText("<", bx - 40, by + (boxH - 32) / 2, 32, WHITE);
     DrawText(">", bx + boxW + 25, by + (boxH - 32) / 2, 32, WHITE);
 
-    // --- Hint inferior ---
     const char* shopHint = "FLECHAS: cambiar articulo    M: ajustes    TAB: volver al mapa";
     DrawText(shopHint, (screenWidth - MeasureText(shopHint, 12)) / 2, screenHeight - 32, 12, Color{ 200, 170, 0, 255 });
 
@@ -265,4 +267,5 @@ void ShopUnload(void) {
     UnloadTexture(texCoco);
     UnloadTexture(texTotem);
     UnloadTexture(texBat);
+    UnloadTexture(texBatSkin);
 }
