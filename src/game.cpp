@@ -99,50 +99,49 @@ static const int LEVEL_2_DATA[47][25] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,1,1,1,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,1,12,1,0,0,1,3,3,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1},
-    {0,1,3,1,1,1,1,3,0,0,0,3,1,3,3,4,3,1,3,3,3,4,3,3,1},
-    {0,1,3,3,4,3,3,3,0,3,4,3,1,3,0,3,3,1,0,0,6,0,0,4,1},
-    {0,1,1,1,1,1,1,1,7,3,0,3,0,3,1,3,3,1,4,1,1,0,0,3,1},
-    {0,0,0,0,0,0,0,1,1,3,3,3,3,3,1,3,3,3,3,1,3,3,3,3,1},
-    {0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,3,1},
-    {0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,5,3,3,3,3,1,1,1,1},
-    {0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,0,0,0},
-    {0,0,0,0,0,1,3,3,3,3,3,3,3,3,3,1,1,1,3,1,1,1,1,1,1},
-    {0,0,0,0,1,1,3,1,1,0,3,0,0,3,3,1,10,3,3,3,3,3,3,9,1},
-    {0,0,1,1,1,0,3,3,3,3,3,1,1,3,3,0,3,0,4,0,0,0,0,3,1},
-    {0,0,1,6,0,0,3,0,1,1,1,1,1,5,3,3,3,1,8,3,3,3,3,11,1},
-    {0,0,1,6,0,0,3,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1},
-    {0,0,1,0,0,0,3,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,1,0,0,3,5,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,1,1,1,3,1,1,3,3,3,3,1,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,1,3,3,3,3,3,4,3,1,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,1,1,1,1,3,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0},
-    {0,0,1,1,1,1,10,3,3,4,3,0,0,0,9,1,0,0,0,0,0,0,0,0,0},
-    {1,1,1,3,3,3,3,3,3,3,1,1,1,0,3,1,0,0,0,0,0,0,0,0,0},
-    {1,6,0,3,0,1,0,0,0,3,1,1,10,3,11,1,0,0,0,0,0,0,0,0,0},
-    {1,1,1,3,0,0,0,0,0,1,1,1,8,3,9,1,0,0,0,0,0,0,0,0,0},
-    {0,0,1,3,3,3,3,4,3,3,1,1,10,3,11,1,0,0,0,0,0,0,0,0,0},
-    {0,0,1,1,1,1,3,0,0,3,1,1,8,4,9,1,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,1,3,0,0,3,1,1,1,0,3,1,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,1,8,3,3,11,1,3,3,3,11,1,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,1,1,1,1,1,1,3,0,1,1,1,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,1,3,0,0,1,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,1,1,1,1,1,1,1,3,0,0,1,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,1,0,0,6,0,3,3,3,3,3,1,0,0,1,1,1,1,1,1,1,1},
-    {0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,1,3,3,3,3,3,4,1},
-    {0,0,0,0,1,6,0,0,0,0,1,1,1,1,1,1,1,1,4,0,0,0,0,3,1},
-    {0,0,0,0,1,1,1,1,0,3,3,3,3,3,3,0,0,0,3,0,0,0,0,4,1},
-    {0,0,0,0,0,0,0,1,0,3,3,3,3,1,1,3,3,3,3,0,0,0,0,3,1},
-    {0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,2,0,4,1},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
-
 
 // --- DATOS DEL NIVEL 3 ---
 static const int LEVEL_3_DATA[MAP_ROWS_3][MAP_COLUMNS_3] = {
@@ -236,6 +235,48 @@ static const int LEVEL_4_DATA[MAP_ROWS_4][MAP_COLUMNS_4] = {
 static const int LEVEL_5_DATA[MAP_ROWS_5][MAP_COLUMNS_5] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,1,1,1,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,1,12,1,0,0,1,3,3,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0},
+    {0,1,3,1,1,1,1,3,0,0,0,3,1,3,3,4,3,1,3,3,3,4,3,3,1,0,0},
+    {0,1,3,3,4,3,3,3,0,3,4,3,1,3,0,3,3,1,0,0,6,0,0,4,1,0,0},
+    {0,1,1,1,1,1,1,1,7,3,0,3,0,3,1,3,3,1,4,1,1,0,0,3,1,0,0},
+    {0,0,0,0,0,0,0,1,1,3,3,3,3,3,1,3,3,3,3,1,3,3,3,3,1,0,0},
+    {0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,3,1,0,0},
+    {0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,5,3,3,3,3,1,1,1,1,0,0},
+    {0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,0,0,0,0,0},
+    {0,0,0,0,0,1,3,3,3,3,3,3,3,3,3,1,1,1,3,1,1,1,1,1,1,0,0},
+    {0,0,0,0,1,1,3,1,1,0,3,0,0,3,3,1,10,3,3,3,3,3,3,9,1,0,0},
+    {0,0,1,1,1,0,3,3,3,3,3,1,1,3,3,0,3,0,4,0,0,0,0,3,1,0,0},
+    {0,0,1,6,0,0,3,0,1,1,1,1,1,5,3,3,3,1,8,3,3,3,3,11,1,0,0},
+    {0,0,1,6,0,0,3,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0},
+    {0,0,1,0,0,0,3,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,0,0,3,5,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,1,3,1,1,3,3,3,3,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,3,3,3,3,3,4,3,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,1,1,1,1,3,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,1,1,10,3,3,4,3,0,0,0,9,1,0,0,0,0,0,0,0,0,0,0,0},
+    {1,1,1,3,3,3,3,3,3,3,1,1,1,0,3,1,0,0,0,0,0,0,0,0,0,0,0},
+    {1,6,0,3,0,1,0,0,0,3,1,1,10,3,11,1,0,0,0,0,0,0,0,0,0,0,0},
+    {1,1,1,3,0,0,0,0,0,1,1,1,8,3,9,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,3,3,3,3,4,3,3,1,1,10,3,11,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,1,1,3,0,0,3,1,1,8,4,9,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,1,3,0,0,3,1,1,1,0,3,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,1,8,3,3,11,1,3,3,3,11,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,1,1,1,1,1,1,3,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,1,3,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,1,1,1,1,1,1,3,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,0,0,6,0,3,3,3,3,3,1,0,0,1,1,1,1,1,1,1,1,0,0},
+    {0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,1,3,3,3,3,3,4,1,0,0},
+    {0,0,0,0,1,6,0,0,0,0,1,1,1,1,1,1,1,1,4,0,0,0,0,3,1,0,0},
+    {0,0,0,0,1,1,1,1,0,3,3,3,3,3,3,0,0,0,3,0,0,0,0,4,1,0,0},
+    {0,0,0,0,0,0,0,1,0,3,3,3,3,1,1,3,3,3,3,0,0,2,0,3,1,0,0},
+    {0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+};
+
+// --- DATOS DEL NIVEL 6 (vacío) ---
+static const int LEVEL_6_DATA[MAP_ROWS_6][MAP_COLUMNS_6] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -254,10 +295,12 @@ static const int LEVEL_5_DATA[MAP_ROWS_5][MAP_COLUMNS_5] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,1,12,1,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,1,3,1,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,1,2,1,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -377,6 +420,26 @@ static int GetWallVariant5(const int map[MAP_ROWS_5][MAP_COLUMNS_5], int row, in
     return WALL_SOLID;
 }
 
+static int TileIsWall6(const int map[MAP_ROWS_6][MAP_COLUMNS_6], int row, int col) {
+    if (row < 0 || row >= MAP_ROWS_6 || col < 0 || col >= MAP_COLUMNS_6) return 0;
+    return (map[row][col] == TILE_WALL);
+}
+static int GetWallVariant6(const int map[MAP_ROWS_6][MAP_COLUMNS_6], int row, int col) {
+    int A = TileIsWall6(map, row - 1, col), B = TileIsWall6(map, row + 1, col);
+    int L = TileIsWall6(map, row, col - 1), R = TileIsWall6(map, row, col + 1);
+    int AL = TileIsWall6(map, row - 1, col - 1), AR = TileIsWall6(map, row - 1, col + 1);
+    int BL = TileIsWall6(map, row + 1, col - 1), BR = TileIsWall6(map, row + 1, col + 1);
+    if (!A && !L) return WALL_CORNER_TL; if (!A && !R) return WALL_CORNER_TR;
+    if (!B && !L) return WALL_CORNER_BL; if (!B && !R) return WALL_CORNER_BR;
+    if (!A) return WALL_BORDER_TOP; if (!B) return WALL_BORDER_BOTTOM;
+    if (!L) return WALL_BORDER_LEFT; if (!R) return WALL_BORDER_RIGHT;
+    if ((!AL) + (!AR) + (!BL) + (!BR) >= 1) {
+        if (!AL) return WALL_INNER_CORNER_TL; if (!AR) return WALL_INNER_CORNER_TR;
+        if (!BL) return WALL_INNER_CORNER_BL; if (!BR) return WALL_INNER_CORNER_BR;
+    }
+    return WALL_SOLID;
+}
+
 // --- CHECKWALLCOLLISION ---
 static bool CheckWallCollision(GameState* gameState, float x, float y) {
     int col = (int)(x / TILE_SIZE);
@@ -401,6 +464,10 @@ static bool CheckWallCollision(GameState* gameState, float x, float y) {
     else if (gameState->currentLevel == 4) { // Nivel 5
         if (row < 0 || row >= MAP_ROWS_5 || col < 0 || col >= MAP_COLUMNS_5) return true;
         return (gameState->tileMap_5[row][col] == TILE_WALL);
+    }
+    else if (gameState->currentLevel == 5) { // Nivel 6
+        if (row < 0 || row >= MAP_ROWS_6 || col < 0 || col >= MAP_COLUMNS_6) return true;
+        return (gameState->tileMap_6[row][col] == TILE_WALL);
     }
     return true;
 }
@@ -439,11 +506,18 @@ static void CollectTileUnderPlayer(GameState* gameState) {
                 gameState->tileMap_4[row][col] = TILE_EMPTY;
         }
     }
-    else {
+    else if (gameState->currentLevel == 4) {
         if (row >= 0 && row < MAP_ROWS_5 && col >= 0 && col < MAP_COLUMNS_5) {
             tileValue = gameState->tileMap_5[row][col];
             if (tileValue == TILE_DOT || tileValue == TILE_COIN || tileValue == TILE_STAR)
                 gameState->tileMap_5[row][col] = TILE_EMPTY;
+        }
+    }
+    else {
+        if (row >= 0 && row < MAP_ROWS_6 && col >= 0 && col < MAP_COLUMNS_6) {
+            tileValue = gameState->tileMap_6[row][col];
+            if (tileValue == TILE_DOT || tileValue == TILE_COIN || tileValue == TILE_STAR)
+                gameState->tileMap_6[row][col] = TILE_EMPTY;
         }
     }
 
@@ -509,13 +583,23 @@ static void PlacePlayerAtSpawn(GameState* gameState) {
                     return;
                 }
     }
-    else {
+    else if (gameState->currentLevel == 4) {
         for (int row = 0; row < MAP_ROWS_5; row++)
             for (int col = 0; col < MAP_COLUMNS_5; col++)
                 if (gameState->tileMap_5[row][col] == TILE_PLAYER_SPAWN) {
                     gameState->playerX = (float)(col * TILE_SIZE);
                     gameState->playerY = (float)(row * TILE_SIZE);
                     gameState->tileMap_5[row][col] = TILE_EMPTY;
+                    return;
+                }
+    }
+    else {
+        for (int row = 0; row < MAP_ROWS_6; row++)
+            for (int col = 0; col < MAP_COLUMNS_6; col++)
+                if (gameState->tileMap_6[row][col] == TILE_PLAYER_SPAWN) {
+                    gameState->playerX = (float)(col * TILE_SIZE);
+                    gameState->playerY = (float)(row * TILE_SIZE);
+                    gameState->tileMap_6[row][col] = TILE_EMPTY;
                     return;
                 }
     }
@@ -590,8 +674,10 @@ void ResetGameState(GameState* gameState) {
         memcpy(gameState->tileMap_3, LEVEL_3_DATA, sizeof(LEVEL_3_DATA));
     else if (gameState->currentLevel == 3)
         memcpy(gameState->tileMap_4, LEVEL_4_DATA, sizeof(LEVEL_4_DATA));
-    else
+    else if (gameState->currentLevel == 4)
         memcpy(gameState->tileMap_5, LEVEL_5_DATA, sizeof(LEVEL_5_DATA));
+    else
+        memcpy(gameState->tileMap_6, LEVEL_6_DATA, sizeof(LEVEL_6_DATA));
 
     gameState->starsTotal = 0;
     gameState->batCount = 0;
@@ -600,7 +686,8 @@ void ResetGameState(GameState* gameState) {
     else if (gameState->currentLevel == 1) { rows = MAP_ROWS_2; cols = MAP_COLUMNS_2; }
     else if (gameState->currentLevel == 2) { rows = MAP_ROWS_3; cols = MAP_COLUMNS_3; }
     else if (gameState->currentLevel == 3) { rows = MAP_ROWS_4; cols = MAP_COLUMNS_4; }
-    else { rows = MAP_ROWS_5; cols = MAP_COLUMNS_5; }
+    else if (gameState->currentLevel == 4) { rows = MAP_ROWS_5; cols = MAP_COLUMNS_5; }
+    else { rows = MAP_ROWS_6; cols = MAP_COLUMNS_6; }
 
     int monkeySpawnRow = -1;
     int monkeySpawnCol = -1;
@@ -612,7 +699,8 @@ void ResetGameState(GameState* gameState) {
             else if (gameState->currentLevel == 1) tile = gameState->tileMap_2[row][col];
             else if (gameState->currentLevel == 2) tile = gameState->tileMap_3[row][col];
             else if (gameState->currentLevel == 3) tile = gameState->tileMap_4[row][col];
-            else                                   tile = gameState->tileMap_5[row][col];
+            else if (gameState->currentLevel == 4) tile = gameState->tileMap_5[row][col];
+            else                                   tile = gameState->tileMap_6[row][col];
 
             if (tile == TILE_STAR) {
                 gameState->starsTotal++;
@@ -637,7 +725,8 @@ void ResetGameState(GameState* gameState) {
                 else if (gameState->currentLevel == 1) gameState->tileMap_2[row][col] = TILE_EMPTY;
                 else if (gameState->currentLevel == 2) gameState->tileMap_3[row][col] = TILE_EMPTY;
                 else if (gameState->currentLevel == 3) gameState->tileMap_4[row][col] = TILE_EMPTY;
-                else                                   gameState->tileMap_5[row][col] = TILE_EMPTY;
+                else if (gameState->currentLevel == 4) gameState->tileMap_5[row][col] = TILE_EMPTY;
+                else                                   gameState->tileMap_6[row][col] = TILE_EMPTY;
             }
             else if (TileIsSpike(tile) && gameState->spikeCount < MAX_SPIKES) {
                 int i = gameState->spikeCount++;
@@ -768,6 +857,10 @@ void GameLoad(GameState* gameState, MapState* mapState) {
         gameState->currentMapRows = MAP_ROWS_5; gameState->currentMapCols = MAP_COLUMNS_5;
         memcpy(gameState->tileMap_5, LEVEL_5_DATA, sizeof(LEVEL_5_DATA));
     }
+    else if (gameState->currentLevel == 5) {
+        gameState->currentMapRows = MAP_ROWS_6; gameState->currentMapCols = MAP_COLUMNS_6;
+        memcpy(gameState->tileMap_6, LEVEL_6_DATA, sizeof(LEVEL_6_DATA));
+    }
     else {
         gameState->currentMapRows = MAP_ROWS_1; gameState->currentMapCols = MAP_COLUMNS_1;
         memcpy(gameState->tileMap_1, initialMap, sizeof(initialMap));
@@ -808,7 +901,8 @@ void HandleBounceCollision(GameState* gameState) {
         (gameState->currentLevel == 1) ? gameState->tileMap_2[tileRow][tileCol] :
         (gameState->currentLevel == 2) ? gameState->tileMap_3[tileRow][tileCol] :
         (gameState->currentLevel == 3) ? gameState->tileMap_4[tileRow][tileCol] :
-        gameState->tileMap_5[tileRow][tileCol];
+        (gameState->currentLevel == 4) ? gameState->tileMap_5[tileRow][tileCol] :
+        gameState->tileMap_6[tileRow][tileCol];
 
     if (currentTile >= 8 && currentTile <= 11) {
         int nextVX = 0, nextVY = 0;
@@ -994,6 +1088,11 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
             h = gameState->tileMap_5[tileRow][nextTileCol];
             break;
+        case 5:
+            mapColumns = MAP_COLUMNS_6;
+            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
+            h = gameState->tileMap_6[tileRow][nextTileCol];
+            break;
         }
 
         // 2. Comprobación unificada de colisiones con bloques sólidos, pinchos, tótems y PÚAS
@@ -1054,6 +1153,11 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             mapRows = MAP_ROWS_5;
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
             h = gameState->tileMap_5[nextTileRow][tileCol];
+            break;
+        case 5:
+            mapRows = MAP_ROWS_6;
+            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
+            h = gameState->tileMap_6[nextTileRow][tileCol];
             break;
         }
 
@@ -1447,6 +1551,7 @@ void GameDraw(GameState* gameState) {
             else if (gameState->currentLevel == 2) tt = gameState->tileMap_3[row][col];
             else if (gameState->currentLevel == 3) tt = gameState->tileMap_4[row][col];
             else if (gameState->currentLevel == 4) tt = gameState->tileMap_5[row][col];
+            else if (gameState->currentLevel == 5) tt = gameState->tileMap_6[row][col];
             else                                   tt = gameState->tileMap_1[row][col];
             if (tt == TILE_EMPTY) continue;
 
@@ -1464,6 +1569,7 @@ void GameDraw(GameState* gameState) {
                 else if (gameState->currentLevel == 2) wv = GetWallVariant3(gameState->tileMap_3, row, col);
                 else if (gameState->currentLevel == 3) wv = GetWallVariant4(gameState->tileMap_4, row, col);
                 else if (gameState->currentLevel == 4) wv = GetWallVariant5(gameState->tileMap_5, row, col);
+                else if (gameState->currentLevel == 5) wv = GetWallVariant6(gameState->tileMap_6, row, col);
                 else                                   wv = GetWallVariant1(gameState->tileMap_1, row, col);
                 DrawTexturePro(gameState->wallTextures[wv], src, dst, orig, 0, WHITE);
                 break;

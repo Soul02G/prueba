@@ -89,6 +89,8 @@
 #define MAP_ROWS_4            40
 #define MAP_COLUMNS_5         27
 #define MAP_ROWS_5            40
+#define MAP_COLUMNS_6         27
+#define MAP_ROWS_6            40
 #define LEADERBOARD_SIZE      10
 #define MAX_BATS              20
 #define MAX_SPIKES            64
@@ -235,6 +237,7 @@ typedef struct {
     int tileMap_3[MAP_ROWS_3][MAP_COLUMNS_3];
     int tileMap_4[MAP_ROWS_4][MAP_COLUMNS_4];
     int tileMap_5[MAP_ROWS_5][MAP_COLUMNS_5];
+    int tileMap_6[MAP_ROWS_6][MAP_COLUMNS_6];
 
     // --- GAMEPLAY Y UI ---
 
