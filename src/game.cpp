@@ -190,46 +190,46 @@ static const int LEVEL_3_DATA[MAP_ROWS_3][MAP_COLUMNS_3] = {
 
 // --- DATOS DEL NIVEL 4 ---
 static const int LEVEL_4_DATA[MAP_ROWS_4][MAP_COLUMNS_4] = {
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,1,24,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,1,25,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,1,24,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,1,25,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,1,24,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,14,0,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,16,0,0,0,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,16,0,2,0,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+{26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26},
+    {26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26},
+    {26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26},
+    {26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26},
+    {26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26},
+    {26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26},
+    {26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26},
+    {26,0,1,1,1,1,14,1,14,1,0,0,0,0,0,0,0,0,0,0,0,24,0,0,0,0,26},
+    {26,0,1,3,3,4,3,3,3,4,25,3,3,3,3,3,3,3,3,3,25,5,24,0,0,0,26},
+    {26,0,1,3,1,1,1,13,1,13,0,0,0,0,0,0,0,0,0,0,0,24,0,0,0,0,26},
+    {26,0,0,3,0,0,0,0,26,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,26},
+    {26,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,26},
+    {26,26,0,3,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,3,0,0,0,0,26},
+    {26,24,5,0,25,0,3,4,3,0,25,3,24,3,0,0,1,0,0,0,0,3,0,0,0,0,26},
+    {26,26,0,0,0,0,0,0,0,0,1,1,1,1,1,3,1,0,0,0,0,3,0,0,0,0,26},
+    {26,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,1,0,0,0,0,3,0,0,0,0,26},
+    {26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,26},
+    {26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,26},
+    {26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,26},
+    {26,0,0,0,0,0,0,25,25,25,0,0,0,0,0,0,24,0,0,0,0,3,0,0,0,0,26},
+    {26,0,0,0,0,0,0,0,3,3,3,3,3,3,3,3,24,0,0,0,0,3,0,0,0,0,26},
+    {26,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,24,0,0,0,0,3,0,0,0,0,26},
+    {26,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,26},
+    {26,0,0,0,0,0,0,1,24,1,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,26},
+    {26,0,0,0,0,0,0,16,3,1,0,0,0,0,0,0,0,0,0,0,1,3,15,0,0,0,26},
+    {26,0,0,0,0,0,0,1,25,1,0,0,0,0,0,17,0,0,0,0,1,25,1,0,0,0,26},
+    {26,0,0,0,0,0,0,1,3,15,0,0,0,0,0,1,0,0,0,0,1,3,1,0,0,0,26},
+    {26,0,0,0,0,0,0,1,24,1,0,0,0,0,0,0,0,0,0,0,1,3,1,0,0,0,26},
+    {26,0,0,0,0,0,0,16,3,1,0,0,0,0,0,0,0,0,0,0,1,3,1,0,0,0,26},
+    {26,0,0,0,0,0,0,1,25,1,0,0,0,0,0,0,0,0,0,0,1,3,1,0,0,0,26},
+    {26,0,0,0,0,0,0,1,3,15,0,0,0,0,1,1,1,1,1,1,1,3,1,0,0,0,26},
+    {26,0,0,0,0,0,0,1,24,1,0,0,0,0,1,12,3,3,3,3,3,3,1,0,0,0,26},
+    {26,0,0,0,0,0,0,26,3,26,0,0,0,0,1,1,1,1,1,1,1,24,1,0,0,0,26},
+    {26,0,0,0,0,0,26,0,3,0,26,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,26},
+    {26,0,0,0,0,0,1,0,2,0,1,0,0,0,0,0,0,0,0,0,0,25,0,0,0,0,26},
+    {26,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26},
+    {26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26},
+    {26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26},
+    {26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26},
+    {26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26}
 };
 
 // --- DATOS DEL NIVEL 5 ---
@@ -709,6 +709,7 @@ void GameLoad(GameState* gameState, MapState* mapState) {
     gameState->coinTexture = LoadTexture("resources\\coin-frame-0.png");
     gameState->starTexture = LoadTexture("resources\\tile_star.png");
     gameState->levelEndTexture = LoadTexture("resources\\tile_end.png");
+    gameState->texPuas = LoadTexture("resources\\puas.png");
     gameState->spikeTexture = LoadTexture("resources\\pinchos.png");
     gameState->texBlockRed = LoadTexture("resources\\red.png");
     gameState->texBlockBlue = LoadTexture("resources\\blue.png");
@@ -962,40 +963,59 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         int nextX = gameState->playerX + gameState->velocityX;
         int tileRow = gameState->playerY / TILE_SIZE;
         int nextTileCol = (gameState->velocityX > 0) ? (nextX + TILE_SIZE - 1) / TILE_SIZE : nextX / TILE_SIZE;
-        if (gameState->currentLevel == 0) {
-            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_1 ? MAP_COLUMNS_1 - 1 : nextTileCol);
-            int h = gameState->tileMap_1[tileRow][nextTileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
-            else if (nextX < 0 || nextX + TILE_SIZE > MAP_COLUMNS_1 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
-            else gameState->playerX = nextX;
+
+        // 1. Obtener dinámicamente las columnas y el valor del tile según el nivel actual
+        int mapColumns = 0;
+        int h = TILE_EMPTY;
+
+        switch (gameState->currentLevel) {
+        case 0:
+            mapColumns = MAP_COLUMNS_1;
+            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
+            h = gameState->tileMap_1[tileRow][nextTileCol];
+            break;
+        case 1:
+            mapColumns = MAP_COLUMNS_2;
+            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
+            h = gameState->tileMap_2[tileRow][nextTileCol];
+            break;
+        case 2:
+            mapColumns = MAP_COLUMNS_3;
+            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
+            h = gameState->tileMap_3[tileRow][nextTileCol];
+            break;
+        case 3:
+            mapColumns = MAP_COLUMNS_4;
+            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
+            h = gameState->tileMap_4[tileRow][nextTileCol];
+            break;
+        default:
+            mapColumns = MAP_COLUMNS_5;
+            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
+            h = gameState->tileMap_5[tileRow][nextTileCol];
+            break;
         }
-        else if (gameState->currentLevel == 1) {
-            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_2 ? MAP_COLUMNS_2 - 1 : nextTileCol);
-            int h = gameState->tileMap_2[tileRow][nextTileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
-            else if (nextX < 0 || nextX + TILE_SIZE > MAP_COLUMNS_2 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
-            else gameState->playerX = nextX;
+
+        // 2. Comprobación unificada de colisiones con bloques sólidos, pinchos, tótems y PÚAS
+        if (h == TILE_WALL || TileIsSpike(h) || h == TILE_PUAS || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) {
+            // Ajustar posición al borde del obstáculo
+            gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE;
+            gameState->velocityX = 0;
+            PlaySound(gameState->soundHitWall);
+
+            // EFECTO DE MUERTE INSTANTÁNEA: Si el obstáculo eran las nuevas púas, el jugador muere
+            if (h == TILE_PUAS) {
+                gameState->playerDead = 1;
+            }
         }
-        else if (gameState->currentLevel == 2) {
-            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_3 ? MAP_COLUMNS_3 - 1 : nextTileCol);
-            int h = gameState->tileMap_3[tileRow][nextTileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
-            else if (nextX < 0 || nextX + TILE_SIZE > MAP_COLUMNS_3 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
-            else gameState->playerX = nextX;
+        // 3. Comprobación de límites exteriores del mapa
+        else if (nextX < 0 || nextX + TILE_SIZE > mapColumns * TILE_SIZE) {
+            gameState->velocityX = 0;
+            PlaySound(gameState->soundHitWall);
         }
-        else if (gameState->currentLevel == 3) {
-            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_4 ? MAP_COLUMNS_4 - 1 : nextTileCol);
-            int h = gameState->tileMap_4[tileRow][nextTileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
-            else if (nextX < 0 || nextX + TILE_SIZE > MAP_COLUMNS_4 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
-            else gameState->playerX = nextX;
-        }
+        // 4. Movimiento libre si no hay colisión
         else {
-            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= MAP_COLUMNS_5 ? MAP_COLUMNS_5 - 1 : nextTileCol);
-            int h = gameState->tileMap_5[tileRow][nextTileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE; gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
-            else if (nextX < 0 || nextX + TILE_SIZE > MAP_COLUMNS_5 * TILE_SIZE) { gameState->velocityX = 0; PlaySound(gameState->soundHitWall); }
-            else gameState->playerX = nextX;
+            gameState->playerX = nextX;
         }
     }
 
@@ -1004,40 +1024,59 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         int nextY = gameState->playerY + gameState->velocityY;
         int tileCol = gameState->playerX / TILE_SIZE;
         int nextTileRow = (gameState->velocityY > 0) ? (nextY + TILE_SIZE - 1) / TILE_SIZE : nextY / TILE_SIZE;
-        if (gameState->currentLevel == 0) {
-            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_1 ? MAP_ROWS_1 - 1 : nextTileRow);
-            int h = gameState->tileMap_1[nextTileRow][tileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
-            else if (nextY < 0 || nextY + TILE_SIZE > MAP_ROWS_1 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
-            else gameState->playerY = nextY;
+
+        // 1. Obtener dinámicamente las filas máximas y el valor del tile según el nivel actual
+        int mapRows = 0;
+        int h = TILE_EMPTY;
+
+        switch (gameState->currentLevel) {
+        case 0:
+            mapRows = MAP_ROWS_1;
+            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
+            h = gameState->tileMap_1[nextTileRow][tileCol];
+            break;
+        case 1:
+            mapRows = MAP_ROWS_2;
+            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
+            h = gameState->tileMap_2[nextTileRow][tileCol];
+            break;
+        case 2:
+            mapRows = MAP_ROWS_3;
+            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
+            h = gameState->tileMap_3[nextTileRow][tileCol];
+            break;
+        case 3:
+            mapRows = MAP_ROWS_4;
+            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
+            h = gameState->tileMap_4[nextTileRow][tileCol];
+            break;
+        default:
+            mapRows = MAP_ROWS_5;
+            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
+            h = gameState->tileMap_5[nextTileRow][tileCol];
+            break;
         }
-        else if (gameState->currentLevel == 1) {
-            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_2 ? MAP_ROWS_2 - 1 : nextTileRow);
-            int h = gameState->tileMap_2[nextTileRow][tileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
-            else if (nextY < 0 || nextY + TILE_SIZE > MAP_ROWS_2 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
-            else gameState->playerY = nextY;
+
+        // 2. Comprobación unificada de colisiones en vertical (bloques, pinchos, tótems y PÚAS)
+        if (h == TILE_WALL || TileIsSpike(h) || h == TILE_PUAS || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) {
+            // Ajustar posición al borde superior o inferior del obstáculo
+            gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE;
+            gameState->velocityY = 0;
+            PlaySound(gameState->soundHitWall);
+
+            // MUERTE INSTANTÁNEA: Si cae o choca verticalmente contra las nuevas púas, muere
+            if (h == TILE_PUAS) {
+                gameState->playerDead = 1;
+            }
         }
-        else if (gameState->currentLevel == 2) {
-            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_3 ? MAP_ROWS_3 - 1 : nextTileRow);
-            int h = gameState->tileMap_3[nextTileRow][tileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
-            else if (nextY < 0 || nextY + TILE_SIZE > MAP_ROWS_3 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
-            else gameState->playerY = nextY;
+        // 3. Comprobación de límites exteriores (techo y suelo del mapa)
+        else if (nextY < 0 || nextY + TILE_SIZE > mapRows * TILE_SIZE) {
+            gameState->velocityY = 0;
+            PlaySound(gameState->soundHitWall);
         }
-        else if (gameState->currentLevel == 3) {
-            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_4 ? MAP_ROWS_4 - 1 : nextTileRow);
-            int h = gameState->tileMap_4[nextTileRow][tileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
-            else if (nextY < 0 || nextY + TILE_SIZE > MAP_ROWS_4 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
-            else gameState->playerY = nextY;
-        }
+        // 4. Movimiento libre
         else {
-            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= MAP_ROWS_5 ? MAP_ROWS_5 - 1 : nextTileRow);
-            int h = gameState->tileMap_5[nextTileRow][tileCol];
-            if (h == TILE_WALL || TileIsSpike(h) || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) { gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE; gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
-            else if (nextY < 0 || nextY + TILE_SIZE > MAP_ROWS_5 * TILE_SIZE) { gameState->velocityY = 0; PlaySound(gameState->soundHitWall); }
-            else gameState->playerY = nextY;
+            gameState->playerY = nextY;
         }
     }
 
@@ -1485,6 +1524,10 @@ void GameDraw(GameState* gameState) {
                     { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f }, rot, WHITE);
                 break;
             }
+            case TILE_PUAS:
+                DrawTexturePro(gameState->texPuas, { 0, 0, (float)gameState->texPuas.width, (float)gameState->texPuas.height }, dst, orig, 0, WHITE);
+                break;
+
             case TILE_SPIKE_UP:
             case TILE_SPIKE_DOWN:
             case TILE_SPIKE_LEFT:
@@ -1632,6 +1675,7 @@ void GameUnload(GameState* gameState) {
     UnloadTexture(gameState->dotTexture); UnloadTexture(gameState->coinTexture);
     UnloadTexture(gameState->starTexture); UnloadTexture(gameState->levelEndTexture);
     UnloadTexture(gameState->spikeTexture);
+    UnloadTexture(gameState->texPuas);
     UnloadTexture(gameState->texBlockRed);
     UnloadTexture(gameState->texBlockBlue);
     UnloadTexture(gameState->trailHorizontal); UnloadTexture(gameState->trailVertical);
@@ -1646,4 +1690,5 @@ void GameUnload(GameState* gameState) {
     UnloadSound(gameState->soundCollectDot); UnloadSound(gameState->soundCollectCoin);
     UnloadSound(gameState->soundCollectStar); UnloadSound(gameState->soundLevelComplete);
     UnloadSound(gameState->soundLevelStart);
+
 }

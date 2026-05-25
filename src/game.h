@@ -60,6 +60,8 @@
 #define TILE_BLOCK_RED        24   // empieza sólido
 #define TILE_BLOCK_BLUE       25   // empieza intangible
 
+#define TILE_PUAS             26   // Pinchos de muerte instantánea
+
 // --- VARIANTES DE PAREDES (AUTO-TILING) ---
 #define WALL_SOLID            0
 #define WALL_BORDER_TOP       1
@@ -197,6 +199,7 @@ typedef struct {
     Texture2D texMonkeyFrames[MONKEY_FRAMES];
     Texture2D texMonkeyDrop;
 
+    Texture2D texPuas;
     // --- AUDIO ---
 
     Sound soundDash;
