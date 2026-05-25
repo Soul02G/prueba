@@ -97,45 +97,45 @@ static const int LEVEL_2_DATA[47][25] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,1,3,3,3,3,3,1,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,1,3,0,0,0,3,1,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,1,3,0,2,0,3,1,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,1,3,1,1,1,3,1,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,1,3,24,0,25,3,1,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,1,1,1,0,1,1,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,1,1,1,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,1,12,1,0,0,1,3,3,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1},
+    {0,1,3,1,1,1,1,3,0,0,0,3,1,3,3,4,3,1,3,3,3,4,3,3,1},
+    {0,1,3,3,4,3,3,3,0,3,4,3,1,3,0,3,3,1,0,0,6,0,0,4,1},
+    {0,1,1,1,1,1,1,1,7,3,0,3,0,3,1,3,3,1,4,1,1,0,0,3,1},
+    {0,0,0,0,0,0,0,1,1,3,3,3,3,3,1,3,3,3,3,1,3,3,3,3,1},
+    {0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,3,1},
+    {0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,5,3,3,3,3,1,1,1,1},
+    {0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,0,0,0},
+    {0,0,0,0,0,1,3,3,3,3,3,3,3,3,3,1,1,1,3,1,1,1,1,1,1},
+    {0,0,0,0,1,1,3,1,1,0,3,0,0,3,3,1,10,3,3,3,3,3,3,9,1},
+    {0,0,1,1,1,0,3,3,3,3,3,1,1,3,3,0,3,0,4,0,0,0,0,3,1},
+    {0,0,1,6,0,0,3,0,1,1,1,1,1,5,3,3,3,1,8,3,3,3,3,11,1},
+    {0,0,1,6,0,0,3,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1},
+    {0,0,1,0,0,0,3,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,0,0,3,5,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,1,3,1,1,3,3,3,3,1,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,3,3,3,3,3,4,3,1,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,1,1,1,1,3,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,1,1,10,3,3,4,3,0,0,0,9,1,0,0,0,0,0,0,0,0,0},
+    {1,1,1,3,3,3,3,3,3,3,1,1,1,0,3,1,0,0,0,0,0,0,0,0,0},
+    {1,6,0,3,0,1,0,0,0,3,1,1,10,3,11,1,0,0,0,0,0,0,0,0,0},
+    {1,1,1,3,0,0,0,0,0,1,1,1,8,3,9,1,0,0,0,0,0,0,0,0,0},
+    {0,0,1,3,3,3,3,4,3,3,1,1,10,3,11,1,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,1,1,3,0,0,3,1,1,8,4,9,1,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,1,3,0,0,3,1,1,1,0,3,1,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,1,8,3,3,11,1,3,3,3,11,1,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,1,1,1,1,1,1,3,0,1,1,1,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,1,3,0,0,1,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,1,1,1,1,1,1,3,0,0,1,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,0,0,6,0,3,3,3,3,3,1,0,0,1,1,1,1,1,1,1,1},
+    {0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,1,3,3,3,3,3,4,1},
+    {0,0,0,0,1,6,0,0,0,0,1,1,1,1,1,1,1,1,4,0,0,0,0,3,1},
+    {0,0,0,0,1,1,1,1,0,3,3,3,3,3,3,0,0,0,3,0,0,0,0,4,1},
+    {0,0,0,0,0,0,0,1,0,3,3,3,3,1,1,3,3,3,3,0,0,0,0,3,1},
+    {0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,2,0,4,1},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -180,9 +180,9 @@ static const int LEVEL_3_DATA[MAP_ROWS_3][MAP_COLUMNS_3] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,1,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,2,0,24,0,25,0,24,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
@@ -445,27 +445,27 @@ static bool CheckWallCollision(GameState* gameState, float x, float y) {
     int col = (int)(x / TILE_SIZE);
     int row = (int)(y / TILE_SIZE);
 
-    if (gameState->currentLevel == 0) { // Nivel 1
+    if (gameState->currentLevel == 0) {
         if (row < 0 || row >= MAP_ROWS_1 || col < 0 || col >= MAP_COLUMNS_1) return true;
         return (gameState->tileMap_1[row][col] == TILE_WALL);
     }
-    else if (gameState->currentLevel == 1) { // Nivel 2
+    else if (gameState->currentLevel == 1) {
         if (row < 0 || row >= MAP_ROWS_2 || col < 0 || col >= MAP_COLUMNS_2) return true;
         return (gameState->tileMap_2[row][col] == TILE_WALL);
     }
-    else if (gameState->currentLevel == 2) { // Nivel 3
+    else if (gameState->currentLevel == 2) {
         if (row < 0 || row >= MAP_ROWS_3 || col < 0 || col >= MAP_COLUMNS_3) return true;
         return (gameState->tileMap_3[row][col] == TILE_WALL);
     }
-    else if (gameState->currentLevel == 3) { // Nivel 4
+    else if (gameState->currentLevel == 3) {
         if (row < 0 || row >= MAP_ROWS_4 || col < 0 || col >= MAP_COLUMNS_4) return true;
         return (gameState->tileMap_4[row][col] == TILE_WALL);
     }
-    else if (gameState->currentLevel == 4) { // Nivel 5
+    else if (gameState->currentLevel == 4) {
         if (row < 0 || row >= MAP_ROWS_5 || col < 0 || col >= MAP_COLUMNS_5) return true;
         return (gameState->tileMap_5[row][col] == TILE_WALL);
     }
-    else if (gameState->currentLevel == 5) { // Nivel 6
+    else if (gameState->currentLevel == 5) {
         if (row < 0 || row >= MAP_ROWS_6 || col < 0 || col >= MAP_COLUMNS_6) return true;
         return (gameState->tileMap_6[row][col] == TILE_WALL);
     }
@@ -753,13 +753,11 @@ void ResetGameState(GameState* gameState) {
     gameState->monkeyDrop.active = false;
 
     if (monkeySpawnRow != -1 && monkeySpawnCol != -1) {
-
         gameState->monkey.active = true;
         gameState->monkey.x = (float)(monkeySpawnCol * TILE_SIZE);
         gameState->monkey.y = (float)(monkeySpawnRow * TILE_SIZE);
     }
     else {
-
         gameState->monkey.active = false;
         gameState->monkey.x = 0.0f;
         gameState->monkey.y = 0.0f;
@@ -822,8 +820,10 @@ void GameLoad(GameState* gameState, MapState* mapState) {
     for (int i = 0; i < MONKEY_FRAMES; i++)
         gameState->texMonkeyFrames[i] = LoadTexture(TextFormat("resources\\MonkeyFrames_%d.png", i));
     gameState->texMonkeyDrop = LoadTexture("resources\\coco.png");
+    // FIX: soporte para skin de murcielago (batSkinIndex)
+    const char* batSkinPrefix = (mapState->batSkinIndex == 1) ? "batS-frame" : "bat-frame";
     for (int i = 0; i < 4; i++) {
-        gameState->batTextures[i] = LoadTexture(TextFormat("resources/bat-frame-%d.png", i + 1));
+        gameState->batTextures[i] = LoadTexture(TextFormat("resources\\%s-%d.png", batSkinPrefix, i + 1));
         SetTextureFilter(gameState->batTextures[i], TEXTURE_FILTER_POINT);
     }
     gameState->texTotem = LoadTexture("resources\\tiraflechas.png");
@@ -1028,14 +1028,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     // --- FIX: registrar progreso al completar el nivel por primera vez ---
     if (gameState->levelCompleted && !gameState->showingVictoryOptions && !gameState->enteringInitials && !gameState->showingLeaderboard) {
         gameState->showingVictoryOptions = 1;
-        // currentLevel es 0-based (0=nivel1, 1=nivel2, 3=nivel4, 4=nivel5)
-        // El nivel 2 (índice 2) es la tienda, se salta automáticamente en MapUpdate
-        // así que los niveles jugables mapean directamente a sus índices en mapState
         int mapIdx = gameState->currentLevel;
-        // Si currentLevel > 1 (porque la tienda ocupa el índice 2 del mapa),
-        // hay que sumar 1 para saltar el slot de la tienda
-        mapIdx = gameState->currentLevel;
-
         printf("Nivel completado! currentLevel=%d mapIdx=%d stars=%d coins=%d\n", gameState->currentLevel, mapIdx, gameState->starsCollected, gameState->coinsCollected);
         MapRegisterLevelComplete(mapState, mapIdx, gameState->starsCollected, gameState->coinsCollected);
         MapRegisterLevelComplete(mapState, mapIdx, gameState->starsCollected, gameState->coinsCollected);
@@ -1058,7 +1051,6 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         int tileRow = gameState->playerY / TILE_SIZE;
         int nextTileCol = (gameState->velocityX > 0) ? (nextX + TILE_SIZE - 1) / TILE_SIZE : nextX / TILE_SIZE;
 
-        // 1. Obtener dinámicamente las columnas y el valor del tile según el nivel actual
         int mapColumns = 0;
         int h = TILE_EMPTY;
 
@@ -1083,7 +1075,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
             h = gameState->tileMap_4[tileRow][nextTileCol];
             break;
-        default:
+        case 4:
             mapColumns = MAP_COLUMNS_5;
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
             h = gameState->tileMap_5[tileRow][nextTileCol];
@@ -1093,26 +1085,25 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
             h = gameState->tileMap_6[tileRow][nextTileCol];
             break;
+        default:
+            mapColumns = MAP_COLUMNS_1;
+            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
+            h = gameState->tileMap_1[tileRow][nextTileCol];
+            break;
         }
 
-        // 2. Comprobación unificada de colisiones con bloques sólidos, pinchos, tótems y PÚAS
         if (h == TILE_WALL || TileIsSpike(h) || h == TILE_PUAS || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) {
-            // Ajustar posición al borde del obstáculo
             gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE;
             gameState->velocityX = 0;
             PlaySound(gameState->soundHitWall);
-
-            // EFECTO DE MUERTE INSTANTÁNEA: Si el obstáculo eran las nuevas púas, el jugador muere
             if (h == TILE_PUAS) {
                 gameState->playerDead = 1;
             }
         }
-        // 3. Comprobación de límites exteriores del mapa
         else if (nextX < 0 || nextX + TILE_SIZE > mapColumns * TILE_SIZE) {
             gameState->velocityX = 0;
             PlaySound(gameState->soundHitWall);
         }
-        // 4. Movimiento libre si no hay colisión
         else {
             gameState->playerX = nextX;
         }
@@ -1124,7 +1115,6 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         int tileCol = gameState->playerX / TILE_SIZE;
         int nextTileRow = (gameState->velocityY > 0) ? (nextY + TILE_SIZE - 1) / TILE_SIZE : nextY / TILE_SIZE;
 
-        // 1. Obtener dinámicamente las filas máximas y el valor del tile según el nivel actual
         int mapRows = 0;
         int h = TILE_EMPTY;
 
@@ -1149,7 +1139,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
             h = gameState->tileMap_4[nextTileRow][tileCol];
             break;
-        default:
+        case 4:
             mapRows = MAP_ROWS_5;
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
             h = gameState->tileMap_5[nextTileRow][tileCol];
@@ -1159,26 +1149,25 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
             h = gameState->tileMap_6[nextTileRow][tileCol];
             break;
+        default:
+            mapRows = MAP_ROWS_1;
+            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
+            h = gameState->tileMap_1[nextTileRow][tileCol];
+            break;
         }
 
-        // 2. Comprobación unificada de colisiones en vertical (bloques, pinchos, tótems y PÚAS)
         if (h == TILE_WALL || TileIsSpike(h) || h == TILE_PUAS || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) {
-            // Ajustar posición al borde superior o inferior del obstáculo
             gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE;
             gameState->velocityY = 0;
             PlaySound(gameState->soundHitWall);
-
-            // MUERTE INSTANTÁNEA: Si cae o choca verticalmente contra las nuevas púas, muere
             if (h == TILE_PUAS) {
                 gameState->playerDead = 1;
             }
         }
-        // 3. Comprobación de límites exteriores (techo y suelo del mapa)
         else if (nextY < 0 || nextY + TILE_SIZE > mapRows * TILE_SIZE) {
             gameState->velocityY = 0;
             PlaySound(gameState->soundHitWall);
         }
-        // 4. Movimiento libre
         else {
             gameState->playerY = nextY;
         }
@@ -1271,7 +1260,8 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         else if (gameState->currentLevel == 1) { mapRows = MAP_ROWS_2; mapCols = MAP_COLUMNS_2; }
         else if (gameState->currentLevel == 2) { mapRows = MAP_ROWS_3; mapCols = MAP_COLUMNS_3; }
         else if (gameState->currentLevel == 3) { mapRows = MAP_ROWS_4; mapCols = MAP_COLUMNS_4; }
-        else { mapRows = MAP_ROWS_5; mapCols = MAP_COLUMNS_5; }
+        else if (gameState->currentLevel == 4) { mapRows = MAP_ROWS_5; mapCols = MAP_COLUMNS_5; }
+        else { mapRows = MAP_ROWS_6; mapCols = MAP_COLUMNS_6; }
         float pL = (float)gameState->playerX + 4, pR = pL + TILE_SIZE - 8;
         float pT = (float)gameState->playerY + 4, pB = pT + TILE_SIZE - 8;
         int alive = 0;
@@ -1288,7 +1278,8 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
                 else if (gameState->currentLevel == 1) t = gameState->tileMap_2[ar][ac];
                 else if (gameState->currentLevel == 2) t = gameState->tileMap_3[ar][ac];
                 else if (gameState->currentLevel == 3) t = gameState->tileMap_4[ar][ac];
-                else                                   t = gameState->tileMap_5[ar][ac];
+                else if (gameState->currentLevel == 4) t = gameState->tileMap_5[ar][ac];
+                else                                   t = gameState->tileMap_6[ar][ac];
                 hitWall = (t == TILE_WALL) || TileIsTotem(t);
             }
             if (hitWall) { a.active = false; continue; }
@@ -1316,7 +1307,8 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
                     else if (gameState->currentLevel == 1) t = gameState->tileMap_2[r][c];
                     else if (gameState->currentLevel == 2) t = gameState->tileMap_3[r][c];
                     else if (gameState->currentLevel == 3) t = gameState->tileMap_4[r][c];
-                    else                                   t = gameState->tileMap_5[r][c];
+                    else if (gameState->currentLevel == 4) t = gameState->tileMap_5[r][c];
+                    else                                   t = gameState->tileMap_6[r][c];
                     if (t == TILE_MONKEY_SPAWN) { spawnRow = r; spawnCol = c; break; }
                 }
             }
@@ -1333,7 +1325,6 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         }
 
         if (gameState->monkey.active) {
-            // Paso 1: detectar trigger
             if (!gameState->monkeyTriggered && !gameState->monkeyDrop.active) {
                 int pColLeft = (int)(gameState->playerX / TILE_SIZE);
                 int pColRight = (int)((gameState->playerX + TILE_SIZE - 1) / TILE_SIZE);
@@ -1347,7 +1338,8 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
                             else if (gameState->currentLevel == 1) tile = gameState->tileMap_2[r][c];
                             else if (gameState->currentLevel == 2) tile = gameState->tileMap_3[r][c];
                             else if (gameState->currentLevel == 3) tile = gameState->tileMap_4[r][c];
-                            else                                   tile = gameState->tileMap_5[r][c];
+                            else if (gameState->currentLevel == 4) tile = gameState->tileMap_5[r][c];
+                            else                                   tile = gameState->tileMap_6[r][c];
                             if (tile == TILE_MONKEY_TRIGGER || tile == 21)
                                 gameState->monkeyTriggered = true;
                         }
@@ -1355,12 +1347,10 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
                 }
             }
 
-            // Paso 2: animar el mono
             gameState->monkey.animTimer += dt;
             if (gameState->monkey.animTimer >= 0.12f) {
                 gameState->monkey.animTimer = 0.0f;
                 gameState->monkey.frame = (gameState->monkey.frame + 1) % MONKEY_FRAMES;
-                // Paso 3: lanzar coco en frame 8 si trigger activo
                 if (gameState->monkey.frame == 8 && !gameState->monkeyDrop.active && gameState->monkeyTriggered) {
                     gameState->monkeyDrop.active = true;
                     gameState->monkeyDrop.x = gameState->monkey.x - TILE_SIZE + (TILE_SIZE * 1.0f);
@@ -1372,13 +1362,11 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         }
     }
 
-    // Coco pegado al mono cuando no cae
     if (!gameState->monkeyDrop.active) {
         gameState->monkeyDrop.x = gameState->monkey.x - TILE_SIZE + (TILE_SIZE * 1.0f);
         gameState->monkeyDrop.y = gameState->monkey.y + TILE_SIZE * 0.5f;
     }
 
-    // Caida del coco
     if (gameState->monkeyDrop.active) {
         gameState->monkeyDrop.y += gameState->monkeyDrop.speed * dt;
         float pL = (float)gameState->playerX + 4, pR = pL + TILE_SIZE - 8;
@@ -1596,7 +1584,6 @@ void GameDraw(GameState* gameState) {
             case TILE_LEVEL_END:
                 DrawTexturePro(gameState->levelEndTexture, { 0,0,(float)gameState->levelEndTexture.width,(float)gameState->levelEndTexture.height }, dst, orig, 0, WHITE);
                 break;
-
             case TILE_BLOCK_RED: {
                 bool solid = !gameState->blockToggle;
                 Color c = solid ? WHITE : Color{ 255, 255, 255, 80 };
@@ -1633,7 +1620,6 @@ void GameDraw(GameState* gameState) {
             case TILE_PUAS:
                 DrawTexturePro(gameState->texPuas, { 0, 0, (float)gameState->texPuas.width, (float)gameState->texPuas.height }, dst, orig, 0, WHITE);
                 break;
-
             case TILE_SPIKE_UP:
             case TILE_SPIKE_DOWN:
             case TILE_SPIKE_LEFT:
@@ -1661,7 +1647,6 @@ void GameDraw(GameState* gameState) {
                     SpikeHazardOffset(tt, &dRow, &dCol);
                     int hx = (col + dCol) * TILE_SIZE - cameraX;
                     int hy = (row + dRow) * TILE_SIZE - cameraY;
-
                     if (state == 3) {
                         float b = fabsf(sinf(stimer * 3.14159f * 8));
                         Vector2 hCenter = { (float)hx + TILE_SIZE / 2.0f, (float)hy + TILE_SIZE / 2.0f };
@@ -1796,5 +1781,4 @@ void GameUnload(GameState* gameState) {
     UnloadSound(gameState->soundCollectDot); UnloadSound(gameState->soundCollectCoin);
     UnloadSound(gameState->soundCollectStar); UnloadSound(gameState->soundLevelComplete);
     UnloadSound(gameState->soundLevelStart);
-
 }
