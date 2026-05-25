@@ -168,7 +168,7 @@ typedef struct {
 
 typedef struct {
 
-    // --- TEXTURAS ---
+    // --- TEXTURAS BASE ---
 
     Texture2D wallTextures[WALL_VARIANT_COUNT];
     Texture2D dotTexture;
@@ -193,16 +193,35 @@ typedef struct {
     Texture2D texRebote10;
     Texture2D texRebote11;
 
-    // Tótems
+    // Tótems y flechas (base)
     Texture2D texTotem;
     Texture2D texArrow;
 
-    // Mono
+    // Mono (base)
     Texture2D texMonkeyFrames[MONKEY_FRAMES];
     Texture2D texMonkeyDrop;
 
     Texture2D texPuas;
-    // --- AUDIO ---
+
+    // --- TEXTURAS DE SKINS ALTERNATIVAS ---
+
+    // Flecha
+    Texture2D texArrowSkin;          // flechaS.png
+
+    // Coco
+    Texture2D texCocoSkin; 
+
+   
+    Texture2D texTotemSkin;
+    Texture2D texTotemSkinS;
+
+    Texture2D texMonkeyFramesSkin[MONKEY_FRAMES];
+
+    int activeFlechaSkin;
+    int activeCocoSkin;
+    int activeTotemSkin;
+    int activeMonkeySkin; 
+
 
     Sound soundDash;
     Sound soundHitWall;
@@ -212,7 +231,6 @@ typedef struct {
     Sound soundLevelComplete;
     Sound soundLevelStart;
 
-    // --- ESTADO DEL JUGADOR ---
 
     float playerX, playerY;
     int velocityX, velocityY;
@@ -227,8 +245,6 @@ typedef struct {
     bool playerDead;
     bool playerDeadScreen;
 
-    // --- MAPAS Y NIVELES ---
-
     int currentLevel;
     int currentMapRows;
     int currentMapCols;
@@ -238,8 +254,6 @@ typedef struct {
     int tileMap_4[MAP_ROWS_4][MAP_COLUMNS_4];
     int tileMap_5[MAP_ROWS_5][MAP_COLUMNS_5];
     int tileMap_6[MAP_ROWS_6][MAP_COLUMNS_6];
-
-    // --- GAMEPLAY Y UI ---
 
     int score;
     int coinsCollected;
@@ -254,7 +268,6 @@ typedef struct {
     bool timerStarted;
     bool timerExpired;
 
-    // --- LEADERBOARD Y MENÚS ---
 
     bool showingLeaderboard;
     bool enteringInitials;
@@ -265,7 +278,6 @@ typedef struct {
     LeaderboardEntry leaderboard[LEADERBOARD_SIZE];
     int leaderboardCount;
 
-    // --- ENEMIGOS Y SISTEMA ---
 
     Bat bats[MAX_BATS];
     int batCount;
@@ -278,37 +290,29 @@ typedef struct {
     int lastBounceTileCol;
     int lastBounceTileRow;
 
-    // --- SISTEMA DE PINCHOS ---
     int   spikeCount;
     int   spikeCol[MAX_SPIKES];
     int   spikeRow[MAX_SPIKES];
-    int   spikeState[MAX_SPIKES];  // 0=off 1=tick 2=on 3=damage
+    int   spikeState[MAX_SPIKES];
     float spikeTimer[MAX_SPIKES];
 
-    // --- SISTEMA DE TÓTEMS ---
     int   totemCount;
     int   totemCol[MAX_TOTEMS];
     int   totemRow[MAX_TOTEMS];
-    int   totemDir[MAX_TOTEMS];    // 0=up 1=down 2=left 3=right
+    int   totemDir[MAX_TOTEMS];
     float totemTimers[MAX_TOTEMS];
 
-    // --- FLECHAS ---
     Arrow arrows[MAX_ARROWS];
     int arrowCount;
 
-    // --- MONO Y COCO ---
     Monkey monkey;
     MonkeyDrop monkeyDrop;
     bool monkeyTriggered;
 
-    // --- BLOQUES ALTERNANTES ---
-    // false = rojo sólido / azul intangible
-    // true  = rojo intangible / azul sólido
     bool blockToggle;
 
 } GameState;
 
-// --- PROTOTIPOS ---
 
 void GameLoad(GameState* gameState, MapState* mapState);
 SceneType GameUpdate(GameState* gameState, MapState* mapState);

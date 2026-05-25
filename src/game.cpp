@@ -20,7 +20,6 @@ static inline bool TileIsSpike(int t) {
     return t == TILE_SPIKE_UP || t == TILE_SPIKE_DOWN || t == TILE_SPIKE_LEFT || t == TILE_SPIKE_RIGHT;
 }
 
-// Bloques alternantes: rojo sólido cuando !toggle, azul sólido cuando toggle
 static inline bool TileBlockSolid(int t, bool toggle) {
     return (t == TILE_BLOCK_RED && !toggle) || (t == TILE_BLOCK_BLUE && toggle);
 }
@@ -29,7 +28,6 @@ static inline bool TileIsTotem(int t) {
     return t >= TILE_TOTEM_UP && t <= TILE_TOTEM_RIGHT;
 }
 
-// Dado un tile de pincho, devuelve el offset de la casilla peligrosa (dRow, dCol)
 static inline void SpikeHazardOffset(int t, int* dRow, int* dCol) {
     *dRow = 0; *dCol = 0;
     if (t == TILE_SPIKE_UP)    *dRow = -1;
@@ -37,7 +35,6 @@ static inline void SpikeHazardOffset(int t, int* dRow, int* dCol) {
     if (t == TILE_SPIKE_LEFT)  *dCol = -1;
     if (t == TILE_SPIKE_RIGHT) *dCol = 1;
 }
-
 
 static const int playerAnimSequence[PLAYER_ANIM_SEQ_LEN] = { 0, 1, 0, 2, 3, 2, 0, 4 };
 static const int playerAnimSpeed = 10;
@@ -143,7 +140,6 @@ static const int LEVEL_2_DATA[47][25] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
 
-// --- DATOS DEL NIVEL 3 ---
 static const int LEVEL_3_DATA[MAP_ROWS_3][MAP_COLUMNS_3] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -187,7 +183,6 @@ static const int LEVEL_3_DATA[MAP_ROWS_3][MAP_COLUMNS_3] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
 
-// --- DATOS DEL NIVEL 4 ---
 static const int LEVEL_4_DATA[MAP_ROWS_4][MAP_COLUMNS_4] = {
 {26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26},
     {26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26},
@@ -231,7 +226,6 @@ static const int LEVEL_4_DATA[MAP_ROWS_4][MAP_COLUMNS_4] = {
     {26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26}
 };
 
-// --- DATOS DEL NIVEL 5 ---
 static const int LEVEL_5_DATA[MAP_ROWS_5][MAP_COLUMNS_5] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -275,7 +269,6 @@ static const int LEVEL_5_DATA[MAP_ROWS_5][MAP_COLUMNS_5] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
 
-// --- DATOS DEL NIVEL 6 (vacío) ---
 static const int LEVEL_6_DATA[MAP_ROWS_6][MAP_COLUMNS_6] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -339,7 +332,6 @@ static int GetWallVariant1(const int map[MAP_ROWS_1][MAP_COLUMNS_1], int row, in
     }
     return WALL_SOLID;
 }
-
 static int TileIsWall2(const int map[MAP_ROWS_2][MAP_COLUMNS_2], int row, int col) {
     if (row < 0 || row >= MAP_ROWS_2 || col < 0 || col >= MAP_COLUMNS_2) return 0;
     return (map[row][col] == TILE_WALL);
@@ -359,7 +351,6 @@ static int GetWallVariant2(const int map[MAP_ROWS_2][MAP_COLUMNS_2], int row, in
     }
     return WALL_SOLID;
 }
-
 static int TileIsWall3(const int map[MAP_ROWS_3][MAP_COLUMNS_3], int row, int col) {
     if (row < 0 || row >= MAP_ROWS_3 || col < 0 || col >= MAP_COLUMNS_3) return 0;
     return (map[row][col] == TILE_WALL);
@@ -379,7 +370,6 @@ static int GetWallVariant3(const int map[MAP_ROWS_3][MAP_COLUMNS_3], int row, in
     }
     return WALL_SOLID;
 }
-
 static int TileIsWall4(const int map[MAP_ROWS_4][MAP_COLUMNS_4], int row, int col) {
     if (row < 0 || row >= MAP_ROWS_4 || col < 0 || col >= MAP_COLUMNS_4) return 0;
     return (map[row][col] == TILE_WALL);
@@ -399,7 +389,6 @@ static int GetWallVariant4(const int map[MAP_ROWS_4][MAP_COLUMNS_4], int row, in
     }
     return WALL_SOLID;
 }
-
 static int TileIsWall5(const int map[MAP_ROWS_5][MAP_COLUMNS_5], int row, int col) {
     if (row < 0 || row >= MAP_ROWS_5 || col < 0 || col >= MAP_COLUMNS_5) return 0;
     return (map[row][col] == TILE_WALL);
@@ -419,7 +408,6 @@ static int GetWallVariant5(const int map[MAP_ROWS_5][MAP_COLUMNS_5], int row, in
     }
     return WALL_SOLID;
 }
-
 static int TileIsWall6(const int map[MAP_ROWS_6][MAP_COLUMNS_6], int row, int col) {
     if (row < 0 || row >= MAP_ROWS_6 || col < 0 || col >= MAP_COLUMNS_6) return 0;
     return (map[row][col] == TILE_WALL);
@@ -444,7 +432,6 @@ static int GetWallVariant6(const int map[MAP_ROWS_6][MAP_COLUMNS_6], int row, in
 static bool CheckWallCollision(GameState* gameState, float x, float y) {
     int col = (int)(x / TILE_SIZE);
     int row = (int)(y / TILE_SIZE);
-
     if (gameState->currentLevel == 0) {
         if (row < 0 || row >= MAP_ROWS_1 || col < 0 || col >= MAP_COLUMNS_1) return true;
         return (gameState->tileMap_1[row][col] == TILE_WALL);
@@ -477,7 +464,6 @@ static void CollectTileUnderPlayer(GameState* gameState) {
     int col = (int)((gameState->playerX + (TILE_SIZE / 2)) / TILE_SIZE);
     int row = (int)((gameState->playerY + (TILE_SIZE / 2)) / TILE_SIZE);
     int tileValue = 0;
-
     if (gameState->currentLevel == 0) {
         if (row >= 0 && row < MAP_ROWS_1 && col >= 0 && col < MAP_COLUMNS_1) {
             tileValue = gameState->tileMap_1[row][col];
@@ -520,9 +506,8 @@ static void CollectTileUnderPlayer(GameState* gameState) {
                 gameState->tileMap_6[row][col] = TILE_EMPTY;
         }
     }
-
     switch (tileValue) {
-    case TILE_DOT:       gameState->score += 10;  PlaySound(gameState->soundCollectDot);   break;
+    case TILE_DOT:   gameState->score += 10; PlaySound(gameState->soundCollectDot); break;
     case TILE_COIN:
         gameState->coinsCollected += 1;
         printf("Moneda recogida! Llevas: %d\n", gameState->coinsCollected);
@@ -549,8 +534,7 @@ static void PlacePlayerAtSpawn(GameState* gameState) {
                 if (gameState->tileMap_1[row][col] == TILE_PLAYER_SPAWN) {
                     gameState->playerX = (float)(col * TILE_SIZE);
                     gameState->playerY = (float)(row * TILE_SIZE);
-                    gameState->tileMap_1[row][col] = TILE_EMPTY;
-                    return;
+                    gameState->tileMap_1[row][col] = TILE_EMPTY; return;
                 }
     }
     else if (gameState->currentLevel == 1) {
@@ -559,8 +543,7 @@ static void PlacePlayerAtSpawn(GameState* gameState) {
                 if (gameState->tileMap_2[row][col] == TILE_PLAYER_SPAWN) {
                     gameState->playerX = (float)(col * TILE_SIZE);
                     gameState->playerY = (float)(row * TILE_SIZE);
-                    gameState->tileMap_2[row][col] = TILE_EMPTY;
-                    return;
+                    gameState->tileMap_2[row][col] = TILE_EMPTY; return;
                 }
     }
     else if (gameState->currentLevel == 2) {
@@ -569,8 +552,7 @@ static void PlacePlayerAtSpawn(GameState* gameState) {
                 if (gameState->tileMap_3[row][col] == TILE_PLAYER_SPAWN) {
                     gameState->playerX = (float)(col * TILE_SIZE);
                     gameState->playerY = (float)(row * TILE_SIZE);
-                    gameState->tileMap_3[row][col] = TILE_EMPTY;
-                    return;
+                    gameState->tileMap_3[row][col] = TILE_EMPTY; return;
                 }
     }
     else if (gameState->currentLevel == 3) {
@@ -579,8 +561,7 @@ static void PlacePlayerAtSpawn(GameState* gameState) {
                 if (gameState->tileMap_4[row][col] == TILE_PLAYER_SPAWN) {
                     gameState->playerX = (float)(col * TILE_SIZE);
                     gameState->playerY = (float)(row * TILE_SIZE);
-                    gameState->tileMap_4[row][col] = TILE_EMPTY;
-                    return;
+                    gameState->tileMap_4[row][col] = TILE_EMPTY; return;
                 }
     }
     else if (gameState->currentLevel == 4) {
@@ -589,8 +570,7 @@ static void PlacePlayerAtSpawn(GameState* gameState) {
                 if (gameState->tileMap_5[row][col] == TILE_PLAYER_SPAWN) {
                     gameState->playerX = (float)(col * TILE_SIZE);
                     gameState->playerY = (float)(row * TILE_SIZE);
-                    gameState->tileMap_5[row][col] = TILE_EMPTY;
-                    return;
+                    gameState->tileMap_5[row][col] = TILE_EMPTY; return;
                 }
     }
     else {
@@ -599,8 +579,7 @@ static void PlacePlayerAtSpawn(GameState* gameState) {
                 if (gameState->tileMap_6[row][col] == TILE_PLAYER_SPAWN) {
                     gameState->playerX = (float)(col * TILE_SIZE);
                     gameState->playerY = (float)(row * TILE_SIZE);
-                    gameState->tileMap_6[row][col] = TILE_EMPTY;
-                    return;
+                    gameState->tileMap_6[row][col] = TILE_EMPTY; return;
                 }
     }
 }
@@ -617,7 +596,9 @@ static void InsertLeaderboard(GameState* gs) {
     gs->leaderboard[pos] = entry;
     for (int i = pos; i > 0; i--) {
         if (gs->leaderboard[i].time < gs->leaderboard[i - 1].time) {
-            LeaderboardEntry tmp = gs->leaderboard[i]; gs->leaderboard[i] = gs->leaderboard[i - 1]; gs->leaderboard[i - 1] = tmp;
+            LeaderboardEntry tmp = gs->leaderboard[i];
+            gs->leaderboard[i] = gs->leaderboard[i - 1];
+            gs->leaderboard[i - 1] = tmp;
         }
         else break;
     }
@@ -648,10 +629,8 @@ void ResetGameState(GameState* gameState) {
     gameState->showingVictoryOptions = 0;
     gameState->enteringInitials = 0;
     gameState->initialIndex = 0;
-    gameState->initials[0] = 'A';
-    gameState->initials[1] = 'A';
-    gameState->initials[2] = 'A';
-    gameState->initials[3] = '\0';
+    gameState->initials[0] = 'A'; gameState->initials[1] = 'A';
+    gameState->initials[2] = 'A'; gameState->initials[3] = '\0';
     gameState->initialCharIndex[0] = 0;
     gameState->initialCharIndex[1] = 0;
     gameState->initialCharIndex[2] = 0;
@@ -666,18 +645,12 @@ void ResetGameState(GameState* gameState) {
     gameState->monkeyTriggered = false;
     gameState->blockToggle = false;
 
-    if (gameState->currentLevel == 0)
-        memcpy(gameState->tileMap_1, initialMap, sizeof(initialMap));
-    else if (gameState->currentLevel == 1)
-        memcpy(gameState->tileMap_2, LEVEL_2_DATA, sizeof(LEVEL_2_DATA));
-    else if (gameState->currentLevel == 2)
-        memcpy(gameState->tileMap_3, LEVEL_3_DATA, sizeof(LEVEL_3_DATA));
-    else if (gameState->currentLevel == 3)
-        memcpy(gameState->tileMap_4, LEVEL_4_DATA, sizeof(LEVEL_4_DATA));
-    else if (gameState->currentLevel == 4)
-        memcpy(gameState->tileMap_5, LEVEL_5_DATA, sizeof(LEVEL_5_DATA));
-    else
-        memcpy(gameState->tileMap_6, LEVEL_6_DATA, sizeof(LEVEL_6_DATA));
+    if (gameState->currentLevel == 0) memcpy(gameState->tileMap_1, initialMap, sizeof(initialMap));
+    else if (gameState->currentLevel == 1) memcpy(gameState->tileMap_2, LEVEL_2_DATA, sizeof(LEVEL_2_DATA));
+    else if (gameState->currentLevel == 2) memcpy(gameState->tileMap_3, LEVEL_3_DATA, sizeof(LEVEL_3_DATA));
+    else if (gameState->currentLevel == 3) memcpy(gameState->tileMap_4, LEVEL_4_DATA, sizeof(LEVEL_4_DATA));
+    else if (gameState->currentLevel == 4) memcpy(gameState->tileMap_5, LEVEL_5_DATA, sizeof(LEVEL_5_DATA));
+    else                                   memcpy(gameState->tileMap_6, LEVEL_6_DATA, sizeof(LEVEL_6_DATA));
 
     gameState->starsTotal = 0;
     gameState->batCount = 0;
@@ -689,8 +662,7 @@ void ResetGameState(GameState* gameState) {
     else if (gameState->currentLevel == 4) { rows = MAP_ROWS_5; cols = MAP_COLUMNS_5; }
     else { rows = MAP_ROWS_6; cols = MAP_COLUMNS_6; }
 
-    int monkeySpawnRow = -1;
-    int monkeySpawnCol = -1;
+    int monkeySpawnRow = -1, monkeySpawnCol = -1;
 
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
@@ -706,17 +678,14 @@ void ResetGameState(GameState* gameState) {
                 gameState->starsTotal++;
             }
             else if (tile == TILE_MONKEY_SPAWN) {
-                monkeySpawnRow = row;
-                monkeySpawnCol = col;
+                monkeySpawnRow = row; monkeySpawnCol = col;
             }
             else if (tile == TILE_HORIZONTAL_BAT || tile == TILE_VERTICAL_BAT) {
                 if (gameState->batCount < MAX_BATS) {
                     Bat& bat = gameState->bats[gameState->batCount];
-                    bat.x = (float)(col * TILE_SIZE);
-                    bat.y = (float)(row * TILE_SIZE);
+                    bat.x = (float)(col * TILE_SIZE); bat.y = (float)(row * TILE_SIZE);
                     bat.isHorizontal = (tile == TILE_HORIZONTAL_BAT) ? 1 : 0;
-                    bat.stopTimer = 0.0f;
-                    bat.deadly = 1;
+                    bat.stopTimer = 0.0f; bat.deadly = 1;
                     if (bat.isHorizontal) { bat.velocityX = BAT_SPEED; bat.velocityY = 0.0f; }
                     else { bat.velocityX = 0.0f; bat.velocityY = -BAT_SPEED; }
                     gameState->batCount++;
@@ -730,15 +699,12 @@ void ResetGameState(GameState* gameState) {
             }
             else if (TileIsSpike(tile) && gameState->spikeCount < MAX_SPIKES) {
                 int i = gameState->spikeCount++;
-                gameState->spikeCol[i] = col;
-                gameState->spikeRow[i] = row;
-                gameState->spikeState[i] = 0;
-                gameState->spikeTimer[i] = 0.0f;
+                gameState->spikeCol[i] = col; gameState->spikeRow[i] = row;
+                gameState->spikeState[i] = 0; gameState->spikeTimer[i] = 0.0f;
             }
             else if (TileIsTotem(tile) && gameState->totemCount < MAX_TOTEMS) {
                 int ti = gameState->totemCount++;
-                gameState->totemCol[ti] = col;
-                gameState->totemRow[ti] = row;
+                gameState->totemCol[ti] = col; gameState->totemRow[ti] = row;
                 gameState->totemDir[ti] = tile - TILE_TOTEM_UP;
                 gameState->totemTimers[ti] = TOTEM_FIRE_INTERVAL;
             }
@@ -759,8 +725,7 @@ void ResetGameState(GameState* gameState) {
     }
     else {
         gameState->monkey.active = false;
-        gameState->monkey.x = 0.0f;
-        gameState->monkey.y = 0.0f;
+        gameState->monkey.x = 0.0f; gameState->monkey.y = 0.0f;
     }
 
     gameState->monkeyDrop.x = gameState->monkey.x - TILE_SIZE + (TILE_SIZE * 1.0f);
@@ -774,7 +739,9 @@ void ResetGameState(GameState* gameState) {
     gameState->cameraY = (float)(gameState->playerY - SCREEN_HEIGHT / 2 + TILE_SIZE / 2);
 }
 
+// ---------------------------------------------------------------------------
 //  GAMELOAD
+// ---------------------------------------------------------------------------
 void GameLoad(GameState* gameState, MapState* mapState) {
     const char* wallTextureFiles[WALL_VARIANT_COUNT] = {
         "resources\\tile_wall_solid.png","resources\\tile_wall_top.png","resources\\tile_wall_bottom.png",
@@ -811,25 +778,50 @@ void GameLoad(GameState* gameState, MapState* mapState) {
     gameState->coinFrames[1] = LoadTexture("resources\\coin-frame-1.png");
     gameState->coinFrames[2] = LoadTexture("resources\\coin-frame-2.png");
     gameState->coinFrames[3] = LoadTexture("resources\\coin-frame-3.png");
+
+    // --- Jugador (skin base o skin S) ---
     const char* skinPrefix = (mapState->playerSkinIndex == 1) ? "totmS" : "totm";
     gameState->playerFrames[0] = LoadTexture(TextFormat("resources\\%s.png", skinPrefix));
     gameState->playerFrames[1] = LoadTexture(TextFormat("resources\\%s_1.png", skinPrefix));
     gameState->playerFrames[2] = LoadTexture(TextFormat("resources\\%s_2.png", skinPrefix));
     gameState->playerFrames[3] = LoadTexture(TextFormat("resources\\%s_3.png", skinPrefix));
     gameState->playerFrames[4] = LoadTexture(TextFormat("resources\\%s_4.png", skinPrefix));
+
+    // --- Mono (frames base) ---
     for (int i = 0; i < MONKEY_FRAMES; i++)
         gameState->texMonkeyFrames[i] = LoadTexture(TextFormat("resources\\MonkeyFrames_%d.png", i));
+
+    // --- Mono (frames skin S) ---
+    for (int i = 0; i < MONKEY_FRAMES; i++)
+        gameState->texMonkeyFramesSkin[i] = LoadTexture(TextFormat("resources\\MonkeyFramesS_%d.png", i));
+
+    // --- Coco base + skin ---
     gameState->texMonkeyDrop = LoadTexture("resources\\coco.png");
-    // FIX: soporte para skin de murcielago (batSkinIndex)
+    gameState->texCocoSkin = LoadTexture("resources\\cocoS.png");
+    SetTextureFilter(gameState->texCocoSkin, TEXTURE_FILTER_POINT);
+
+    // --- Murcielago (skin base o skin S) ---
     const char* batSkinPrefix = (mapState->batSkinIndex == 1) ? "batS-frame" : "bat-frame";
     for (int i = 0; i < 4; i++) {
         gameState->batTextures[i] = LoadTexture(TextFormat("resources\\%s-%d.png", batSkinPrefix, i + 1));
         SetTextureFilter(gameState->batTextures[i], TEXTURE_FILTER_POINT);
     }
+
+    // --- Totem base + skins ---
     gameState->texTotem = LoadTexture("resources\\tiraflechas.png");
-    gameState->texArrow = LoadTexture("resources\\flecha.png");
+    gameState->texTotemSkin = LoadTexture("resources\\tiraflechasS.png");
+    gameState->texTotemSkinS = LoadTexture("resources\\tiraflechasSS.png");
     SetTextureFilter(gameState->texTotem, TEXTURE_FILTER_POINT);
+    SetTextureFilter(gameState->texTotemSkin, TEXTURE_FILTER_POINT);
+    SetTextureFilter(gameState->texTotemSkinS, TEXTURE_FILTER_POINT);
+
+    // --- Flecha base + skin ---
+    gameState->texArrow = LoadTexture("resources\\flecha.png");
+    gameState->texArrowSkin = LoadTexture("resources\\flechaS.png");
     SetTextureFilter(gameState->texArrow, TEXTURE_FILTER_POINT);
+    SetTextureFilter(gameState->texArrowSkin, TEXTURE_FILTER_POINT);
+
+    // Resto de filtros
     SetTextureFilter(gameState->dotTexture, TEXTURE_FILTER_POINT);
     SetTextureFilter(gameState->starTexture, TEXTURE_FILTER_POINT);
     SetTextureFilter(gameState->levelEndTexture, TEXTURE_FILTER_POINT);
@@ -841,6 +833,13 @@ void GameLoad(GameState* gameState, MapState* mapState) {
     for (int i = 0; i < PLAYER_ANIM_FRAMES; i++) SetTextureFilter(gameState->playerFrames[i], TEXTURE_FILTER_POINT);
     for (int i = 0; i < COIN_ANIM_FRAMES; i++) SetTextureFilter(gameState->coinFrames[i], TEXTURE_FILTER_POINT);
 
+    // --- Sincronizar indices de skin activos ---
+    gameState->activeFlechaSkin = mapState->flechaSkinIndex;
+    gameState->activeCocoSkin = mapState->cocoSkinIndex;
+    gameState->activeTotemSkin = mapState->tiraflechasSkinIndex;
+    gameState->activeMonkeySkin = mapState->monkeySkinIndex;
+
+    // --- Mapa del nivel ---
     if (gameState->currentLevel == 1) {
         gameState->currentMapRows = MAP_ROWS_2; gameState->currentMapCols = MAP_COLUMNS_2;
         memcpy(gameState->tileMap_2, LEVEL_2_DATA, sizeof(LEVEL_2_DATA));
@@ -866,6 +865,7 @@ void GameLoad(GameState* gameState, MapState* mapState) {
         memcpy(gameState->tileMap_1, initialMap, sizeof(initialMap));
     }
 
+    // --- Audio ---
     gameState->soundDash = LoadSound("cosas de la wiki\\dash.wav");
     gameState->soundHitWall = LoadSound("cosas de la wiki\\hitting wall.wav");
     gameState->soundCollectDot = LoadSound("cosas de la wiki\\collecting dots.wav");
@@ -874,6 +874,7 @@ void GameLoad(GameState* gameState, MapState* mapState) {
     gameState->soundLevelComplete = LoadSound("cosas de la wiki\\level complete.wav");
     gameState->soundLevelStart = LoadSound("cosas de la wiki\\start of the level.wav");
 
+    // --- Leaderboard ---
     gameState->leaderboardCount = 0;
     FILE* f = fopen("leaderboard.bin", "rb");
     if (f) {
@@ -891,13 +892,14 @@ void GameLoad(GameState* gameState, MapState* mapState) {
     PlaySound(gameState->soundLevelStart);
 }
 
+// ---------------------------------------------------------------------------
 void HandleBounceCollision(GameState* gameState) {
     int tileCol = (int)((gameState->playerX + TILE_SIZE / 2) / TILE_SIZE);
     int tileRow = (int)((gameState->playerY + TILE_SIZE / 2) / TILE_SIZE);
-
     if (tileRow < 0 || tileCol < 0) return;
 
-    int currentTile = (gameState->currentLevel == 0) ? gameState->tileMap_1[tileRow][tileCol] :
+    int currentTile =
+        (gameState->currentLevel == 0) ? gameState->tileMap_1[tileRow][tileCol] :
         (gameState->currentLevel == 1) ? gameState->tileMap_2[tileRow][tileCol] :
         (gameState->currentLevel == 2) ? gameState->tileMap_3[tileRow][tileCol] :
         (gameState->currentLevel == 3) ? gameState->tileMap_4[tileRow][tileCol] :
@@ -905,39 +907,31 @@ void HandleBounceCollision(GameState* gameState) {
         gameState->tileMap_6[tileRow][tileCol];
 
     if (currentTile >= 8 && currentTile <= 11) {
-        int nextVX = 0, nextVY = 0;
-        bool activated = false;
-
+        int nextVX = 0, nextVY = 0; bool activated = false;
         switch (currentTile) {
         case 8:
             if (gameState->velocityX < 0) { nextVY = -PLAYER_MOVE_SPEED; activated = true; }
-            else if (gameState->velocityY > 0) { nextVX = PLAYER_MOVE_SPEED; activated = true; }
-            break;
+            else if (gameState->velocityY > 0) { nextVX = PLAYER_MOVE_SPEED; activated = true; } break;
         case 9:
             if (gameState->velocityX > 0) { nextVY = PLAYER_MOVE_SPEED; activated = true; }
-            else if (gameState->velocityY < 0) { nextVX = -PLAYER_MOVE_SPEED; activated = true; }
-            break;
+            else if (gameState->velocityY < 0) { nextVX = -PLAYER_MOVE_SPEED; activated = true; } break;
         case 10:
             if (gameState->velocityX < 0) { nextVY = PLAYER_MOVE_SPEED; activated = true; }
-            else if (gameState->velocityY < 0) { nextVX = PLAYER_MOVE_SPEED; activated = true; }
-            break;
+            else if (gameState->velocityY < 0) { nextVX = PLAYER_MOVE_SPEED; activated = true; } break;
         case 11:
             if (gameState->velocityX > 0) { nextVY = -PLAYER_MOVE_SPEED; activated = true; }
-            else if (gameState->velocityY > 0) { nextVX = -PLAYER_MOVE_SPEED; activated = true; }
-            break;
+            else if (gameState->velocityY > 0) { nextVX = -PLAYER_MOVE_SPEED; activated = true; } break;
         }
-
         if (activated) {
-            gameState->velocityX = nextVX;
-            gameState->velocityY = nextVY;
+            gameState->velocityX = nextVX; gameState->velocityY = nextVY;
             gameState->playerX = (float)(tileCol * TILE_SIZE);
             gameState->playerY = (float)(tileRow * TILE_SIZE);
             float push = 2.0f;
-            if (gameState->velocityX > 0)      gameState->playerX += push;
+            if (gameState->velocityX > 0) gameState->playerX += push;
             else if (gameState->velocityX < 0) gameState->playerX -= push;
-            if (gameState->velocityY > 0)      gameState->playerY += push;
+            if (gameState->velocityY > 0) gameState->playerY += push;
             else if (gameState->velocityY < 0) gameState->playerY -= push;
-            if (gameState->velocityX > 0)      gameState->playerRotation = 90;
+            if (gameState->velocityX > 0) gameState->playerRotation = 90;
             else if (gameState->velocityX < 0) gameState->playerRotation = 270;
             else if (gameState->velocityY > 0) gameState->playerRotation = 180;
             else if (gameState->velocityY < 0) gameState->playerRotation = 0;
@@ -946,19 +940,23 @@ void HandleBounceCollision(GameState* gameState) {
     }
 }
 
+// ---------------------------------------------------------------------------
 //  GAMEUPDATE
+// ---------------------------------------------------------------------------
 SceneType GameUpdate(GameState* gameState, MapState* mapState) {
 
     // --- MENU PAUSA ---
     if (IsKeyPressed(KEY_M) && !gameState->levelCompleted &&
-        !gameState->showingVictoryOptions && !gameState->enteringInitials && !gameState->showingLeaderboard
-        && !gameState->playerDeadScreen)
+        !gameState->showingVictoryOptions && !gameState->enteringInitials &&
+        !gameState->showingLeaderboard && !gameState->playerDeadScreen)
         gameState->menuOpen = !gameState->menuOpen;
 
     if (gameState->menuOpen) {
         if (IsKeyPressed(KEY_UP))   gameState->menuOption = (gameState->menuOption - 1 + 4) % 4;
         if (IsKeyPressed(KEY_DOWN)) gameState->menuOption = (gameState->menuOption + 1) % 4;
-        if (gameState->menuOption == 0) { if (IsKeyPressed(KEY_ENTER)) { ResetGameState(gameState); gameState->menuOpen = false; } }
+        if (gameState->menuOption == 0) {
+            if (IsKeyPressed(KEY_ENTER)) { ResetGameState(gameState); gameState->menuOpen = false; }
+        }
         else if (gameState->menuOption == 1) {
             if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT)) {
                 gameState->musicEnabled = !gameState->musicEnabled; mapState->musicEnabled = gameState->musicEnabled;
@@ -971,7 +969,9 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             if (gameState->masterVolume > 1.0f) gameState->masterVolume = 1.0f;
             mapState->masterVolume = gameState->masterVolume;
         }
-        else if (gameState->menuOption == 3) { if (IsKeyPressed(KEY_ENTER)) return SCENE_MAP; }
+        else if (gameState->menuOption == 3) {
+            if (IsKeyPressed(KEY_ENTER)) return SCENE_MAP;
+        }
         SetMasterVolume(gameState->musicEnabled ? gameState->masterVolume : 0.0f);
         return SCENE_GAME;
     }
@@ -980,8 +980,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     if (gameState->playerDead && !gameState->playerDeadScreen) {
         PlaySound(gameState->soundHitWall);
         gameState->playerDeadScreen = true;
-        gameState->velocityX = 0;
-        gameState->velocityY = 0;
+        gameState->velocityX = 0; gameState->velocityY = 0;
     }
     if (gameState->playerDeadScreen) {
         if (IsKeyPressed(KEY_SPACE)) {
@@ -989,10 +988,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             ResetGameState(gameState);
             PlaySound(gameState->soundLevelStart);
         }
-        if (IsKeyPressed(KEY_M)) {
-            gameState->playerDeadScreen = false;
-            return SCENE_MAP;
-        }
+        if (IsKeyPressed(KEY_M)) { gameState->playerDeadScreen = false; return SCENE_MAP; }
         return SCENE_GAME;
     }
 
@@ -1012,7 +1008,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     }
     if (gameState->showingVictoryOptions) {
         if (IsKeyPressed(KEY_L)) { gameState->showingVictoryOptions = 0; gameState->enteringInitials = 1; }
-        if (IsKeyPressed(KEY_M))     return SCENE_MAP;
+        if (IsKeyPressed(KEY_M))       return SCENE_MAP;
         if (IsKeyPressed(KEY_SPACE)) { ResetGameState(gameState); PlaySound(gameState->soundLevelStart); }
         return SCENE_GAME;
     }
@@ -1025,7 +1021,6 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
 
     if (gameState->timerStarted && !gameState->levelCompleted) gameState->timer += dt;
 
-    // --- FIX: registrar progreso al completar el nivel por primera vez ---
     if (gameState->levelCompleted && !gameState->showingVictoryOptions && !gameState->enteringInitials && !gameState->showingLeaderboard) {
         gameState->showingVictoryOptions = 1;
         int mapIdx = gameState->currentLevel;
@@ -1038,10 +1033,10 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     // --- INPUT ---
     if (gameState->velocityX == 0 && gameState->velocityY == 0) {
         bool moved = false;
-        if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) { gameState->velocityX = PLAYER_MOVE_SPEED; gameState->playerRotation = 90;  gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
+        if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) { gameState->velocityX = PLAYER_MOVE_SPEED; gameState->playerRotation = 90; gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
         else if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) { gameState->velocityX = -PLAYER_MOVE_SPEED; gameState->playerRotation = 270; gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
         else if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) { gameState->velocityY = PLAYER_MOVE_SPEED; gameState->playerRotation = 180; gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
-        else if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) { gameState->velocityY = -PLAYER_MOVE_SPEED; gameState->playerRotation = 0;   gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
+        else if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) { gameState->velocityY = -PLAYER_MOVE_SPEED; gameState->playerRotation = 0; gameState->timerStarted = 1; PlaySound(gameState->soundDash); moved = true; }
         if (moved) gameState->blockToggle = !gameState->blockToggle;
     }
 
@@ -1050,59 +1045,23 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         int nextX = gameState->playerX + gameState->velocityX;
         int tileRow = gameState->playerY / TILE_SIZE;
         int nextTileCol = (gameState->velocityX > 0) ? (nextX + TILE_SIZE - 1) / TILE_SIZE : nextX / TILE_SIZE;
-
-        int mapColumns = 0;
-        int h = TILE_EMPTY;
-
+        int mapColumns = 0; int h = TILE_EMPTY;
         switch (gameState->currentLevel) {
-        case 0:
-            mapColumns = MAP_COLUMNS_1;
-            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
-            h = gameState->tileMap_1[tileRow][nextTileCol];
-            break;
-        case 1:
-            mapColumns = MAP_COLUMNS_2;
-            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
-            h = gameState->tileMap_2[tileRow][nextTileCol];
-            break;
-        case 2:
-            mapColumns = MAP_COLUMNS_3;
-            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
-            h = gameState->tileMap_3[tileRow][nextTileCol];
-            break;
-        case 3:
-            mapColumns = MAP_COLUMNS_4;
-            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
-            h = gameState->tileMap_4[tileRow][nextTileCol];
-            break;
-        case 4:
-            mapColumns = MAP_COLUMNS_5;
-            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
-            h = gameState->tileMap_5[tileRow][nextTileCol];
-            break;
-        case 5:
-            mapColumns = MAP_COLUMNS_6;
-            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
-            h = gameState->tileMap_6[tileRow][nextTileCol];
-            break;
-        default:
-            mapColumns = MAP_COLUMNS_1;
-            nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol);
-            h = gameState->tileMap_1[tileRow][nextTileCol];
-            break;
+        case 0: mapColumns = MAP_COLUMNS_1; nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol); h = gameState->tileMap_1[tileRow][nextTileCol]; break;
+        case 1: mapColumns = MAP_COLUMNS_2; nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol); h = gameState->tileMap_2[tileRow][nextTileCol]; break;
+        case 2: mapColumns = MAP_COLUMNS_3; nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol); h = gameState->tileMap_3[tileRow][nextTileCol]; break;
+        case 3: mapColumns = MAP_COLUMNS_4; nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol); h = gameState->tileMap_4[tileRow][nextTileCol]; break;
+        case 4: mapColumns = MAP_COLUMNS_5; nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol); h = gameState->tileMap_5[tileRow][nextTileCol]; break;
+        case 5: mapColumns = MAP_COLUMNS_6; nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol); h = gameState->tileMap_6[tileRow][nextTileCol]; break;
+        default: mapColumns = MAP_COLUMNS_1; nextTileCol = (nextTileCol < 0) ? 0 : (nextTileCol >= mapColumns ? mapColumns - 1 : nextTileCol); h = gameState->tileMap_1[tileRow][nextTileCol]; break;
         }
-
         if (h == TILE_WALL || TileIsSpike(h) || h == TILE_PUAS || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) {
             gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE;
-            gameState->velocityX = 0;
-            PlaySound(gameState->soundHitWall);
-            if (h == TILE_PUAS) {
-                gameState->playerDead = 1;
-            }
+            gameState->velocityX = 0; PlaySound(gameState->soundHitWall);
+            if (h == TILE_PUAS) gameState->playerDead = 1;
         }
         else if (nextX < 0 || nextX + TILE_SIZE > mapColumns * TILE_SIZE) {
-            gameState->velocityX = 0;
-            PlaySound(gameState->soundHitWall);
+            gameState->velocityX = 0; PlaySound(gameState->soundHitWall);
         }
         else {
             gameState->playerX = nextX;
@@ -1114,59 +1073,23 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         int nextY = gameState->playerY + gameState->velocityY;
         int tileCol = gameState->playerX / TILE_SIZE;
         int nextTileRow = (gameState->velocityY > 0) ? (nextY + TILE_SIZE - 1) / TILE_SIZE : nextY / TILE_SIZE;
-
-        int mapRows = 0;
-        int h = TILE_EMPTY;
-
+        int mapRows = 0; int h = TILE_EMPTY;
         switch (gameState->currentLevel) {
-        case 0:
-            mapRows = MAP_ROWS_1;
-            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
-            h = gameState->tileMap_1[nextTileRow][tileCol];
-            break;
-        case 1:
-            mapRows = MAP_ROWS_2;
-            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
-            h = gameState->tileMap_2[nextTileRow][tileCol];
-            break;
-        case 2:
-            mapRows = MAP_ROWS_3;
-            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
-            h = gameState->tileMap_3[nextTileRow][tileCol];
-            break;
-        case 3:
-            mapRows = MAP_ROWS_4;
-            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
-            h = gameState->tileMap_4[nextTileRow][tileCol];
-            break;
-        case 4:
-            mapRows = MAP_ROWS_5;
-            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
-            h = gameState->tileMap_5[nextTileRow][tileCol];
-            break;
-        case 5:
-            mapRows = MAP_ROWS_6;
-            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
-            h = gameState->tileMap_6[nextTileRow][tileCol];
-            break;
-        default:
-            mapRows = MAP_ROWS_1;
-            nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow);
-            h = gameState->tileMap_1[nextTileRow][tileCol];
-            break;
+        case 0: mapRows = MAP_ROWS_1; nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow); h = gameState->tileMap_1[nextTileRow][tileCol]; break;
+        case 1: mapRows = MAP_ROWS_2; nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow); h = gameState->tileMap_2[nextTileRow][tileCol]; break;
+        case 2: mapRows = MAP_ROWS_3; nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow); h = gameState->tileMap_3[nextTileRow][tileCol]; break;
+        case 3: mapRows = MAP_ROWS_4; nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow); h = gameState->tileMap_4[nextTileRow][tileCol]; break;
+        case 4: mapRows = MAP_ROWS_5; nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow); h = gameState->tileMap_5[nextTileRow][tileCol]; break;
+        case 5: mapRows = MAP_ROWS_6; nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow); h = gameState->tileMap_6[nextTileRow][tileCol]; break;
+        default: mapRows = MAP_ROWS_1; nextTileRow = (nextTileRow < 0) ? 0 : (nextTileRow >= mapRows ? mapRows - 1 : nextTileRow); h = gameState->tileMap_1[nextTileRow][tileCol]; break;
         }
-
         if (h == TILE_WALL || TileIsSpike(h) || h == TILE_PUAS || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) {
             gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE;
-            gameState->velocityY = 0;
-            PlaySound(gameState->soundHitWall);
-            if (h == TILE_PUAS) {
-                gameState->playerDead = 1;
-            }
+            gameState->velocityY = 0; PlaySound(gameState->soundHitWall);
+            if (h == TILE_PUAS) gameState->playerDead = 1;
         }
         else if (nextY < 0 || nextY + TILE_SIZE > mapRows * TILE_SIZE) {
-            gameState->velocityY = 0;
-            PlaySound(gameState->soundHitWall);
+            gameState->velocityY = 0; PlaySound(gameState->soundHitWall);
         }
         else {
             gameState->playerY = nextY;
@@ -1180,14 +1103,11 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     for (int i = 0; i < gameState->batCount; i++) {
         Bat& bat = gameState->bats[i];
         if (bat.stopTimer > 0.0f) { bat.stopTimer -= dt; continue; }
-        float nextX = bat.x + bat.velocityX;
-        float nextY = bat.y + bat.velocityY;
+        float nextX = bat.x + bat.velocityX, nextY = bat.y + bat.velocityY;
         float checkX = (bat.velocityX > 0) ? (nextX + TILE_SIZE - 1) : (bat.velocityX < 0 ? nextX : bat.x + 5);
         float checkY = (bat.velocityY > 0) ? (nextY + TILE_SIZE - 1) : (bat.velocityY < 0 ? nextY : bat.y + 5);
         if (CheckWallCollision(gameState, checkX, checkY)) {
-            bat.stopTimer = BAT_STOP_TIME;
-            bat.velocityX *= -1;
-            bat.velocityY *= -1;
+            bat.stopTimer = BAT_STOP_TIME; bat.velocityX *= -1; bat.velocityY *= -1;
         }
         else { bat.x = nextX; bat.y = nextY; }
     }
@@ -1196,14 +1116,12 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     if (!gameState->playerDead && !gameState->levelCompleted) {
         float pL = (float)gameState->playerX + 4, pR = pL + TILE_SIZE - 8;
         float pT = (float)gameState->playerY + 4, pB = pT + TILE_SIZE - 8;
-
         for (int i = 0; i < gameState->batCount; i++) {
             Bat& bat = gameState->bats[i];
             if (pL < bat.x + TILE_SIZE - 4 && pR > bat.x + 4 && pT < bat.y + TILE_SIZE - 4 && pB > bat.y + 4) {
                 gameState->playerDead = 1; break;
             }
         }
-
         if (!gameState->playerDead) {
             int pCol = (int)((gameState->playerX + TILE_SIZE / 2) / TILE_SIZE);
             int pRow = (int)((gameState->playerY + TILE_SIZE / 2) / TILE_SIZE);
@@ -1215,8 +1133,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
                 else if (gameState->currentLevel == 2) t = gameState->tileMap_3[sr][sc];
                 else if (gameState->currentLevel == 3) t = gameState->tileMap_4[sr][sc];
                 else                                   t = gameState->tileMap_5[sr][sc];
-                int dRow, dCol;
-                SpikeHazardOffset(t, &dRow, &dCol);
+                int dRow, dCol; SpikeHazardOffset(t, &dRow, &dCol);
                 bool playerOnHazard = (pCol == sc + dCol && pRow == sr + dRow);
                 switch (gameState->spikeState[i]) {
                 case 0: if (playerOnHazard) { gameState->spikeState[i] = 1; gameState->spikeTimer[i] = 0.0f; } break;
@@ -1241,14 +1158,12 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
                 Arrow& a = gameState->arrows[gameState->arrowCount++];
                 int spawnCol = gameState->totemCol[i], spawnRow = gameState->totemRow[i];
                 switch (gameState->totemDir[i]) {
-                case 0: spawnRow -= 1; a.vx = 0;            a.vy = -ARROW_SPEED; a.rotation = 90.0f; break;
+                case 0: spawnRow -= 1; a.vx = 0;            a.vy = -ARROW_SPEED; a.rotation = 90.0f;  break;
                 case 1: spawnRow += 1; a.vx = 0;            a.vy = ARROW_SPEED; a.rotation = 270.0f; break;
-                case 2: spawnCol -= 1; a.vx = -ARROW_SPEED; a.vy = 0;            a.rotation = 0.0f; break;
+                case 2: spawnCol -= 1; a.vx = -ARROW_SPEED; a.vy = 0;            a.rotation = 0.0f;   break;
                 case 3: spawnCol += 1; a.vx = ARROW_SPEED; a.vy = 0;            a.rotation = 180.0f; break;
                 }
-                a.x = (float)(spawnCol * TILE_SIZE);
-                a.y = (float)(spawnRow * TILE_SIZE);
-                a.active = true;
+                a.x = (float)(spawnCol * TILE_SIZE); a.y = (float)(spawnRow * TILE_SIZE); a.active = true;
             }
         }
     }
@@ -1295,9 +1210,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
 
     // --- SISTEMA DEL MONO ---
     {
-        int rows = gameState->currentMapRows;
-        int cols = gameState->currentMapCols;
-
+        int rows = gameState->currentMapRows, cols = gameState->currentMapCols;
         if (gameState->monkey.x == 0.0f && gameState->monkey.y == 0.0f) {
             int spawnRow = -1, spawnCol = -1;
             for (int r = 0; r < rows && spawnRow == -1; r++) {
@@ -1308,65 +1221,65 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
                     else if (gameState->currentLevel == 2) t = gameState->tileMap_3[r][c];
                     else if (gameState->currentLevel == 3) t = gameState->tileMap_4[r][c];
                     else if (gameState->currentLevel == 4) t = gameState->tileMap_5[r][c];
-                    else                                   t = gameState->tileMap_6[r][c];
-                    if (t == TILE_MONKEY_SPAWN) { spawnRow = r; spawnCol = c; break; }
+                    else t = gameState->tileMap_6[r][c];
+                    if (t == TILE_MONKEY_SPAWN) { spawnRow = r; spawnCol = c; }
                 }
             }
-            if (spawnRow != -1) {
+            if (spawnRow != -1 && spawnCol != -1) {
                 gameState->monkey.active = true;
-                gameState->monkey.state = MONKEY_IDLE;
-                gameState->monkey.hasDropped = false;
                 gameState->monkey.x = (float)(spawnCol * TILE_SIZE);
                 gameState->monkey.y = (float)(spawnRow * TILE_SIZE);
-                gameState->monkey.frame = 0;
-                gameState->monkey.animTimer = 0.0f;
-                gameState->monkey.pauseTimer = 0.0f;
             }
         }
 
+        // CORRECCIÓN DEL TRIGGER: Primero asumimos que no está pisando el botón
+        bool playerIsOnTrigger = false;
         if (gameState->monkey.active) {
-            if (!gameState->monkeyTriggered && !gameState->monkeyDrop.active) {
-                int pColLeft = (int)(gameState->playerX / TILE_SIZE);
-                int pColRight = (int)((gameState->playerX + TILE_SIZE - 1) / TILE_SIZE);
-                int pRowTop = (int)(gameState->playerY / TILE_SIZE);
-                int pRowBot = (int)((gameState->playerY + TILE_SIZE - 1) / TILE_SIZE);
-                for (int r = pRowTop; r <= pRowBot && !gameState->monkeyTriggered; r++) {
-                    for (int c = pColLeft; c <= pColRight && !gameState->monkeyTriggered; c++) {
-                        if (r >= 0 && r < rows && c >= 0 && c < cols) {
-                            int tile;
-                            if (gameState->currentLevel == 0) tile = gameState->tileMap_1[r][c];
-                            else if (gameState->currentLevel == 1) tile = gameState->tileMap_2[r][c];
-                            else if (gameState->currentLevel == 2) tile = gameState->tileMap_3[r][c];
-                            else if (gameState->currentLevel == 3) tile = gameState->tileMap_4[r][c];
-                            else if (gameState->currentLevel == 4) tile = gameState->tileMap_5[r][c];
-                            else                                   tile = gameState->tileMap_6[r][c];
-                            if (tile == TILE_MONKEY_TRIGGER || tile == 21)
-                                gameState->monkeyTriggered = true;
-                        }
-                    }
+            // Calculamos en qué fila y columna del mapa está el jugador actualmente
+            int pCol = (int)((gameState->playerX + TILE_SIZE / 2.0f) / TILE_SIZE);
+            int pRow = (int)((gameState->playerY + TILE_SIZE / 2.0f) / TILE_SIZE);
+
+            if (pRow >= 0 && pRow < rows && pCol >= 0 && pCol < cols) {
+                int tile;
+                if (gameState->currentLevel == 0) tile = gameState->tileMap_1[pRow][pCol];
+                else if (gameState->currentLevel == 1) tile = gameState->tileMap_2[pRow][pCol];
+                else if (gameState->currentLevel == 2) tile = gameState->tileMap_3[pRow][pCol];
+                else if (gameState->currentLevel == 3) tile = gameState->tileMap_4[pRow][pCol];
+                else if (gameState->currentLevel == 4) tile = gameState->tileMap_5[pRow][pCol];
+                else tile = gameState->tileMap_6[pRow][pCol];
+
+                if (tile == TILE_MONKEY_TRIGGER || tile == 21) {
+                    playerIsOnTrigger = true;
                 }
+            }
+        }
+
+        // Si el jugador está sobre el trigger, se activa. Si no, se desactiva.
+        gameState->monkeyTriggered = playerIsOnTrigger;
+
+        // Gestión de la animación
+        gameState->monkey.animTimer += dt;
+        if (gameState->monkey.animTimer >= 0.12f) {
+            gameState->monkey.animTimer = 0.0f;
+
+            // Si llegamos al frame 8, el trigger está activo y el coco no vuela: ¡Lanzamos!
+            if (gameState->monkey.frame == 8 && !gameState->monkeyDrop.active && gameState->monkeyTriggered) {
+                gameState->monkeyDrop.active = true;
+                gameState->monkeyDrop.x = gameState->monkey.x - TILE_SIZE + (TILE_SIZE * 1.0f);
+                gameState->monkeyDrop.y = gameState->monkey.y + TILE_SIZE * 0.5f;
+                gameState->monkeyDrop.speed = 350.0f;
             }
 
-            gameState->monkey.animTimer += dt;
-            if (gameState->monkey.animTimer >= 0.12f) {
-                gameState->monkey.animTimer = 0.0f;
-                gameState->monkey.frame = (gameState->monkey.frame + 1) % MONKEY_FRAMES;
-                if (gameState->monkey.frame == 8 && !gameState->monkeyDrop.active && gameState->monkeyTriggered) {
-                    gameState->monkeyDrop.active = true;
-                    gameState->monkeyDrop.x = gameState->monkey.x - TILE_SIZE + (TILE_SIZE * 1.0f);
-                    gameState->monkeyDrop.y = gameState->monkey.y + TILE_SIZE * 0.5f;
-                    gameState->monkeyDrop.speed = 350.0f;
-                    gameState->monkeyTriggered = false;
-                }
-            }
+            // Avanzar fotograma de manera circular
+            gameState->monkey.frame = (gameState->monkey.frame + 1) % MONKEY_FRAMES;
         }
     }
+
 
     if (!gameState->monkeyDrop.active) {
         gameState->monkeyDrop.x = gameState->monkey.x - TILE_SIZE + (TILE_SIZE * 1.0f);
         gameState->monkeyDrop.y = gameState->monkey.y + TILE_SIZE * 0.5f;
     }
-
     if (gameState->monkeyDrop.active) {
         gameState->monkeyDrop.y += gameState->monkeyDrop.speed * dt;
         float pL = (float)gameState->playerX + 4, pR = pL + TILE_SIZE - 8;
@@ -1374,21 +1287,18 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         float cL = gameState->monkeyDrop.x + 2, cR = cL + TILE_SIZE * 1.5f - 4;
         float cT = gameState->monkeyDrop.y + 2, cB = cT + TILE_SIZE * 1.5f - 4;
         if (!gameState->playerDead && cL < pR && cR > pL && cT < pB && cB > pT) {
-            gameState->playerDead = 1;
-            gameState->monkeyDrop.active = false;
+            gameState->playerDead = 1; gameState->monkeyDrop.active = false;
         }
         if (gameState->monkeyDrop.y > (float)(gameState->currentMapRows * TILE_SIZE))
             gameState->monkeyDrop.active = false;
     }
 
-    // --- RECOLECCION DE OBJETOS ---
     CollectTileUnderPlayer(gameState);
 
     // --- ANIMACIONES Y TRAIL ---
     int playerIsMoving = (gameState->velocityX != 0 || gameState->velocityY != 0);
     if (playerIsMoving) {
-        gameState->playerAnimFrame = 0;
-        gameState->playerAnimTimer = 0;
+        gameState->playerAnimFrame = 0; gameState->playerAnimTimer = 0;
         for (int i = TRAIL_LENGTH - 1; i > 0; i--) gameState->trailPositions[i] = gameState->trailPositions[i - 1];
         gameState->trailPositions[0] = { (float)gameState->playerX, (float)gameState->playerY };
     }
@@ -1402,7 +1312,9 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     return SCENE_GAME;
 }
 
+// ---------------------------------------------------------------------------
 //  GAMEDRAW - Helpers
+// ---------------------------------------------------------------------------
 static void DrawPanel(int panelW, int panelH) {
     int px = (SCREEN_WIDTH - panelW) / 2, py = (SCREEN_HEIGHT - panelH) / 2;
     DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ColorAlpha(BLACK, 0.82f));
@@ -1494,21 +1406,23 @@ static void DrawDeathPanel(GameState* gs) {
     int px = (SCREEN_WIDTH - W) / 2, py = (SCREEN_HEIGHT - H) / 2;
     DrawPanelTitle("HAS MUERTO", W, H, 26);
     const char* sub = "Mejor suerte la proxima vez...";
-    DrawText(sub, px + (W - MeasureText(sub, 14)) / 2, py + 58, 14, Color{ 60, 45, 0, 220 });
-    DrawLine(px + 30, py + 80, px + W - 30, py + 80, Color{ 100, 80, 0, 150 });
-    struct { const char* k; const char* d; } opts[] = { { "[ESPACIO]", "Reintentar" }, { "[M]", "Volver al mapa" } };
+    DrawText(sub, px + (W - MeasureText(sub, 14)) / 2, py + 58, 14, Color{ 60,45,0,220 });
+    DrawLine(px + 30, py + 80, px + W - 30, py + 80, Color{ 100,80,0,150 });
+    struct { const char* k; const char* d; }opts[] = { {"[ESPACIO]","Reintentar"},{"[M]","Volver al mapa"} };
     for (int i = 0; i < 2; i++) {
         int oy = py + 100 + i * 50;
-        DrawRectangle(px + 16, oy - 6, W - 32, 40, Color{ 255, 245, 120, 80 });
-        DrawRectangleLines(px + 16, oy - 6, W - 32, 40, Color{ 80, 60, 0, 120 });
-        DrawText(opts[i].k, px + 50, oy + 6, 18, Color{ 80, 60, 0, 255 });
-        DrawText(opts[i].d, px + 50 + MeasureText(opts[i].k, 18) + 12, oy + 6, 18, Color{ 30, 20, 0, 255 });
+        DrawRectangle(px + 16, oy - 6, W - 32, 40, Color{ 255,245,120,80 });
+        DrawRectangleLines(px + 16, oy - 6, W - 32, 40, Color{ 80,60,0,120 });
+        DrawText(opts[i].k, px + 50, oy + 6, 18, Color{ 80,60,0,255 });
+        DrawText(opts[i].d, px + 50 + MeasureText(opts[i].k, 18) + 12, oy + 6, 18, Color{ 30,20,0,255 });
     }
     const char* h = "ESPACIO: reintentar    M: mapa";
-    DrawText(h, px + (W - MeasureText(h, 11)) / 2, py + H - 18, 11, Color{ 100, 80, 0, 200 });
+    DrawText(h, px + (W - MeasureText(h, 11)) / 2, py + H - 18, 11, Color{ 100,80,0,200 });
 }
 
+// ---------------------------------------------------------------------------
 //  GAMEDRAW - Principal
+// ---------------------------------------------------------------------------
 void GameDraw(GameState* gameState) {
     ClearBackground(BLACK);
 
@@ -1528,7 +1442,6 @@ void GameDraw(GameState* gameState) {
     if (mapPixelHeight < SCREEN_HEIGHT) gameState->cameraY = -(float)(SCREEN_HEIGHT - mapPixelHeight) / 2.0f;
 
     int cameraX = (int)gameState->cameraX, cameraY = (int)gameState->cameraY;
-
     Color collectibleColor = (gameState->blinkTimer < 0.5f) ? Color{ 255,220,0,255 } : Color{ 180,0,220,255 };
 
     // --- MAPA ---
@@ -1546,9 +1459,9 @@ void GameDraw(GameState* gameState) {
             int sx = col * TILE_SIZE - cameraX, sy = row * TILE_SIZE - cameraY;
             if (sx < -TILE_SIZE || sx > SCREEN_WIDTH + TILE_SIZE || sy < -TILE_SIZE || sy > SCREEN_HEIGHT + TILE_SIZE) continue;
 
-            Rectangle src = { 0, 0, (float)TILE_SIZE, (float)TILE_SIZE };
-            Rectangle dst = { (float)sx, (float)sy, (float)TILE_SIZE, (float)TILE_SIZE };
-            Vector2 orig = { 0, 0 };
+            Rectangle src = { 0,0,(float)TILE_SIZE,(float)TILE_SIZE };
+            Rectangle dst = { (float)sx,(float)sy,(float)TILE_SIZE,(float)TILE_SIZE };
+            Vector2 orig = { 0,0 };
 
             switch (tt) {
             case TILE_WALL: {
@@ -1573,26 +1486,22 @@ void GameDraw(GameState* gameState) {
             case TILE_STAR:
                 DrawTexturePro(gameState->starTexture, { 0,0,(float)gameState->starTexture.width,(float)gameState->starTexture.height }, dst, orig, 0, collectibleColor);
                 break;
-            case 8:
-                DrawTexturePro(gameState->texRebote8, { 0,0,(float)gameState->texRebote8.width, (float)gameState->texRebote8.height }, dst, orig, 0, WHITE); break;
-            case 9:
-                DrawTexturePro(gameState->texRebote9, { 0,0,(float)gameState->texRebote9.width, (float)gameState->texRebote9.height }, dst, orig, 0, WHITE); break;
-            case 10:
-                DrawTexturePro(gameState->texRebote10, { 0,0,(float)gameState->texRebote10.width,(float)gameState->texRebote10.height }, dst, orig, 0, WHITE); break;
-            case 11:
-                DrawTexturePro(gameState->texRebote11, { 0,0,(float)gameState->texRebote11.width,(float)gameState->texRebote11.height }, dst, orig, 0, WHITE); break;
+            case 8:  DrawTexturePro(gameState->texRebote8, { 0,0,(float)gameState->texRebote8.width, (float)gameState->texRebote8.height }, dst, orig, 0, WHITE); break;
+            case 9:  DrawTexturePro(gameState->texRebote9, { 0,0,(float)gameState->texRebote9.width, (float)gameState->texRebote9.height }, dst, orig, 0, WHITE); break;
+            case 10: DrawTexturePro(gameState->texRebote10, { 0,0,(float)gameState->texRebote10.width,(float)gameState->texRebote10.height }, dst, orig, 0, WHITE); break;
+            case 11: DrawTexturePro(gameState->texRebote11, { 0,0,(float)gameState->texRebote11.width,(float)gameState->texRebote11.height }, dst, orig, 0, WHITE); break;
             case TILE_LEVEL_END:
                 DrawTexturePro(gameState->levelEndTexture, { 0,0,(float)gameState->levelEndTexture.width,(float)gameState->levelEndTexture.height }, dst, orig, 0, WHITE);
                 break;
             case TILE_BLOCK_RED: {
                 bool solid = !gameState->blockToggle;
-                Color c = solid ? WHITE : Color{ 255, 255, 255, 80 };
+                Color c = solid ? WHITE : Color{ 255,255,255,80 };
                 DrawTexturePro(gameState->texBlockRed, { 0,0,(float)gameState->texBlockRed.width,(float)gameState->texBlockRed.height }, dst, orig, 0, c);
                 break;
             }
             case TILE_BLOCK_BLUE: {
                 bool solid = gameState->blockToggle;
-                Color c = solid ? WHITE : Color{ 255, 255, 255, 80 };
+                Color c = solid ? WHITE : Color{ 255,255,255,80 };
                 DrawTexturePro(gameState->texBlockBlue, { 0,0,(float)gameState->texBlockBlue.width,(float)gameState->texBlockBlue.height }, dst, orig, 0, c);
                 break;
             }
@@ -1611,14 +1520,18 @@ void GameDraw(GameState* gameState) {
                 if (tt == TILE_TOTEM_LEFT)  rot = 0.0f;
                 if (tt == TILE_TOTEM_RIGHT) rot = 180.0f;
                 Vector2 center = { (float)sx + TILE_SIZE / 2.0f, (float)sy + TILE_SIZE / 2.0f };
-                DrawTexturePro(gameState->texTotem,
-                    { 0, 0, (float)gameState->texTotem.width, (float)gameState->texTotem.height },
+                // --- SKIN TOTEM ---
+                Texture2D* totemTex = &gameState->texTotem;
+                if (gameState->activeTotemSkin == 1) totemTex = &gameState->texTotemSkin;
+                else if (gameState->activeTotemSkin == 2) totemTex = &gameState->texTotemSkinS;
+                DrawTexturePro(*totemTex,
+                    { 0,0,(float)totemTex->width,(float)totemTex->height },
                     { center.x, center.y, (float)TILE_SIZE, (float)TILE_SIZE },
                     { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f }, rot, WHITE);
                 break;
             }
             case TILE_PUAS:
-                DrawTexturePro(gameState->texPuas, { 0, 0, (float)gameState->texPuas.width, (float)gameState->texPuas.height }, dst, orig, 0, WHITE);
+                DrawTexturePro(gameState->texPuas, { 0,0,(float)gameState->texPuas.width,(float)gameState->texPuas.height }, dst, orig, 0, WHITE);
                 break;
             case TILE_SPIKE_UP:
             case TILE_SPIKE_DOWN:
@@ -1634,27 +1547,25 @@ void GameDraw(GameState* gameState) {
                 if (tt == TILE_SPIKE_LEFT)  rot = 270.0f;
                 if (tt == TILE_SPIKE_RIGHT) rot = 90.0f;
                 Color spkColor = WHITE;
-                if (state == 0) spkColor = Color{ 100, 100, 100, 180 };
-                else if (state == 1) { float b = sinf(stimer / 0.2f * 3.14159f * 6); spkColor = Color{ 255, (unsigned char)(200 + 55 * b), 0, 255 }; }
-                else if (state == 3) spkColor = Color{ 255, 60, 60, 255 };
+                if (state == 0) spkColor = Color{ 100,100,100,180 };
+                else if (state == 1) { float b = sinf(stimer / 0.2f * 3.14159f * 6); spkColor = Color{ 255,(unsigned char)(200 + 55 * b),0,255 }; }
+                else if (state == 3) spkColor = Color{ 255,60,60,255 };
                 Vector2 center = { (float)sx + TILE_SIZE / 2.0f, (float)sy + TILE_SIZE / 2.0f };
                 DrawTexturePro(gameState->spikeTexture,
-                    { 0, 0, (float)gameState->spikeTexture.width, (float)gameState->spikeTexture.height },
-                    { center.x, center.y, (float)TILE_SIZE, (float)TILE_SIZE },
-                    { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f }, rot, spkColor);
+                    { 0,0,(float)gameState->spikeTexture.width,(float)gameState->spikeTexture.height },
+                    { center.x,center.y,(float)TILE_SIZE,(float)TILE_SIZE },
+                    { TILE_SIZE / 2.0f,TILE_SIZE / 2.0f }, rot, spkColor);
                 if (state >= 1 && spikeIdx >= 0) {
-                    int dRow, dCol;
-                    SpikeHazardOffset(tt, &dRow, &dCol);
-                    int hx = (col + dCol) * TILE_SIZE - cameraX;
-                    int hy = (row + dRow) * TILE_SIZE - cameraY;
+                    int dRow, dCol; SpikeHazardOffset(tt, &dRow, &dCol);
+                    int hx = (col + dCol) * TILE_SIZE - cameraX, hy = (row + dRow) * TILE_SIZE - cameraY;
                     if (state == 3) {
                         float b = fabsf(sinf(stimer * 3.14159f * 8));
-                        Vector2 hCenter = { (float)hx + TILE_SIZE / 2.0f, (float)hy + TILE_SIZE / 2.0f };
-                        Rectangle unfSrc = { 0, 0, (float)gameState->spikeUnfold.width, (float)gameState->spikeUnfold.height };
-                        Rectangle unfDst = { hCenter.x, hCenter.y, (float)TILE_SIZE, (float)TILE_SIZE };
+                        Vector2 hCenter = { (float)hx + TILE_SIZE / 2.0f,(float)hy + TILE_SIZE / 2.0f };
+                        Rectangle unfSrc = { 0,0,(float)gameState->spikeUnfold.width,(float)gameState->spikeUnfold.height };
+                        Rectangle unfDst = { hCenter.x,hCenter.y,(float)TILE_SIZE,(float)TILE_SIZE };
                         DrawTexturePro(gameState->spikeUnfold, unfSrc, unfDst,
-                            { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f }, rot,
-                            Color{ 255, 255, 255, (unsigned char)(200 + 55 * b) });
+                            { TILE_SIZE / 2.0f,TILE_SIZE / 2.0f }, rot,
+                            Color{ 255,255,255,(unsigned char)(200 + 55 * b) });
                     }
                 }
                 break;
@@ -1669,7 +1580,7 @@ void GameDraw(GameState* gameState) {
         for (int i = TRAIL_LENGTH - 1; i >= 0; i--) {
             float op = (float)(TRAIL_LENGTH - i) / (float)TRAIL_LENGTH;
             Color tc = { 255,255,255,(unsigned char)(255 * op) };
-            Rectangle td = { gameState->trailPositions[i].x - cameraX, gameState->trailPositions[i].y - cameraY, (float)TILE_SIZE, (float)TILE_SIZE };
+            Rectangle td = { gameState->trailPositions[i].x - cameraX, gameState->trailPositions[i].y - cameraY, (float)TILE_SIZE,(float)TILE_SIZE };
             DrawTexturePro(at, { 0,0,(float)at.width,(float)at.height }, td, { 0,0 }, 0.0f, tc);
         }
     }
@@ -1678,53 +1589,64 @@ void GameDraw(GameState* gameState) {
     for (int i = 0; i < gameState->batCount; i++) {
         Bat& bat = gameState->bats[i];
         int bsx = (int)bat.x - cameraX, bsy = (int)bat.y - cameraY;
-        if (bsx < -TILE_SIZE || bsx > SCREEN_WIDTH + TILE_SIZE || bsy < -TILE_SIZE || bsy > SCREEN_HEIGHT + TILE_SIZE) continue;
+        if (bsx<-TILE_SIZE || bsx>SCREEN_WIDTH + TILE_SIZE || bsy<-TILE_SIZE || bsy>SCREEN_HEIGHT + TILE_SIZE) continue;
         Texture2D& bt = gameState->batTextures[batAnimSequence[gameState->batCurrentFrames]];
         DrawTexturePro(bt, { 0,0,(float)bt.width,(float)bt.height }, { (float)bsx,(float)bsy,(float)TILE_SIZE,(float)TILE_SIZE }, { 0,0 }, 0.0f, WHITE);
     }
 
-    // --- FLECHAS ---
+    // --- FLECHAS (con skin) ---
     for (int i = 0; i < gameState->arrowCount; i++) {
         Arrow& a = gameState->arrows[i];
         if (!a.active) continue;
         int ax = (int)a.x - cameraX, ay = (int)a.y - cameraY;
-        if (ax < -TILE_SIZE || ax > SCREEN_WIDTH + TILE_SIZE || ay < -TILE_SIZE || ay > SCREEN_HEIGHT + TILE_SIZE) continue;
+        if (ax<-TILE_SIZE || ax>SCREEN_WIDTH + TILE_SIZE || ay<-TILE_SIZE || ay>SCREEN_HEIGHT + TILE_SIZE) continue;
         Vector2 center = { (float)ax + TILE_SIZE / 2.0f, (float)ay + TILE_SIZE / 2.0f };
-        DrawTexturePro(gameState->texArrow,
-            { 0, 0, (float)gameState->texArrow.width, (float)gameState->texArrow.height },
-            { center.x, center.y, (float)TILE_SIZE, (float)TILE_SIZE },
-            { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f }, a.rotation, WHITE);
+        // --- SKIN FLECHA ---
+        Texture2D& arrowTex = (gameState->activeFlechaSkin == 1)
+            ? gameState->texArrowSkin
+            : gameState->texArrow;
+        DrawTexturePro(arrowTex,
+            { 0,0,(float)arrowTex.width,(float)arrowTex.height },
+            { center.x,center.y,(float)TILE_SIZE,(float)TILE_SIZE },
+            { TILE_SIZE / 2.0f,TILE_SIZE / 2.0f }, a.rotation, WHITE);
     }
 
-    // --- MONO ---
+    // --- MONO (con skin) ---
     if (gameState->monkey.active) {
         int frameIdx = gameState->monkey.frame % MONKEY_FRAMES;
-        Texture2D& tex = gameState->texMonkeyFrames[frameIdx];
+        // --- SKIN MONO ---
+        Texture2D& tex = (gameState->activeMonkeySkin == 1)
+            ? gameState->texMonkeyFramesSkin[frameIdx]
+            : gameState->texMonkeyFrames[frameIdx];
         DrawTexturePro(tex,
             { 0.0f, 0.0f, (float)tex.width, (float)tex.height },
             { (float)(gameState->monkey.x - cameraX - TILE_SIZE),
-              (float)(gameState->monkey.y - cameraY - TILE_SIZE),
-              (float)TILE_SIZE * 3.0f, (float)TILE_SIZE * 3.0f },
+             (float)(gameState->monkey.y - cameraY - TILE_SIZE),
+             (float)TILE_SIZE * 3.0f, (float)TILE_SIZE * 3.0f },
             { 0.0f, 0.0f }, 0.0f, WHITE);
     }
 
-    // --- COCO ---
+    // --- COCO (con skin) ---
     {
-        Texture2D& texCoco = gameState->texMonkeyDrop;
+
+        Texture2D& texCoco = (gameState->activeCocoSkin == 1)
+            ? gameState->texCocoSkin
+            : gameState->texMonkeyDrop;
         float cocoScale = 0.8f;
         float cocoW = TILE_SIZE * 1.5f * cocoScale;
         float cocoH = TILE_SIZE * 1.5f * cocoScale;
         Rectangle srcCoco = { 0.0f, 0.0f, (float)texCoco.width, (float)texCoco.height };
 
         if (gameState->monkeyDrop.active) {
-            Rectangle dst2 = { (float)(gameState->monkeyDrop.x - cameraX), (float)(gameState->monkeyDrop.y - cameraY), cocoW, cocoH };
+            Rectangle dst2 = { (float)(gameState->monkeyDrop.x - cameraX),(float)(gameState->monkeyDrop.y - cameraY),cocoW,cocoH };
             if (texCoco.id > 0) DrawTexturePro(texCoco, srcCoco, dst2, { 0,0 }, 0, WHITE);
             else DrawCircle((int)(dst2.x + cocoW / 2), (int)(dst2.y + cocoH / 2), TILE_SIZE * 0.75f * cocoScale, BROWN);
         }
-        else if (gameState->monkey.active && !gameState->monkey.hasDropped) {
+
+        if (gameState->monkey.active && gameState->monkey.frame <= 8) {
             float cx = gameState->monkey.x + (TILE_SIZE * 0.75f) - TILE_SIZE + (TILE_SIZE * 0.15f);
             float cy = gameState->monkey.y + (TILE_SIZE * 1.0f) - TILE_SIZE + (TILE_SIZE * 0.15f);
-            Rectangle dst2 = { (float)(cx - cameraX), (float)(cy - cameraY), cocoW, cocoH };
+            Rectangle dst2 = { (float)(cx - cameraX),(float)(cy - cameraY),cocoW,cocoH };
             if (texCoco.id > 0) DrawTexturePro(texCoco, srcCoco, dst2, { 0,0 }, 0, WHITE);
             else DrawCircle((int)(dst2.x + cocoW / 2), (int)(dst2.y + cocoH / 2), TILE_SIZE * 0.75f * cocoScale, BROWN);
         }
@@ -1732,8 +1654,8 @@ void GameDraw(GameState* gameState) {
 
     // --- JUGADOR ---
     Texture2D cpf = gameState->playerFrames[playerAnimSequence[gameState->playerAnimFrame]];
-    Rectangle pd = { (float)(gameState->playerX - cameraX) + TILE_SIZE / 2.0f, (float)(gameState->playerY - cameraY) + TILE_SIZE / 2.0f, (float)TILE_SIZE, (float)TILE_SIZE };
-    DrawTexturePro(cpf, { 0,0,(float)cpf.width,(float)cpf.height }, pd, { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f }, gameState->playerRotation + 180, WHITE);
+    Rectangle pd = { (float)(gameState->playerX - cameraX) + TILE_SIZE / 2.0f,(float)(gameState->playerY - cameraY) + TILE_SIZE / 2.0f,(float)TILE_SIZE,(float)TILE_SIZE };
+    DrawTexturePro(cpf, { 0,0,(float)cpf.width,(float)cpf.height }, pd, { TILE_SIZE / 2.0f,TILE_SIZE / 2.0f }, gameState->playerRotation + 180, WHITE);
 
     // --- HUD ---
     DrawRectangle(0, 0, SCREEN_WIDTH, 60, BLACK);
@@ -1753,32 +1675,39 @@ void GameDraw(GameState* gameState) {
         DrawRectangle(SCREEN_WIDTH - 28, 21, 8, 23, BLACK);
     }
 
-    if (gameState->menuOpen)              DrawMenuPanel(gameState);
-    if (gameState->showingVictoryOptions) DrawVictoryPanel(gameState);
-    if (gameState->enteringInitials)      DrawInitialsPanel(gameState);
-    if (gameState->showingLeaderboard)    DrawLeaderboardPanel(gameState);
-    if (gameState->playerDeadScreen)      DrawDeathPanel(gameState);
+    if (gameState->menuOpen)               DrawMenuPanel(gameState);
+    if (gameState->showingVictoryOptions)  DrawVictoryPanel(gameState);
+    if (gameState->enteringInitials)       DrawInitialsPanel(gameState);
+    if (gameState->showingLeaderboard)     DrawLeaderboardPanel(gameState);
+    if (gameState->playerDeadScreen)       DrawDeathPanel(gameState);
 }
 
+// ---------------------------------------------------------------------------
 //  GAMEUNLOAD
+// ---------------------------------------------------------------------------
 void GameUnload(GameState* gameState) {
     for (int i = 0; i < WALL_VARIANT_COUNT; i++) UnloadTexture(gameState->wallTextures[i]);
-    UnloadTexture(gameState->dotTexture); UnloadTexture(gameState->coinTexture);
-    UnloadTexture(gameState->starTexture); UnloadTexture(gameState->levelEndTexture);
-    UnloadTexture(gameState->spikeTexture);
-    UnloadTexture(gameState->texPuas);
-    UnloadTexture(gameState->texBlockRed);
-    UnloadTexture(gameState->texBlockBlue);
+    UnloadTexture(gameState->dotTexture);   UnloadTexture(gameState->coinTexture);
+    UnloadTexture(gameState->starTexture);  UnloadTexture(gameState->levelEndTexture);
+    UnloadTexture(gameState->spikeTexture); UnloadTexture(gameState->texPuas);
+    UnloadTexture(gameState->texBlockRed);  UnloadTexture(gameState->texBlockBlue);
     UnloadTexture(gameState->trailHorizontal); UnloadTexture(gameState->trailVertical);
     for (int i = 0; i < PLAYER_ANIM_FRAMES; i++) UnloadTexture(gameState->playerFrames[i]);
     UnloadTexture(gameState->starCollectedTexture); UnloadTexture(gameState->starEmptyTexture);
     for (int i = 0; i < 4; i++) UnloadTexture(gameState->batTextures[i]);
     UnloadTexture(gameState->texTotem);
+    UnloadTexture(gameState->texTotemSkin);
+    UnloadTexture(gameState->texTotemSkinS);
     UnloadTexture(gameState->texArrow);
-    for (int i = 0; i < MONKEY_FRAMES; i++) UnloadTexture(gameState->texMonkeyFrames[i]);
+    UnloadTexture(gameState->texArrowSkin);
+    for (int i = 0; i < MONKEY_FRAMES; i++) {
+        UnloadTexture(gameState->texMonkeyFrames[i]);
+        UnloadTexture(gameState->texMonkeyFramesSkin[i]);
+    }
     UnloadTexture(gameState->texMonkeyDrop);
-    UnloadSound(gameState->soundDash); UnloadSound(gameState->soundHitWall);
-    UnloadSound(gameState->soundCollectDot); UnloadSound(gameState->soundCollectCoin);
-    UnloadSound(gameState->soundCollectStar); UnloadSound(gameState->soundLevelComplete);
+    UnloadTexture(gameState->texCocoSkin);
+    UnloadSound(gameState->soundDash);          UnloadSound(gameState->soundHitWall);
+    UnloadSound(gameState->soundCollectDot);    UnloadSound(gameState->soundCollectCoin);
+    UnloadSound(gameState->soundCollectStar);   UnloadSound(gameState->soundLevelComplete);
     UnloadSound(gameState->soundLevelStart);
 }
