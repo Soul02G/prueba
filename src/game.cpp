@@ -1,4 +1,4 @@
-#include "game.h"
+﻿#include "game.h"
 #include "map.h"
 #include "raylib.h"
 #include <string.h>
@@ -80,7 +80,7 @@ static const int initialMap[MAP_ROWS_1][MAP_COLUMNS_1] = {
     {0,0,0,0,0,1,3,0,0,4,1,1,1,1,3,3,3,3,0,0,3,19,0,0,0,0,0},
     {0,0,0,0,0,1,3,0,0,3,1,0,0,1,1,1,1,1,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,1,3,3,3,3,1,0,0,0,1,0,0,0,0,0,3,1,0,0,0,0,0},
-    {0,0,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,0,0,0,3,1,0,0,0,0,0},
+    {0,0,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,27,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,2,0,0,3,1,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -93,10 +93,10 @@ static const int initialMap[MAP_ROWS_1][MAP_COLUMNS_1] = {
 static const int LEVEL_2_DATA[47][25] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,14,1,1,1,1,1,26,26,1,0},
-    {0,0,0,0,1,3,3,3,3,3,1,3,3,3,3,3,15,1,3,3,0,0,0,1,0},
-    {0,0,0,0,1,3,0,0,0,3,1,3,3,3,1,4,15,1,3,1,1,0,0,1,0},
+    {0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,14,1,1,0,0,0,0,0,0,0},
+    {0,0,0,0,1,3,3,3,3,3,1,3,3,3,3,3,15,1,1,1,1,26,26,1,0},
+    {0,0,0,0,1,3,0,0,0,3,1,0,0,0,0,3,15,1,3,3,0,0,0,1,0},
+    {0,0,0,0,1,3,0,27,0,3,1,3,3,3,1,4,15,1,3,1,1,0,0,1,0},
     {0,0,0,0,1,3,0,2,0,3,1,3,3,4,1,3,1,1,3,1,10,0,11,1,0},
     {0,0,0,0,1,3,1,1,1,3,1,5,3,3,1,3,3,3,3,1,3,0,0,1,1},
     {0,0,0,0,1,3,24,4,25,3,1,1,3,1,1,13,13,1,1,1,3,0,0,0,0},
@@ -215,9 +215,9 @@ static const int LEVEL_4_DATA[MAP_ROWS_4][MAP_COLUMNS_4] = {
     {26,0,0,0,0,0,0,16,3,1,0,0,0,0,0,0,0,0,0,0,1,3,1,0,0,0,26},
     {26,0,0,0,0,0,0,1,25,1,0,0,0,0,0,0,0,0,0,0,1,3,1,0,0,0,26},
     {26,0,0,0,0,0,0,1,3,15,0,0,0,0,1,1,1,1,1,1,1,3,1,0,0,0,26},
-    {26,0,0,0,0,0,0,1,24,1,0,0,0,0,1,12,3,3,3,3,3,3,1,0,0,0,26},
-    {26,0,0,0,0,0,0,26,3,26,0,0,0,0,1,1,1,1,1,1,1,24,1,0,0,0,26},
-    {26,0,0,0,0,0,26,0,3,0,26,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,26},
+    {26,0,0,0,0,0,0,26,24,26,0,0,0,0,1,12,3,3,3,3,3,3,1,0,0,0,26},
+    {26,0,0,0,0,0,26,0,0,0,26,0,0,0,1,1,1,1,1,1,1,24,1,0,0,0,26},
+    {26,0,0,0,0,0,26,0,27,0,26,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,26},
     {26,0,0,0,0,0,1,0,2,0,1,0,0,0,0,0,0,0,0,0,0,25,0,0,0,0,26},
     {26,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26},
     {26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26},
@@ -262,7 +262,7 @@ static const int LEVEL_5_DATA[MAP_ROWS_5][MAP_COLUMNS_5] = {
     {0,0,0,0,1,0,0,6,0,3,3,3,3,3,1,0,0,1,1,1,1,1,1,1,1,0,0},
     {0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,1,3,3,3,3,3,4,1,0,0},
     {0,0,0,0,1,6,0,0,0,0,1,1,1,1,1,1,1,1,4,0,0,0,0,3,1,0,0},
-    {0,0,0,0,1,1,1,1,0,3,3,3,3,3,3,0,0,0,3,0,0,0,0,4,1,0,0},
+    {0,0,0,0,1,1,1,1,0,3,3,3,3,3,3,0,0,0,3,0,0,27,0,4,1,0,0},
     {0,0,0,0,0,0,0,1,0,3,3,3,3,1,1,3,3,3,3,0,0,2,0,3,1,0,0},
     {0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -303,11 +303,11 @@ static const int LEVEL_6_DATA[MAP_ROWS_6][MAP_COLUMNS_6] = {
     {0,0,0,0,1,4,3,3,1,3,0,3,0,1,0,1,3,0,3,26,0,0,0,0,0,0,0},
     {0,0,0,0,1,13,1,13,26,26,26,1,26,26,26,26,26,26,0,26,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,0,26,0,0,0,0,0,0,0},
-    {0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,26,0,26,0,0,0,0,0,0,0},
-    {0,0,0,1,20,0,0,3,3,3,4,3,3,3,15,1,1,1,0,1,0,0,0,0,0,0,0},
-    {0,0,0,1,1,0,0,3,1,1,1,1,1,3,1,1,1,0,0,1,0,0,0,0,0,0,0},
-    {0,0,0,1,2,0,0,3,15,0,1,20,0,24,1,0,1,3,1,0,0,0,0,0,0,0,0},
-    {0,0,0,1,1,1,1,13,1,0,1,1,1,3,1,1,1,3,1,0,0,0,0,0,0,0,0},
+    {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,26,0,26,0,0,0,0,0,0,0},
+    {0,20,0,0,0,0,0,3,3,3,4,3,3,3,15,1,1,1,0,1,0,0,0,0,0,0,0},
+    {0,1,0,0,27,0,0,3,1,1,1,1,1,3,1,1,1,0,0,1,0,0,0,0,0,0,0},
+    {0,1,0,0,2,0,0,3,15,0,1,20,0,24,1,0,1,3,1,0,0,0,0,0,0,0,0},
+    {0,1,1,1,1,1,1,13,1,0,1,1,1,3,1,1,1,3,1,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,1,20,5,25,3,3,3,3,1,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0},
 };
@@ -768,6 +768,12 @@ void GameLoad(GameState* gameState, MapState* mapState) {
     gameState->levelEndAnimFrame = 0;
     gameState->levelEndAnimTimer = 0.0f;
     gameState->texPuas = LoadTexture("resources\\puas.png");
+    for (int i = 0; i < DOOR_ANIM_FRAMES; i++) {
+        gameState->texDoorFrames[i] = LoadTexture(TextFormat("resources\\puerta_%d.png", i));
+        SetTextureFilter(gameState->texDoorFrames[i], TEXTURE_FILTER_POINT);
+    }
+    gameState->doorAnimFrame = 0;
+    gameState->doorAnimTimer = 0.0f;
     gameState->spikeTexture = LoadTexture("resources\\pinchos.png");
     gameState->texBlockRed = LoadTexture("resources\\red.png");
     gameState->texBlockBlue = LoadTexture("resources\\blue.png");
@@ -1324,6 +1330,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     }
     if (++gameState->coinAnimTimer >= coinAnimSpeed) { gameState->coinAnimTimer = 0; gameState->coinAnimFrame = (gameState->coinAnimFrame + 1) % COIN_ANIM_SEQ_LEN; }
     if (++gameState->batFrameCounter >= batAnimSpeed) { gameState->batFrameCounter = 0; gameState->batCurrentFrames = (gameState->batCurrentFrames + 1) % BAT_ANIM_SEQ_LEN; }
+    if (++gameState->doorAnimTimer >= 15) { gameState->doorAnimTimer = 0; gameState->doorAnimFrame = (gameState->doorAnimFrame + 1) % DOOR_ANIM_FRAMES; }
     gameState->levelEndAnimTimer += GetFrameTime();
     if (gameState->levelEndAnimTimer >= 0.2f) { gameState->levelEndAnimTimer = 0.0f; gameState->levelEndAnimFrame ^= 1; }
 
@@ -1532,6 +1539,8 @@ void GameDraw(GameState* gameState) {
                 break;
             case TILE_MONKEY_SPAWN:
                 break;
+            case TILE_DOOR:
+                break;  // Se dibuja en el pase separado de puertas (3x3, 50% opacidad)
             case TILE_TOTEM_UP:
             case TILE_TOTEM_DOWN:
             case TILE_TOTEM_LEFT:
@@ -1592,6 +1601,30 @@ void GameDraw(GameState* gameState) {
                 break;
             }
             }
+        }
+    }
+
+    // --- PUERTAS (decorativas, 3x3 tiles, 50% opacidad) ---
+    for (int row = 0; row < gameState->currentMapRows; row++) {
+        for (int col = 0; col < gameState->currentMapCols; col++) {
+            int tt2;
+            if (gameState->currentLevel == 1) tt2 = gameState->tileMap_2[row][col];
+            else if (gameState->currentLevel == 2) tt2 = gameState->tileMap_3[row][col];
+            else if (gameState->currentLevel == 3) tt2 = gameState->tileMap_4[row][col];
+            else if (gameState->currentLevel == 4) tt2 = gameState->tileMap_5[row][col];
+            else if (gameState->currentLevel == 5) tt2 = gameState->tileMap_6[row][col];
+            else                                   tt2 = gameState->tileMap_1[row][col];
+            if (tt2 != TILE_DOOR) continue;
+
+            float cx = col * TILE_SIZE + TILE_SIZE / 2.0f - cameraX;
+            float cy = row * TILE_SIZE + TILE_SIZE / 2.0f - cameraY + TILE_SIZE * 0.5f - 4.5f;
+            float drawW = (float)TILE_SIZE * 3.0f;
+            float drawH = (float)TILE_SIZE * 3.0f;
+            Texture2D& dt = gameState->texDoorFrames[gameState->doorAnimFrame];
+            Rectangle doorSrc = { 0, 0, (float)dt.width, (float)dt.height };
+            Rectangle doorDst = { cx, cy, drawW, drawH };
+            DrawTexturePro(dt, doorSrc, doorDst, { drawW / 2.0f, drawH / 2.0f }, 0.0f,
+                Color{ 255, 255, 255, 128 });  // 128/255 ≈ 50% opacidad
         }
     }
 
@@ -1718,6 +1751,7 @@ void GameUnload(GameState* gameState) {
     UnloadTexture(gameState->dotTexture);   UnloadTexture(gameState->coinTexture);
     UnloadTexture(gameState->starTexture);  UnloadTexture(gameState->levelEndTexture); UnloadTexture(gameState->levelEndTexture2);
     UnloadTexture(gameState->spikeTexture); UnloadTexture(gameState->texPuas);
+    for (int i = 0; i < DOOR_ANIM_FRAMES; i++) UnloadTexture(gameState->texDoorFrames[i]);
     UnloadTexture(gameState->texBlockRed);  UnloadTexture(gameState->texBlockBlue);
     UnloadTexture(gameState->trailHorizontal); UnloadTexture(gameState->trailVertical);
     for (int i = 0; i < PLAYER_ANIM_FRAMES; i++) UnloadTexture(gameState->playerFrames[i]);

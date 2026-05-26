@@ -21,6 +21,7 @@
 #define COIN_ANIM_FRAMES      4
 #define BAT_ANIM_SEQ_LEN      6
 #define MONKEY_FRAMES         11
+#define DOOR_ANIM_FRAMES      4
 
 // --- DEFINICIONES DE TILES ---
 #define TILE_EMPTY            0
@@ -61,6 +62,7 @@
 #define TILE_BLOCK_BLUE       25   // empieza intangible
 
 #define TILE_PUAS             26   // Pinchos de muerte instantánea
+#define TILE_DOOR             27   // Puerta decorativa (no sólida, animada)
 
 // --- VARIANTES DE PAREDES (AUTO-TILING) ---
 #define WALL_SOLID            0
@@ -205,6 +207,11 @@ typedef struct {
     Texture2D texMonkeyDrop;
 
     Texture2D texPuas;
+
+    // Puerta animada
+    Texture2D texDoorFrames[DOOR_ANIM_FRAMES];
+    int   doorAnimFrame;
+    float doorAnimTimer;
 
     // --- TEXTURAS DE SKINS ALTERNATIVAS ---
 
