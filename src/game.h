@@ -324,6 +324,8 @@ typedef struct {
 
     // --- DEBUG ---
     bool debugImmortal;   // Ctrl+P+1: inmortalidad (no muere por ningún peligro)
+    bool debugShowHitboxes; // Ctrl+P+2: mostrar hitboxes (colisiones)
+    bool debugUnlockAll;  // Ctrl+P+3: desbloquea todos los niveles, 999 monedas, 3 estrellas
 
 } GameState;
 

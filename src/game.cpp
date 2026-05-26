@@ -15,6 +15,7 @@ static void InsertLeaderboard(GameState* gs);
 static int GetWallVariant1(const int map[MAP_ROWS_1][MAP_COLUMNS_1], int row, int col);
 static int GetWallVariant2(const int map[MAP_ROWS_2][MAP_COLUMNS_2], int row, int col);
 static bool CheckWallCollision(GameState* gameState, float x, float y);
+extern void SaveGameProgress(const MapState* mapState);
 
 static inline bool TileIsSpike(int t) {
     return t == TILE_SPIKE_UP || t == TILE_SPIKE_DOWN || t == TILE_SPIKE_LEFT || t == TILE_SPIKE_RIGHT;
@@ -34,6 +35,24 @@ static inline void SpikeHazardOffset(int t, int* dRow, int* dCol) {
     if (t == TILE_SPIKE_DOWN)  *dRow = 1;
     if (t == TILE_SPIKE_LEFT)  *dCol = -1;
     if (t == TILE_SPIKE_RIGHT) *dCol = 1;
+}
+
+static void DebugUnlockAllLevels(GameState* gameState, MapState* mapState) {
+    if (mapState == NULL) return;
+    
+  // Desbloquear todos los niveles con 3 estrellas
+    for (int i = 0; i < MAX_LEVELS; i++) {
+        mapState->levels[i].completed = 1;
+        mapState->levels[i].starsEarned = 3;  // 3 estrellas máximas
+    }
+    
+    // Establecer 999 monedas
+    mapState->totalCoins = 999;
+    
+ // Guardar el progreso
+    SaveGameProgress(mapState);
+    
+    printf("[DEBUG] Todos los niveles desbloqueados, 999 monedas asignadas, 3 estrellas para todos!\n");
 }
 
 static const int playerAnimSequence[PLAYER_ANIM_SEQ_LEN] = { 0, 1, 0, 2, 3, 2, 0, 4 };
@@ -898,6 +917,8 @@ void GameLoad(GameState* gameState, MapState* mapState) {
     gameState->totemCount = 0;
     gameState->arrowCount = 0;
     gameState->debugImmortal = false;
+    gameState->debugShowHitboxes = false;
+    gameState->debugUnlockAll = false;
 
     ResetGameState(gameState);
     PlaySound(gameState->soundLevelStart);
@@ -960,6 +981,15 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     // Detectar P como tecla recien pulsada, con Ctrl y 1 mantenidos
     if (IsKeyPressed(KEY_P) && IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_ONE))
         gameState->debugImmortal = !gameState->debugImmortal;
+
+    // --- DEBUG: Ctrl+P+2 -> toggle mostrar hitboxes ---
+    if (IsKeyPressed(KEY_P) && IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_TWO))
+        gameState->debugShowHitboxes = !gameState->debugShowHitboxes;
+
+    // --- DEBUG: Ctrl+P+3 -> unlock all levels, 999 coins, max stars ---
+    if (IsKeyPressed(KEY_P) && IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_THREE)) {
+        DebugUnlockAllLevels(gameState, mapState);
+    }
 
     // --- MENU PAUSA ---
     if (IsKeyPressed(KEY_M) && !gameState->levelCompleted &&
@@ -1139,8 +1169,8 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             }
         }
         if (!gameState->playerDead) {
-            int pCol = (int)((gameState->playerX + TILE_SIZE / 2) / TILE_SIZE);
-            int pRow = (int)((gameState->playerY + TILE_SIZE / 2) / TILE_SIZE);
+            int pCol = (int)((gameState->playerX + TILE_SIZE / 2.0f) / TILE_SIZE);
+            int pRow = (int)((gameState->playerY + TILE_SIZE / 2.0f) / TILE_SIZE);
             for (int i = 0; i < gameState->spikeCount; i++) {
                 int sc = gameState->spikeCol[i], sr = gameState->spikeRow[i];
                 int t;
@@ -1479,15 +1509,69 @@ void GameDraw(GameState* gameState) {
             else if (gameState->currentLevel == 4) tt = gameState->tileMap_5[row][col];
             else if (gameState->currentLevel == 5) tt = gameState->tileMap_6[row][col];
             else                                   tt = gameState->tileMap_1[row][col];
+
             if (tt == TILE_EMPTY) continue;
 
             int sx = col * TILE_SIZE - cameraX, sy = row * TILE_SIZE - cameraY;
+
+            // Culling de pantalla
             if (sx < -TILE_SIZE || sx > SCREEN_WIDTH + TILE_SIZE || sy < -TILE_SIZE || sy > SCREEN_HEIGHT + TILE_SIZE) continue;
 
-            Rectangle src = { 0,0,(float)TILE_SIZE,(float)TILE_SIZE };
-            Rectangle dst = { (float)sx,(float)sy,(float)TILE_SIZE,(float)TILE_SIZE };
-            Vector2 orig = { 0,0 };
+            Rectangle src = { 0, 0, (float)TILE_SIZE, (float)TILE_SIZE };
+            Rectangle dst = { (float)sx, (float)sy, (float)TILE_SIZE, (float)TILE_SIZE };
+            Vector2 orig = { 0, 0 };
 
+            // --- MODO DEBUG HITBOXES ---
+            if (gameState->debugShowHitboxes) {
+                // Evaluamos qué color usar dependiendo del tipo de Tile (tt)
+
+                // Paredes, bloques sólidos (Hitboxes Azules)
+                if (tt == TILE_WALL || tt == 8 || tt == 9 || tt == 10 || tt == 11) {
+                    DrawRectangleLinesEx(dst, 2.0f, BLUE);
+                }
+                else if (tt == TILE_BLOCK_RED && !gameState->blockToggle) {
+                    DrawRectangleLinesEx(dst, 2.0f, BLUE);
+                }
+                else if (tt == TILE_BLOCK_BLUE && gameState->blockToggle) {
+                    DrawRectangleLinesEx(dst, 2.0f, BLUE);
+                }
+                // Trampas letales estáticas (Hitboxes Rojas)
+                else if (tt == TILE_PUAS) {
+                    // Ajusta este rectángulo si los pinchos no ocupan todo el TILE_SIZE
+                    DrawRectangleLinesEx(dst, 2.0f, RED);
+                }
+                // Trampas tipo Spike (Pincho que sale)
+                else if (tt == TILE_SPIKE_UP || tt == TILE_SPIKE_DOWN || tt == TILE_SPIKE_LEFT || tt == TILE_SPIKE_RIGHT) {
+                    int spikeIdx = -1;
+                    for (int i = 0; i < gameState->spikeCount; i++) {
+                        if (gameState->spikeCol[i] == col && gameState->spikeRow[i] == row) { spikeIdx = i; break; }
+                    }
+                    int state = (spikeIdx >= 0) ? gameState->spikeState[spikeIdx] : 0;
+
+                    // Dibujamos la base del pincho (quizás es sólida o mata siempre, aquí la pongo azul si es base)
+                    DrawRectangleLinesEx(dst, 2.0f, BLUE);
+
+                    // Si está en estado letal (state == 3 según tu código), dibujamos la hitbox de la parte que mata
+                    if (state >= 1 && spikeIdx >= 0 && state == 3) {
+                        int dRow, dCol;
+                        SpikeHazardOffset(tt, &dRow, &dCol);
+                        int hx = (col + dCol) * TILE_SIZE - cameraX;
+                        int hy = (row + dRow) * TILE_SIZE - cameraY;
+                        Rectangle hazardRect = { (float)hx, (float)hy, (float)TILE_SIZE, (float)TILE_SIZE };
+
+                        // Hitbox roja para la zona letal extendida
+                        DrawRectangleLinesEx(hazardRect, 2.0f, RED);
+                    }
+                }
+
+                // Si el debug está activo, NO dibujamos las texturas normales para ver claramente las colisiones
+                // NOTA: Si quieres ver las hitboxes ENCIMA de las texturas, simplemente quita el 'continue' de abajo
+                // y deja que se ejecute el switch normal. He optado por dibujar "solo las hitboxes" para claridad.
+
+                 continue; // Descomenta esto si solo quieres ver los cuadrados de colores y no el mapa gráfico
+            }
+
+            // --- RENDERIZADO NORMAL (se ejecuta siempre, a menos que descomentes el 'continue' de arriba) ---
             switch (tt) {
             case TILE_WALL: {
                 int wv;
@@ -1522,7 +1606,6 @@ void GameDraw(GameState* gameState) {
                 DrawTexturePro(texEnd, { 0,0,(float)texEnd.width,(float)texEnd.height }, dst, orig, 0, WHITE);
                 break;
             }
-                               break;
             case TILE_BLOCK_RED: {
                 bool solid = !gameState->blockToggle;
                 Color c = solid ? WHITE : Color{ 255,255,255,80 };
@@ -1567,6 +1650,7 @@ void GameDraw(GameState* gameState) {
             case TILE_SPIKE_DOWN:
             case TILE_SPIKE_LEFT:
             case TILE_SPIKE_RIGHT: {
+                // NOTA: Replicamos parte del cálculo aquí para el dibujo gráfico normal
                 int spikeIdx = -1;
                 for (int i = 0; i < gameState->spikeCount; i++)
                     if (gameState->spikeCol[i] == col && gameState->spikeRow[i] == row) { spikeIdx = i; break; }
@@ -1576,15 +1660,18 @@ void GameDraw(GameState* gameState) {
                 if (tt == TILE_SPIKE_DOWN)  rot = 180.0f;
                 if (tt == TILE_SPIKE_LEFT)  rot = 270.0f;
                 if (tt == TILE_SPIKE_RIGHT) rot = 90.0f;
+
                 Color spkColor = WHITE;
                 if (state == 0) spkColor = Color{ 100,100,100,180 };
                 else if (state == 1) { float b = sinf(stimer / 0.2f * 3.14159f * 6); spkColor = Color{ 255,(unsigned char)(200 + 55 * b),0,255 }; }
                 else if (state == 3) spkColor = Color{ 255,60,60,255 };
+
                 Vector2 center = { (float)sx + TILE_SIZE / 2.0f, (float)sy + TILE_SIZE / 2.0f };
                 DrawTexturePro(gameState->spikeTexture,
                     { 0,0,(float)gameState->spikeTexture.width,(float)gameState->spikeTexture.height },
                     { center.x,center.y,(float)TILE_SIZE,(float)TILE_SIZE },
                     { TILE_SIZE / 2.0f,TILE_SIZE / 2.0f }, rot, spkColor);
+
                 if (state >= 1 && spikeIdx >= 0) {
                     int dRow, dCol; SpikeHazardOffset(tt, &dRow, &dCol);
                     int hx = (col + dCol) * TILE_SIZE - cameraX, hy = (row + dRow) * TILE_SIZE - cameraY;
@@ -1643,25 +1730,64 @@ void GameDraw(GameState* gameState) {
     for (int i = 0; i < gameState->batCount; i++) {
         Bat& bat = gameState->bats[i];
         int bsx = (int)bat.x - cameraX, bsy = (int)bat.y - cameraY;
-        if (bsx<-TILE_SIZE || bsx>SCREEN_WIDTH + TILE_SIZE || bsy<-TILE_SIZE || bsy>SCREEN_HEIGHT + TILE_SIZE) continue;
-        Texture2D& bt = gameState->batTextures[batAnimSequence[gameState->batCurrentFrames]];
-        DrawTexturePro(bt, { 0,0,(float)bt.width,(float)bt.height }, { (float)bsx,(float)bsy,(float)TILE_SIZE,(float)TILE_SIZE }, { 0,0 }, 0.0f, WHITE);
+
+        // Culling: si está fuera de la pantalla, pasamos al siguiente
+        if (bsx < -TILE_SIZE || bsx > SCREEN_WIDTH + TILE_SIZE || bsy < -TILE_SIZE || bsy > SCREEN_HEIGHT + TILE_SIZE) continue;
+
+        if (gameState->debugShowHitboxes) {
+            // Dibuja la hitbox como un cuadrado verde
+            // Ajusta el +4 y el -8 si la hitbox del murciélago debe ser de otro tamaño
+            float hitboxLeft = bsx + 4.0f;
+            float hitboxTop = bsy + 4.0f;
+            float hitboxSize = TILE_SIZE - 8.0f;
+
+            DrawRectangle((int)hitboxLeft, (int)hitboxTop, (int)hitboxSize, (int)hitboxSize, RED);
+        }
+        else {
+            // Dibuja el sprite normal del murciélago
+            Texture2D& bt = gameState->batTextures[batAnimSequence[gameState->batCurrentFrames]];
+            DrawTexturePro(bt,
+                { 0, 0, (float)bt.width, (float)bt.height },
+                { (float)bsx, (float)bsy, (float)TILE_SIZE, (float)TILE_SIZE },
+                { 0, 0 },
+                0.0f,
+                WHITE);
+        }
     }
 
     // --- FLECHAS (con skin) ---
     for (int i = 0; i < gameState->arrowCount; i++) {
         Arrow& a = gameState->arrows[i];
         if (!a.active) continue;
+
         int ax = (int)a.x - cameraX, ay = (int)a.y - cameraY;
-        if (ax<-TILE_SIZE || ax>SCREEN_WIDTH + TILE_SIZE || ay<-TILE_SIZE || ay>SCREEN_HEIGHT + TILE_SIZE) continue;
-        Vector2 center = { (float)ax + TILE_SIZE / 2.0f, (float)ay + TILE_SIZE / 2.0f };
-        Texture2D& arrowTex = (gameState->activeFlechaSkin == 1)
-            ? gameState->texArrowSkin
-            : gameState->texArrow;
-        DrawTexturePro(arrowTex,
-            { 0,0,(float)arrowTex.width,(float)arrowTex.height },
-            { center.x,center.y,(float)TILE_SIZE,(float)TILE_SIZE },
-            { TILE_SIZE / 2.0f,TILE_SIZE / 2.0f }, a.rotation, WHITE);
+
+        // Culling: si está fuera de la pantalla, pasamos a la siguiente
+        if (ax < -TILE_SIZE || ax > SCREEN_WIDTH + TILE_SIZE || ay < -TILE_SIZE || ay > SCREEN_HEIGHT + TILE_SIZE) continue;
+
+        if (gameState->debugShowHitboxes) {
+            // Dibuja la hitbox de la flecha como un cuadrado verde
+            // Nota: Ajusta los valores +4 y -8 al tamaño real de tu proyectil
+            float hitboxLeft = ax + 4.0f;
+            float hitboxTop = ay + 4.0f;
+            float hitboxSize = TILE_SIZE - 8.0f;
+
+            DrawRectangle((int)hitboxLeft, (int)hitboxTop, (int)hitboxSize, (int)hitboxSize, RED);
+        }
+        else {
+            // Dibuja el sprite normal de la flecha
+            Vector2 center = { (float)ax + TILE_SIZE / 2.0f, (float)ay + TILE_SIZE / 2.0f };
+            Texture2D& arrowTex = (gameState->activeFlechaSkin == 1)
+                ? gameState->texArrowSkin
+                : gameState->texArrow;
+
+            DrawTexturePro(arrowTex,
+                { 0, 0, (float)arrowTex.width, (float)arrowTex.height },
+                { center.x, center.y, (float)TILE_SIZE, (float)TILE_SIZE },
+                { TILE_SIZE / 2.0f, TILE_SIZE / 2.0f },
+                a.rotation,
+                WHITE);
+        }
     }
 
     // --- MONO (con skin) ---
@@ -1690,25 +1816,50 @@ void GameDraw(GameState* gameState) {
 
         // Coco cayendo
         if (gameState->monkeyDrop.active) {
-            Rectangle dst2 = { (float)(gameState->monkeyDrop.x - cameraX),(float)(gameState->monkeyDrop.y - cameraY),cocoW,cocoH };
-            if (texCoco.id > 0) DrawTexturePro(texCoco, srcCoco, dst2, { 0,0 }, 0, WHITE);
-            else DrawCircle((int)(dst2.x + cocoW / 2), (int)(dst2.y + cocoH / 2), TILE_SIZE * 0.75f * cocoScale, BROWN);
+            Rectangle dst2 = { (float)(gameState->monkeyDrop.x - cameraX), (float)(gameState->monkeyDrop.y - cameraY), cocoW, cocoH };
+
+            if (gameState->debugShowHitboxes) {
+                // Dibuja la hitbox usando los valores calculados en dst2
+                DrawRectangle((int)(dst2.x + 4.0f), (int)(dst2.y + 4.0f), (int)(dst2.width - 8.0f), (int)(dst2.height - 8.0f), RED);
+            }
+            else {
+                if (texCoco.id > 0) DrawTexturePro(texCoco, srcCoco, dst2, { 0,0 }, 0, WHITE);
+                else DrawCircle((int)(dst2.x + cocoW / 2), (int)(dst2.y + cocoH / 2), TILE_SIZE * 0.75f * cocoScale, BROWN);
+            }
         }
 
         // Coco en mano: frames 1 a 8 inclusive
         if (gameState->monkey.active && gameState->monkey.frame >= 1 && gameState->monkey.frame <= 8) {
             float cx = gameState->monkey.x + (TILE_SIZE * 0.75f) - TILE_SIZE + (TILE_SIZE * 0.15f);
             float cy = gameState->monkey.y + (TILE_SIZE * 1.0f) - TILE_SIZE + (TILE_SIZE * 0.15f);
-            Rectangle dst2 = { (float)(cx - cameraX),(float)(cy - cameraY),cocoW,cocoH };
-            if (texCoco.id > 0) DrawTexturePro(texCoco, srcCoco, dst2, { 0,0 }, 0, WHITE);
-            else DrawCircle((int)(dst2.x + cocoW / 2), (int)(dst2.y + cocoH / 2), TILE_SIZE * 0.75f * cocoScale, BROWN);
+            Rectangle dst2 = { (float)(cx - cameraX), (float)(cy - cameraY), cocoW, cocoH };
+
+            if (gameState->debugShowHitboxes) {
+                // Dibuja la hitbox usando los valores calculados en dst2
+                DrawRectangle((int)(dst2.x + 4.0f), (int)(dst2.y + 4.0f), (int)(dst2.width - 8.0f), (int)(dst2.height - 8.0f), RED);
+            }
+            else {
+                if (texCoco.id > 0) DrawTexturePro(texCoco, srcCoco, dst2, { 0,0 }, 0, WHITE);
+                else DrawCircle((int)(dst2.x + cocoW / 2), (int)(dst2.y + cocoH / 2), TILE_SIZE * 0.75f * cocoScale, BROWN);
+            }
         }
     }
 
     // --- JUGADOR ---
-    Texture2D cpf = gameState->playerFrames[playerAnimSequence[gameState->playerAnimFrame]];
-    Rectangle pd = { (float)(gameState->playerX - cameraX) + TILE_SIZE / 2.0f,(float)(gameState->playerY - cameraY) + TILE_SIZE / 2.0f,(float)TILE_SIZE,(float)TILE_SIZE };
-    DrawTexturePro(cpf, { 0,0,(float)cpf.width,(float)cpf.height }, pd, { TILE_SIZE / 2.0f,TILE_SIZE / 2.0f }, gameState->playerRotation + 180, WHITE);
+
+    if (gameState->debugShowHitboxes) {
+        // Draw hitbox as a green square
+        float hitboxLeft = gameState->playerX - cameraX + 4;
+        float hitboxTop = gameState->playerY - cameraY + 4;
+        float hitboxSize = TILE_SIZE - 8;
+        DrawRectangle((int)hitboxLeft, (int)hitboxTop, (int)hitboxSize, (int)hitboxSize, GREEN);
+    }
+    else {
+        // Normal player drawing
+        Texture2D cpf = gameState->playerFrames[playerAnimSequence[gameState->playerAnimFrame]]; 
+        Rectangle pd = { (float)(gameState->playerX - cameraX) + TILE_SIZE / 2.0f,(float)(gameState->playerY - cameraY) + TILE_SIZE / 2.0f,(float)TILE_SIZE,(float)TILE_SIZE };
+        DrawTexturePro(cpf, { 0,0,(float)cpf.width,(float)cpf.height }, pd, { TILE_SIZE / 2.0f,TILE_SIZE / 2.0f }, gameState->playerRotation + 180, WHITE);
+    }
 
     // --- HUD ---
     DrawRectangle(0, 0, SCREEN_WIDTH, 60, BLACK);
