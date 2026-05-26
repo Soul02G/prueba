@@ -891,6 +891,7 @@ void GameLoad(GameState* gameState, MapState* mapState) {
     gameState->batCurrentFrames = 0;
     gameState->totemCount = 0;
     gameState->arrowCount = 0;
+    gameState->debugImmortal = false;
 
     ResetGameState(gameState);
     PlaySound(gameState->soundLevelStart);
@@ -948,6 +949,11 @@ void HandleBounceCollision(GameState* gameState) {
 //  GAMEUPDATE
 // ---------------------------------------------------------------------------
 SceneType GameUpdate(GameState* gameState, MapState* mapState) {
+
+    // --- DEBUG: Ctrl+P+1 -> toggle inmortalidad ---
+    // Detectar P como tecla recien pulsada, con Ctrl y 1 mantenidos
+    if (IsKeyPressed(KEY_P) && IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_ONE))
+        gameState->debugImmortal = !gameState->debugImmortal;
 
     // --- MENU PAUSA ---
     if (IsKeyPressed(KEY_M) && !gameState->levelCompleted &&
@@ -1062,7 +1068,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         if (h == TILE_WALL || TileIsSpike(h) || h == TILE_PUAS || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) {
             gameState->playerX = (gameState->velocityX > 0) ? (nextTileCol * TILE_SIZE) - TILE_SIZE : (nextTileCol + 1) * TILE_SIZE;
             gameState->velocityX = 0; PlaySound(gameState->soundHitWall);
-            if (h == TILE_PUAS) gameState->playerDead = 1;
+            if (h == TILE_PUAS && !gameState->debugImmortal) gameState->playerDead = 1;
         }
         else if (nextX < 0 || nextX + TILE_SIZE > mapColumns * TILE_SIZE) {
             gameState->velocityX = 0; PlaySound(gameState->soundHitWall);
@@ -1090,7 +1096,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         if (h == TILE_WALL || TileIsSpike(h) || h == TILE_PUAS || TileIsTotem(h) || TileBlockSolid(h, gameState->blockToggle)) {
             gameState->playerY = (gameState->velocityY > 0) ? (nextTileRow * TILE_SIZE) - TILE_SIZE : (nextTileRow + 1) * TILE_SIZE;
             gameState->velocityY = 0; PlaySound(gameState->soundHitWall);
-            if (h == TILE_PUAS) gameState->playerDead = 1;
+            if (h == TILE_PUAS && !gameState->debugImmortal) gameState->playerDead = 1;
         }
         else if (nextY < 0 || nextY + TILE_SIZE > mapRows * TILE_SIZE) {
             gameState->velocityY = 0; PlaySound(gameState->soundHitWall);
@@ -1123,7 +1129,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         for (int i = 0; i < gameState->batCount; i++) {
             Bat& bat = gameState->bats[i];
             if (pL < bat.x + TILE_SIZE - 4 && pR > bat.x + 4 && pT < bat.y + TILE_SIZE - 4 && pB > bat.y + 4) {
-                gameState->playerDead = 1; break;
+                if (!gameState->debugImmortal) gameState->playerDead = 1; break;
             }
         }
         if (!gameState->playerDead) {
@@ -1145,7 +1151,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
                 case 1: gameState->spikeTimer[i] += dt; if (gameState->spikeTimer[i] >= 0.2f) { gameState->spikeState[i] = 2; gameState->spikeTimer[i] = 0.0f; } break;
                 case 2: gameState->spikeTimer[i] += dt; if (gameState->spikeTimer[i] >= 1.0f) { gameState->spikeState[i] = 3; gameState->spikeTimer[i] = 0.0f; } break;
                 case 3:
-                    if (playerOnHazard) gameState->playerDead = 1;
+                    if (playerOnHazard && !gameState->debugImmortal) gameState->playerDead = 1;
                     gameState->spikeTimer[i] += dt;
                     if (gameState->spikeTimer[i] >= 0.5f) { gameState->spikeState[i] = 0; gameState->spikeTimer[i] = 0.0f; }
                     break;
@@ -1206,7 +1212,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             if (!gameState->playerDead) {
                 float aL = a.x + 4, aR = a.x + TILE_SIZE - 4;
                 float aT = a.y + 4, aB = a.y + TILE_SIZE - 4;
-                if (aL < pR && aR > pL && aT < pB && aB > pT) { gameState->playerDead = 1; a.active = false; continue; }
+                if (aL < pR && aR > pL && aT < pB && aB > pT) { if (!gameState->debugImmortal) gameState->playerDead = 1; a.active = false; continue; }
             }
             gameState->arrows[alive++] = a;
         }
@@ -1297,7 +1303,7 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
         float cL = gameState->monkeyDrop.x + 2, cR = cL + TILE_SIZE * 1.5f - 4;
         float cT = gameState->monkeyDrop.y + 2, cB = cT + TILE_SIZE * 1.5f - 4;
         if (!gameState->playerDead && cL < pR && cR > pL && cT < pB && cB > pT) {
-            gameState->playerDead = 1; gameState->monkeyDrop.active = false;
+            if (!gameState->debugImmortal) gameState->playerDead = 1; gameState->monkeyDrop.active = false;
         }
         if (gameState->monkeyDrop.y > (float)(gameState->currentMapRows * TILE_SIZE))
             gameState->monkeyDrop.active = false;
@@ -1523,7 +1529,6 @@ void GameDraw(GameState* gameState) {
                 break;
             }
             case TILE_MONKEY_TRIGGER:
-                DrawTexture(gameState->dotTexture, sx, sy, WHITE);
                 break;
             case TILE_MONKEY_SPAWN:
                 break;
@@ -1688,6 +1693,14 @@ void GameDraw(GameState* gameState) {
         DrawRectangle(SCREEN_WIDTH - 50, 15, 35, 35, YELLOW);
         DrawRectangle(SCREEN_WIDTH - 43, 21, 8, 23, BLACK);
         DrawRectangle(SCREEN_WIDTH - 28, 21, 8, 23, BLACK);
+    }
+
+    // --- DEBUG HUD ---
+    if (gameState->debugImmortal) {
+        const char* dbgText = "DEBUG: INMORTAL";
+        int dbgW = MeasureText(dbgText, 14);
+        DrawRectangle((SCREEN_WIDTH - dbgW) / 2 - 6, SCREEN_HEIGHT - 28, dbgW + 12, 22, Color{ 180, 0, 0, 200 });
+        DrawText(dbgText, (SCREEN_WIDTH - dbgW) / 2, SCREEN_HEIGHT - 24, 14, Color{ 255, 255, 0, 255 });
     }
 
     if (gameState->menuOpen)               DrawMenuPanel(gameState);

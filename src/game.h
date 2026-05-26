@@ -315,6 +315,9 @@ typedef struct {
 
     bool blockToggle;
 
+    // --- DEBUG ---
+    bool debugImmortal;   // Ctrl+P+1: inmortalidad (no muere por ningún peligro)
+
 } GameState;
 
 
