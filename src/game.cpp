@@ -643,6 +643,7 @@ void ResetGameState(GameState* gameState) {
     gameState->totemCount = 0;
     gameState->arrowCount = 0;
     gameState->monkeyTriggered = false;
+    gameState->monkeyTriggeredLatched = false;
     gameState->blockToggle = false;
 
     if (gameState->currentLevel == 0) memcpy(gameState->tileMap_1, initialMap, sizeof(initialMap));
@@ -712,7 +713,7 @@ void ResetGameState(GameState* gameState) {
     }
 
     gameState->monkey.hasDropped = false;
-    gameState->monkey.frame = 0;
+    gameState->monkey.frame = 1;
     gameState->monkey.animTimer = 0.0f;
     gameState->monkey.pauseTimer = 0.0f;
     gameState->monkey.state = MONKEY_IDLE;
@@ -762,7 +763,10 @@ void GameLoad(GameState* gameState, MapState* mapState) {
     gameState->dotTexture = LoadTexture("resources\\tile_dot.png");
     gameState->coinTexture = LoadTexture("resources\\coin-frame-0.png");
     gameState->starTexture = LoadTexture("resources\\tile_star.png");
-    gameState->levelEndTexture = LoadTexture("resources\\tile_end.png");
+    gameState->levelEndTexture = LoadTexture("resources\\end_1.png");
+    gameState->levelEndTexture2 = LoadTexture("resources\\end_2.png");
+    gameState->levelEndAnimFrame = 0;
+    gameState->levelEndAnimTimer = 0.0f;
     gameState->texPuas = LoadTexture("resources\\puas.png");
     gameState->spikeTexture = LoadTexture("resources\\pinchos.png");
     gameState->texBlockRed = LoadTexture("resources\\red.png");
@@ -1232,10 +1236,9 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             }
         }
 
-        // CORRECCIÓN DEL TRIGGER: Primero asumimos que no está pisando el botón
+        // Detectar si el jugador esta sobre el trigger este frame
         bool playerIsOnTrigger = false;
         if (gameState->monkey.active) {
-            // Calculamos en qué fila y columna del mapa está el jugador actualmente
             int pCol = (int)((gameState->playerX + TILE_SIZE / 2.0f) / TILE_SIZE);
             int pRow = (int)((gameState->playerY + TILE_SIZE / 2.0f) / TILE_SIZE);
 
@@ -1254,27 +1257,33 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             }
         }
 
-        // Si el jugador está sobre el trigger, se activa. Si no, se desactiva.
         gameState->monkeyTriggered = playerIsOnTrigger;
 
-        // Gestión de la animación
+        // Animacion del mono
         gameState->monkey.animTimer += dt;
         if (gameState->monkey.animTimer >= 0.12f) {
             gameState->monkey.animTimer = 0.0f;
 
-            // Si llegamos al frame 8, el trigger está activo y el coco no vuela: ¡Lanzamos!
-            if (gameState->monkey.frame == 8 && !gameState->monkeyDrop.active && gameState->monkeyTriggered) {
+            // BUG 1 FIX: latch el trigger para que persista hasta el frame 8
+            if (gameState->monkeyTriggered)
+                gameState->monkeyTriggeredLatched = true;
+
+            // Lanzar coco en frame 8 si el trigger fue activado
+            if (gameState->monkey.frame == 8
+                && !gameState->monkeyDrop.active
+                && gameState->monkeyTriggeredLatched)
+            {
                 gameState->monkeyDrop.active = true;
                 gameState->monkeyDrop.x = gameState->monkey.x - TILE_SIZE + (TILE_SIZE * 1.0f);
                 gameState->monkeyDrop.y = gameState->monkey.y + TILE_SIZE * 0.5f;
                 gameState->monkeyDrop.speed = 350.0f;
+                gameState->monkeyTriggeredLatched = false;  // reset tras lanzar
             }
 
-            // Avanzar fotograma de manera circular
-            gameState->monkey.frame = (gameState->monkey.frame + 1) % MONKEY_FRAMES;
+            gameState->monkey.frame = gameState->monkey.frame + 1;
+            if (gameState->monkey.frame >= MONKEY_FRAMES) gameState->monkey.frame = 1;
         }
     }
-
 
     if (!gameState->monkeyDrop.active) {
         gameState->monkeyDrop.x = gameState->monkey.x - TILE_SIZE + (TILE_SIZE * 1.0f);
@@ -1308,6 +1317,8 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
     }
     if (++gameState->coinAnimTimer >= coinAnimSpeed) { gameState->coinAnimTimer = 0; gameState->coinAnimFrame = (gameState->coinAnimFrame + 1) % COIN_ANIM_SEQ_LEN; }
     if (++gameState->batFrameCounter >= batAnimSpeed) { gameState->batFrameCounter = 0; gameState->batCurrentFrames = (gameState->batCurrentFrames + 1) % BAT_ANIM_SEQ_LEN; }
+    gameState->levelEndAnimTimer += GetFrameTime();
+    if (gameState->levelEndAnimTimer >= 0.2f) { gameState->levelEndAnimTimer = 0.0f; gameState->levelEndAnimFrame ^= 1; }
 
     return SCENE_GAME;
 }
@@ -1490,9 +1501,14 @@ void GameDraw(GameState* gameState) {
             case 9:  DrawTexturePro(gameState->texRebote9, { 0,0,(float)gameState->texRebote9.width, (float)gameState->texRebote9.height }, dst, orig, 0, WHITE); break;
             case 10: DrawTexturePro(gameState->texRebote10, { 0,0,(float)gameState->texRebote10.width,(float)gameState->texRebote10.height }, dst, orig, 0, WHITE); break;
             case 11: DrawTexturePro(gameState->texRebote11, { 0,0,(float)gameState->texRebote11.width,(float)gameState->texRebote11.height }, dst, orig, 0, WHITE); break;
-            case TILE_LEVEL_END:
-                DrawTexturePro(gameState->levelEndTexture, { 0,0,(float)gameState->levelEndTexture.width,(float)gameState->levelEndTexture.height }, dst, orig, 0, WHITE);
+            case TILE_LEVEL_END: {
+                Texture2D& texEnd = (gameState->levelEndAnimFrame == 0)
+                    ? gameState->levelEndTexture
+                    : gameState->levelEndTexture2;
+                DrawTexturePro(texEnd, { 0,0,(float)texEnd.width,(float)texEnd.height }, dst, orig, 0, WHITE);
                 break;
+            }
+                               break;
             case TILE_BLOCK_RED: {
                 bool solid = !gameState->blockToggle;
                 Color c = solid ? WHITE : Color{ 255,255,255,80 };
@@ -1520,7 +1536,6 @@ void GameDraw(GameState* gameState) {
                 if (tt == TILE_TOTEM_LEFT)  rot = 0.0f;
                 if (tt == TILE_TOTEM_RIGHT) rot = 180.0f;
                 Vector2 center = { (float)sx + TILE_SIZE / 2.0f, (float)sy + TILE_SIZE / 2.0f };
-                // --- SKIN TOTEM ---
                 Texture2D* totemTex = &gameState->texTotem;
                 if (gameState->activeTotemSkin == 1) totemTex = &gameState->texTotemSkin;
                 else if (gameState->activeTotemSkin == 2) totemTex = &gameState->texTotemSkinS;
@@ -1601,7 +1616,6 @@ void GameDraw(GameState* gameState) {
         int ax = (int)a.x - cameraX, ay = (int)a.y - cameraY;
         if (ax<-TILE_SIZE || ax>SCREEN_WIDTH + TILE_SIZE || ay<-TILE_SIZE || ay>SCREEN_HEIGHT + TILE_SIZE) continue;
         Vector2 center = { (float)ax + TILE_SIZE / 2.0f, (float)ay + TILE_SIZE / 2.0f };
-        // --- SKIN FLECHA ---
         Texture2D& arrowTex = (gameState->activeFlechaSkin == 1)
             ? gameState->texArrowSkin
             : gameState->texArrow;
@@ -1614,7 +1628,6 @@ void GameDraw(GameState* gameState) {
     // --- MONO (con skin) ---
     if (gameState->monkey.active) {
         int frameIdx = gameState->monkey.frame % MONKEY_FRAMES;
-        // --- SKIN MONO ---
         Texture2D& tex = (gameState->activeMonkeySkin == 1)
             ? gameState->texMonkeyFramesSkin[frameIdx]
             : gameState->texMonkeyFrames[frameIdx];
@@ -1628,7 +1641,6 @@ void GameDraw(GameState* gameState) {
 
     // --- COCO (con skin) ---
     {
-
         Texture2D& texCoco = (gameState->activeCocoSkin == 1)
             ? gameState->texCocoSkin
             : gameState->texMonkeyDrop;
@@ -1637,13 +1649,15 @@ void GameDraw(GameState* gameState) {
         float cocoH = TILE_SIZE * 1.5f * cocoScale;
         Rectangle srcCoco = { 0.0f, 0.0f, (float)texCoco.width, (float)texCoco.height };
 
+        // Coco cayendo
         if (gameState->monkeyDrop.active) {
             Rectangle dst2 = { (float)(gameState->monkeyDrop.x - cameraX),(float)(gameState->monkeyDrop.y - cameraY),cocoW,cocoH };
             if (texCoco.id > 0) DrawTexturePro(texCoco, srcCoco, dst2, { 0,0 }, 0, WHITE);
             else DrawCircle((int)(dst2.x + cocoW / 2), (int)(dst2.y + cocoH / 2), TILE_SIZE * 0.75f * cocoScale, BROWN);
         }
 
-        if (gameState->monkey.active && gameState->monkey.frame <= 8) {
+        // Coco en mano: frames 1 a 8 inclusive
+        if (gameState->monkey.active && gameState->monkey.frame >= 1 && gameState->monkey.frame <= 8) {
             float cx = gameState->monkey.x + (TILE_SIZE * 0.75f) - TILE_SIZE + (TILE_SIZE * 0.15f);
             float cy = gameState->monkey.y + (TILE_SIZE * 1.0f) - TILE_SIZE + (TILE_SIZE * 0.15f);
             Rectangle dst2 = { (float)(cx - cameraX),(float)(cy - cameraY),cocoW,cocoH };
@@ -1688,7 +1702,7 @@ void GameDraw(GameState* gameState) {
 void GameUnload(GameState* gameState) {
     for (int i = 0; i < WALL_VARIANT_COUNT; i++) UnloadTexture(gameState->wallTextures[i]);
     UnloadTexture(gameState->dotTexture);   UnloadTexture(gameState->coinTexture);
-    UnloadTexture(gameState->starTexture);  UnloadTexture(gameState->levelEndTexture);
+    UnloadTexture(gameState->starTexture);  UnloadTexture(gameState->levelEndTexture); UnloadTexture(gameState->levelEndTexture2);
     UnloadTexture(gameState->spikeTexture); UnloadTexture(gameState->texPuas);
     UnloadTexture(gameState->texBlockRed);  UnloadTexture(gameState->texBlockBlue);
     UnloadTexture(gameState->trailHorizontal); UnloadTexture(gameState->trailVertical);

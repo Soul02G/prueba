@@ -5,22 +5,19 @@
 
 static Texture2D texPlayer;
 static Texture2D texArrow;
-static Texture2D texMonkey[11];   // frames animados base
+static Texture2D texMonkey[11];
 static Texture2D texCoco;
 static Texture2D texTotem;
 static Texture2D texBat;
 
+static Texture2D texPlayerSkin;
+static Texture2D texBatSkin;
+static Texture2D texCocoSkin;
+static Texture2D texFlechaSkin;
+static Texture2D texTotemSkin;
+static Texture2D texTotemSkinS;
+static Texture2D texMonkeySkin[11];
 
-static Texture2D texPlayerSkin;                  // totmS.png
-static Texture2D texBatSkin;                     // batS-frame-1.png
-static Texture2D texCocoSkin;                    // cocoS.png
-static Texture2D texFlechaSkin;                  // flechaS.png
-static Texture2D texTotemSkin;                   // tiraflechasS.png
-static Texture2D texTotemSkinS;                  // tiraflechasSS.png
-static Texture2D texMonkeySkin[11];              // MonkeyFramesS_0..10.png
-
-
-// Items: 0=Jugador  1=Murcielago  2=Flecha  3=Coco  4=Tiraflechas  5=Mono
 static const int TOTAL_ITEMS = 6;
 static int  selectedItem = 0;
 
@@ -33,23 +30,16 @@ static const char* itemNames[TOTAL_ITEMS] = {
     "MONO"
 };
 
-// Coste en monedas de cada skin (0 = no comprable)
-// Tiraflechas tiene DOS skins => gestionamos el coste por sub-opcion dentro del item
 static const int skinCost[TOTAL_ITEMS] = { 15, 10, 8, 8, 12, 12 };
 
-// Opcion de previsualizacion por item
-//   Jugador/Murcielago/Flecha/Coco/Mono : 0=base  1=skin
-//   Tiraflechas                         : 0=base  1=skinS  2=skinSS
 static int skinOption[TOTAL_ITEMS] = { 0, 0, 0, 0, 0, 0 };
 
-// Animacion del mono en la tienda
 static int  shopMonkeyFrame = 0;
 static int  shopMonkeyTimer = 0;
-static const int SHOP_MONKEY_SPEED = 8;   // frames de juego por frame de sprite
+static const int SHOP_MONKEY_SPEED = 8;
 
 
 void ShopLoad(MapState* mapState) {
-    // Base
     texPlayer = LoadTexture("resources/totm.png");
     texBat = LoadTexture("resources/bat-frame-1.png");
     texArrow = LoadTexture("resources/flecha.png");
@@ -58,15 +48,19 @@ void ShopLoad(MapState* mapState) {
     for (int i = 0; i < 11; i++)
         texMonkey[i] = LoadTexture(TextFormat("resources/MonkeyFrames_%d.png", i));
 
-    // Skins
     texPlayerSkin = LoadTexture("resources/totmS.png");
     texBatSkin = LoadTexture("resources/batS-frame-1.png");
     texCocoSkin = LoadTexture("resources/cocoS.png");
     texFlechaSkin = LoadTexture("resources/flechaS.png");
     texTotemSkin = LoadTexture("resources/tiraflechasS.png");
     texTotemSkinS = LoadTexture("resources/tiraflechasSS.png");
-    for (int i = 0; i < 11; i++)
+
+    // Si un frame de skin no existe (fallback 1x1), duplicar el frame anterior
+    for (int i = 0; i < 11; i++) {
         texMonkeySkin[i] = LoadTexture(TextFormat("resources/MonkeyFramesS_%d.png", i));
+        if (texMonkeySkin[i].width <= 1 && i > 0)
+            texMonkeySkin[i] = texMonkeySkin[i - 1];
+    }
 
     selectedItem = 0;
 
@@ -77,14 +71,14 @@ void ShopLoad(MapState* mapState) {
     skinOption[4] = mapState->tiraflechasSkinIndex;
     skinOption[5] = mapState->monkeySkinIndex;
 
-    shopMonkeyFrame = 0;
+    shopMonkeyFrame = 1;
     shopMonkeyTimer = 0;
 }
 
 
 static int MaxSkinOption(int item) {
-    if (item == 4) return 2;   // tiraflechas: base / S / SS  => max=2
-    return 1;                  // resto: base / skin => max=1
+    if (item == 4) return 2;
+    return 1;
 }
 
 static const char* SkinOptionLabel(int item, int opt) {
@@ -98,7 +92,7 @@ static const char* SkinOptionLabel(int item, int opt) {
 
 
 static bool IsSkinOptionBought(int item, int opt, const MapState* ms) {
-    if (opt == 0) return true;  // la base siempre esta disponible
+    if (opt == 0) return true;
     switch (item) {
     case 0: return ms->playerSkinBought;
     case 1: return ms->batSkinBought;
@@ -112,20 +106,18 @@ static bool IsSkinOptionBought(int item, int opt, const MapState* ms) {
 
 
 static int SkinOptionCost(int item, int /*opt*/) {
-    // Por simplicidad el coste es el mismo para ambas skins de tiraflechas
     return skinCost[item];
 }
 
 SceneType ShopUpdate(MapState* mapState) {
 
-    // --- Animacion del mono (siempre corre) ---
     shopMonkeyTimer++;
     if (shopMonkeyTimer >= SHOP_MONKEY_SPEED) {
         shopMonkeyTimer = 0;
-        shopMonkeyFrame = (shopMonkeyFrame + 1) % 11;
+        shopMonkeyFrame = shopMonkeyFrame + 1;
+        if (shopMonkeyFrame >= 11) shopMonkeyFrame = 1;
     }
 
-    // --- Panel de ajustes ---
     if (mapState->settingsOpen) {
         if (IsKeyPressed(KEY_M)) mapState->settingsOpen = 0;
         if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) mapState->settingsOption = 0;
@@ -149,10 +141,8 @@ SceneType ShopUpdate(MapState* mapState) {
     if (IsKeyPressed(KEY_M))   mapState->settingsOpen = 1;
     if (IsKeyPressed(KEY_TAB)) return SCENE_MAP;
 
-    // --- Navegacion entre items ---
     if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) {
         selectedItem = (selectedItem + 1) % TOTAL_ITEMS;
-        // Sincronizar previsualizacion al item activo
         skinOption[0] = mapState->playerSkinIndex;
         skinOption[1] = mapState->batSkinIndex;
         skinOption[2] = mapState->flechaSkinIndex;
@@ -172,13 +162,11 @@ SceneType ShopUpdate(MapState* mapState) {
 
     int maxOpt = MaxSkinOption(selectedItem);
 
-    // --- Cambiar opcion de skin (ARRIBA/ABAJO) ---
     if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) {
         int newOpt = skinOption[selectedItem] + 1;
         if (newOpt > maxOpt) newOpt = maxOpt;
         skinOption[selectedItem] = newOpt;
 
-        // Si ya la tiene comprada, equiparla inmediatamente
         if (IsSkinOptionBought(selectedItem, newOpt, mapState)) {
             switch (selectedItem) {
             case 0: mapState->playerSkinIndex = newOpt; break;
@@ -207,7 +195,6 @@ SceneType ShopUpdate(MapState* mapState) {
         }
     }
 
-    // --- Comprar skin (ESPACIO) ---
     if (IsKeyPressed(KEY_SPACE)) {
         int opt = skinOption[selectedItem];
         int cost = SkinOptionCost(selectedItem, opt);
@@ -215,36 +202,15 @@ SceneType ShopUpdate(MapState* mapState) {
             if (mapState->totalCoins >= cost) {
                 mapState->totalCoins -= cost;
                 switch (selectedItem) {
-                case 0:
-                    mapState->playerSkinBought = true;
-                    mapState->playerSkinIndex = 1;
-                    break;
-                case 1:
-                    mapState->batSkinBought = true;
-                    mapState->batSkinIndex = 1;
-                    break;
-                case 2:
-                    mapState->flechaSkinBought = true;
-                    mapState->flechaSkinIndex = 1;
-                    break;
-                case 3:
-                    mapState->cocoSkinBought = true;
-                    mapState->cocoSkinIndex = 1;
-                    break;
+                case 0: mapState->playerSkinBought = true;  mapState->playerSkinIndex = 1; break;
+                case 1: mapState->batSkinBought = true;  mapState->batSkinIndex = 1; break;
+                case 2: mapState->flechaSkinBought = true;  mapState->flechaSkinIndex = 1; break;
+                case 3: mapState->cocoSkinBought = true;  mapState->cocoSkinIndex = 1; break;
                 case 4:
-                    if (opt == 1) {
-                        mapState->tiraflechasSkinBought = true;
-                        mapState->tiraflechasSkinIndex = 1;
-                    }
-                    else {
-                        mapState->tiraflechasSSkinBought = true;
-                        mapState->tiraflechasSkinIndex = 2;
-                    }
+                    if (opt == 1) { mapState->tiraflechasSkinBought = true; mapState->tiraflechasSkinIndex = 1; }
+                    else { mapState->tiraflechasSSkinBought = true; mapState->tiraflechasSkinIndex = 2; }
                     break;
-                case 5:
-                    mapState->monkeySkinBought = true;
-                    mapState->monkeySkinIndex = 1;
-                    break;
+                case 5: mapState->monkeySkinBought = true;  mapState->monkeySkinIndex = 1; break;
                 }
             }
         }
@@ -288,7 +254,6 @@ static void DrawSettingsOverlay(const MapState* mapState, int screenWidth, int s
 void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
     ClearBackground(BLACK);
 
-    // HUD superior
     DrawRectangle(0, 0, screenWidth, 50, Color{ 30, 25, 0, 255 });
     DrawCircle(screenWidth - 130, 25, 14, Color{ 255, 220, 0, 255 });
     DrawCircleLines(screenWidth - 130, 25, 14, Color{ 80, 60, 0, 255 });
@@ -299,7 +264,6 @@ void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
 
     DrawText("TIENDA", (screenWidth - MeasureText("TIENDA", 32)) / 2, 65, 32, YELLOW);
 
-    // Caja de previsualizacion
     int boxW = 200, boxH = 200;
     int bx = (screenWidth - boxW) / 2;
     int by = (screenHeight - boxH) / 2 - 60;
@@ -307,14 +271,13 @@ void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
     DrawRectangle(bx, by, boxW, boxH, Color{ 30, 30, 30, 255 });
     DrawRectangleLines(bx, by, boxW, boxH, YELLOW);
 
-    // Seleccionar textura a mostrar
     int opt = skinOption[selectedItem];
 
     if (selectedItem == 5) {
-        // MONO: animado
+        // MONO: animado — usar skin o base, ambos con fallback garantizado en carga
         Texture2D* frames = (opt == 1) ? texMonkeySkin : texMonkey;
         Texture2D& cur = frames[shopMonkeyFrame];
-        if (cur.id > 0) {
+        if (cur.id > 0 && cur.width > 1) {
             int pad = 16;
             DrawTexturePro(cur,
                 { 0.0f, 0.0f, (float)cur.width, (float)cur.height },
@@ -326,10 +289,10 @@ void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
     else {
         Texture2D currentTex = { 0 };
         switch (selectedItem) {
-        case 0: currentTex = (opt == 1) ? texPlayerSkin : texPlayer;   break;
-        case 1: currentTex = (opt == 1) ? texBatSkin : texBat;      break;
-        case 2: currentTex = (opt == 1) ? texFlechaSkin : texArrow;    break;
-        case 3: currentTex = (opt == 1) ? texCocoSkin : texCoco;     break;
+        case 0: currentTex = (opt == 1) ? texPlayerSkin : texPlayer;  break;
+        case 1: currentTex = (opt == 1) ? texBatSkin : texBat;     break;
+        case 2: currentTex = (opt == 1) ? texFlechaSkin : texArrow;   break;
+        case 3: currentTex = (opt == 1) ? texCocoSkin : texCoco;    break;
         case 4:
             if (opt == 1) currentTex = texTotemSkin;
             else if (opt == 2) currentTex = texTotemSkinS;
@@ -346,11 +309,9 @@ void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
         }
     }
 
-    // Nombre del item
     const char* itemName = itemNames[selectedItem];
     DrawText(itemName, (screenWidth - MeasureText(itemName, 24)) / 2, by + boxH + 20, 24, WHITE);
 
-    // Flechas de navegacion de skin (ARRIBA/ABAJO)
     int maxOpt = MaxSkinOption(selectedItem);
     Color upColor = (opt < maxOpt) ? YELLOW : Color{ 80, 80, 80, 255 };
     Color downColor = (opt > 0) ? YELLOW : Color{ 80, 80, 80, 255 };
@@ -359,16 +320,13 @@ void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
     int flechaAbajoY = by + boxH + 68;
     DrawText("v", bx + boxW / 2 - 8, flechaAbajoY, 28, downColor);
 
-    // Etiqueta de la opcion actual
     const char* skinLabel = SkinOptionLabel(selectedItem, opt);
     int skinLabelY = flechaAbajoY + 32;
     DrawText(skinLabel, (screenWidth - MeasureText(skinLabel, 16)) / 2, skinLabelY, 16, YELLOW);
 
-    // Info de compra / equipamiento
     int infoY = skinLabelY + 28;
 
     if (opt == 0) {
-        // Skin base siempre disponible
         const char* baseMsg = "SKIN BASE (siempre disponible)";
         DrawText(baseMsg, (screenWidth - MeasureText(baseMsg, 14)) / 2, infoY, 14, LIGHTGRAY);
     }
@@ -388,7 +346,6 @@ void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
             }
         }
         else {
-            // Ya comprada: mostrar si esta equipada o no
             bool equipped = false;
             switch (selectedItem) {
             case 0: equipped = (mapState->playerSkinIndex == opt); break;
@@ -408,11 +365,9 @@ void ShopDraw(const MapState* mapState, int screenWidth, int screenHeight) {
         }
     }
 
-    // Flechas de navegacion entre items
     DrawText("<", bx - 40, by + (boxH - 32) / 2, 32, WHITE);
     DrawText(">", bx + boxW + 25, by + (boxH - 32) / 2, 32, WHITE);
 
-    // Hint inferior
     const char* shopHint = "FLECHAS IZQUIERDA/DERECHA: articulo    ARRIBA/ABAJO: skin    ESPACIO: comprar    M: ajustes    TAB: mapa";
     DrawText(shopHint, (screenWidth - MeasureText(shopHint, 11)) / 2, screenHeight - 32, 11, Color{ 200, 170, 0, 255 });
 

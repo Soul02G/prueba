@@ -175,6 +175,9 @@ typedef struct {
     Texture2D coinTexture;
     Texture2D starTexture;
     Texture2D levelEndTexture;
+    Texture2D levelEndTexture2;
+    int       levelEndAnimFrame;
+    float     levelEndAnimTimer;
     Texture2D spikeTexture;
     Texture2D spikeUnfold;
     Texture2D texBlockRed;
@@ -209,9 +212,9 @@ typedef struct {
     Texture2D texArrowSkin;          // flechaS.png
 
     // Coco
-    Texture2D texCocoSkin; 
+    Texture2D texCocoSkin;
 
-   
+
     Texture2D texTotemSkin;
     Texture2D texTotemSkinS;
 
@@ -220,7 +223,7 @@ typedef struct {
     int activeFlechaSkin;
     int activeCocoSkin;
     int activeTotemSkin;
-    int activeMonkeySkin; 
+    int activeMonkeySkin;
 
 
     Sound soundDash;
@@ -308,6 +311,7 @@ typedef struct {
     Monkey monkey;
     MonkeyDrop monkeyDrop;
     bool monkeyTriggered;
+    bool monkeyTriggeredLatched;
 
     bool blockToggle;
 
