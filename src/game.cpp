@@ -302,13 +302,13 @@ static const int LEVEL_6_DATA[MAP_ROWS_6][MAP_COLUMNS_6] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,1,20,0,0,0,0,0,0,0,0,0,15,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,1,1,0,0,0,1,1,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,1,2,0,0,0,15,0,0,20,0,24,1,0,1,0,1,0,0,0,0,0,0,0,0},
+    {0,0,0,1,1,1,1,13,1,0,0,0,1,0,0,1,1,0,1,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,20,0,25,0,0,0,0,1,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
 
@@ -1132,11 +1132,12 @@ SceneType GameUpdate(GameState* gameState, MapState* mapState) {
             for (int i = 0; i < gameState->spikeCount; i++) {
                 int sc = gameState->spikeCol[i], sr = gameState->spikeRow[i];
                 int t;
-                if (gameState->currentLevel == 0) t = gameState->tileMap_1[sr][sc];
+                if (gameState->currentLevel == 0)      t = gameState->tileMap_1[sr][sc];
                 else if (gameState->currentLevel == 1) t = gameState->tileMap_2[sr][sc];
                 else if (gameState->currentLevel == 2) t = gameState->tileMap_3[sr][sc];
                 else if (gameState->currentLevel == 3) t = gameState->tileMap_4[sr][sc];
-                else                                   t = gameState->tileMap_5[sr][sc];
+                else if (gameState->currentLevel == 4) t = gameState->tileMap_5[sr][sc];
+                else                                   t = gameState->tileMap_6[sr][sc];
                 int dRow, dCol; SpikeHazardOffset(t, &dRow, &dCol);
                 bool playerOnHazard = (pCol == sc + dCol && pRow == sr + dRow);
                 switch (gameState->spikeState[i]) {
