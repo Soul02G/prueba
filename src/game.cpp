@@ -1525,8 +1525,9 @@ void GameDraw(GameState* gameState) {
             if (gameState->debugShowHitboxes) {
                 // Evaluamos qué color usar dependiendo del tipo de Tile (tt)
 
-                // Paredes, bloques sólidos (Hitboxes Azules)
-                if (tt == TILE_WALL || tt == 8 || tt == 9 || tt == 10 || tt == 11) {
+                // Paredes, rebotes y TÓTEMS (Hitboxes Azules)
+                if (tt == TILE_WALL || tt == 8 || tt == 9 || tt == 10 || tt == 11 ||
+                    tt == TILE_TOTEM_UP || tt == TILE_TOTEM_DOWN || tt == TILE_TOTEM_LEFT || tt == TILE_TOTEM_RIGHT) {
                     DrawRectangleLinesEx(dst, 2.0f, BLUE);
                 }
                 else if (tt == TILE_BLOCK_RED && !gameState->blockToggle) {
@@ -1568,7 +1569,7 @@ void GameDraw(GameState* gameState) {
                 // NOTA: Si quieres ver las hitboxes ENCIMA de las texturas, simplemente quita el 'continue' de abajo
                 // y deja que se ejecute el switch normal. He optado por dibujar "solo las hitboxes" para claridad.
 
-                 continue; // Descomenta esto si solo quieres ver los cuadrados de colores y no el mapa gráfico
+                continue; // Descomenta esto si solo quieres ver los cuadrados de colores y no el mapa gráfico
             }
 
             // --- RENDERIZADO NORMAL (se ejecuta siempre, a menos que descomentes el 'continue' de arriba) ---
