@@ -41,6 +41,15 @@ Beware of touching any elements that cause the character to die.
     * **Economy:** Coin and star creation, detection upon touch, and collection into a counter.
     * **UX & UI:** Functional configuration menu with sliders, pause menu, game data saving, a screen upon completion, and a credit screen.
 
+* **Debug Options:**
+
+
+    * **Immortality:** Allows the player to not die under any circumstance with the LCTRL + 1 + P combination.
+
+    * **Hitbox View:** Shows all the hitboxes instead of the sprites with the LCTRL + 2 + P combination.
+
+    * **Maxed Out:** Unlocks all levels with 3 stars and gives sets coins at 999 with the LCTRL + 3 + P combination. MUST BE INSIDE A LEVEL TO USE.
+
 * **Enemies:**
 
     * **Bats:** Follow a linear, rectilinear movement and cause automatic game loss on contact.
